@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ff85b3">
   
-  <!-- Soporte completo para iOS / Safari -->
+  <!-- Soporte para iOS / Safari -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Munchiz">
@@ -333,7 +333,7 @@
       z-index: 6;
     }
 
-    /* PISTA DISCOTECA AMPLIADA */
+    /* PISTA DISCOTECA */
     #party-stage {
       height: 430px;
       border-radius: 30px;
@@ -434,18 +434,51 @@
       margin-top: 4px;
     }
 
+    /* BARRA DE CONTROL DE AUDIO */
+    .game-audio-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      background: #fff0f6;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px dashed #ffd1e3;
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    .audio-toggle-btn {
+      background: #ffffff;
+      border: 2px solid #ffd1e3;
+      border-radius: 14px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .audio-toggle-btn.muted {
+      background: #f1f3f5;
+      color: #adb5bd;
+      border-color: #dee2e6;
+    }
+
     .game-subtabs {
       display: flex;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
+      flex-wrap: wrap;
     }
 
     .game-subtab-btn {
       border: 2px solid #ffd1e3;
       background: #fff;
       border-radius: 16px;
-      padding: 6px 14px;
-      font-size: 12px;
+      padding: 5px 9px;
+      font-size: 10.5px;
       font-weight: 800;
       color: var(--text-color);
       cursor: pointer;
@@ -474,6 +507,112 @@
       background: #fff8fc;
       touch-action: none;
     }
+
+    /* ESTILOS DE LOS MINIJUEGOS ADICIONALES */
+    /* 1. MEMORIA */
+    .memory-board {
+      width: 100%;
+      max-width: 380px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 8px;
+      background: #fff0f6;
+      border-radius: 24px;
+      border: 3px solid #ffccd5;
+      margin: 0 auto;
+    }
+    .memory-card {
+      aspect-ratio: 1;
+      background: #ffffff;
+      border: 2.5px solid #ffd1e3;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #fcc2d7;
+      transition: all 0.2s ease;
+    }
+    .memory-card.revealed {
+      background: #ffe3ec;
+      border-color: #ff85b3;
+      transform: scale(0.96);
+    }
+    .memory-card.matched {
+      background: #dcfce7;
+      border-color: #86efac;
+      pointer-events: none;
+    }
+
+    /* 2. TOCA AL MUNCHIZ */
+    .whack-board {
+      width: 100%;
+      max-width: 380px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 12px;
+      background: #dcfce7;
+      border-radius: 26px;
+      border: 3.5px solid #86efac;
+      margin: 0 auto;
+    }
+    .whack-hole {
+      aspect-ratio: 1;
+      background: #a7f3d0;
+      border-radius: 50%;
+      border: 4px solid #34d399;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: inset 0 6px 10px rgba(0,0,0,0.15);
+    }
+    .whack-munchiz {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+      transform: translateY(100%);
+      transition: transform 0.15s ease-out;
+      pointer-events: none;
+    }
+    .whack-hole.active .whack-munchiz {
+      transform: translateY(0%);
+    }
+
+    /* 3. SIMÓN DICE */
+    .simon-board {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 8px solid #ffd1e3;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 10px;
+      margin: 8px auto;
+      box-shadow: 0 8px 18px rgba(255, 133, 179, 0.25);
+    }
+    .simon-btn {
+      border: none;
+      cursor: pointer;
+      transition: filter 0.1s ease, transform 0.1s ease;
+      opacity: 0.8;
+    }
+    .simon-btn.active-light {
+      opacity: 1 !important;
+      filter: brightness(1.4) drop-shadow(0 0 10px #ffffff);
+      transform: scale(0.96);
+    }
+    #simon-0 { background: #ff85b3; border-top-left-radius: 100%; }
+    #simon-1 { background: #60a5fa; border-top-right-radius: 100%; }
+    #simon-2 { background: #facc15; border-bottom-left-radius: 100%; }
+    #simon-3 { background: #4ade80; border-bottom-right-radius: 100%; }
 
     #farm-stage {
       height: 380px;
@@ -616,7 +755,7 @@
       100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) - 25px)) scale(1.4); }
     }
 
-    /* GLOBO DE HISTORIETA MÁS AMPLIO Y VISIBLE */
+    /* GLOBO DE HISTORIETA */
     .comic-bubble {
       position: relative;
       background: #ffffff;
@@ -693,7 +832,6 @@
       box-shadow: 0 3px 8px rgba(255, 133, 179, 0.35);
     }
 
-    /* PANTALLA COMPLETA Y VISUALMENTE MÁS AMPLIA PARA EL MENÚ */
     #login-overlay {
       position: absolute;
       inset: 0;
@@ -724,22 +862,21 @@
 <body>
 
   <div id="game-container">
+    <!-- PISTAS DE AUDIO -->
     <audio id="party-audio" src="audio/musica_fiesta.mp3" loop></audio>
+    <audio id="game-music-audio" src="audio/musica_juegos.mp3" loop></audio>
 
-    <!-- MENÚ PRINCIPAL AMPLIADO -->
+    <!-- MENÚ PRINCIPAL -->
     <div id="login-overlay">
       <div class="login-card">
-        <!-- Logotipo más grande -->
         <div class="logo-box" style="margin: 0 auto 4px; width: 210px; height: 60px;">
           <img src="img/logo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg';" alt="Logo">
         </div>
 
-        <!-- Globo de diálogo grande -->
         <div class="comic-bubble">
           hola soy sofi darlen bienvenidos al mundo de los munchiz, diviertete.!!
         </div>
 
-        <!-- Sofi Darlen mucho más grande y protagonista -->
         <div style="display: flex; justify-content: center; margin: 4px 0 12px;">
           <img src="img/sofi.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:princess.svg';" alt="Sofi Darlen" style="width: 135px; height: 135px; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(255, 105, 180, 0.35));">
         </div>
@@ -852,7 +989,7 @@
         </div>
       </div>
 
-      <!-- BOTONES DE ACCIÓN CON COSTOS EN MONEDAS -->
+      <!-- BOTONES DE ACCIÓN -->
       <div class="actions-grid">
         <button class="btn-action" onclick="openModal('food-modal')">
           <img src="img/btn_comida.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Comida">
@@ -882,20 +1019,37 @@
       </div>
     </div>
 
-    <!-- VISTA 2: MINIJUEGOS -->
+    <!-- VISTA 2: MINIJUEGOS (6 JUEGOS COMPLETOS) -->
     <div id="view-game" class="view-content">
-      <div class="game-subtabs">
-        <button class="game-subtab-btn active" id="btn-sub-catch" onclick="selectMinigame('catch')">🍪 Atrapa Dulces</button>
-        <button class="game-subtab-btn" id="btn-sub-flappy" onclick="selectMinigame('flappy')">🕊️ Flappy Munchiz</button>
+      <!-- BARRA DE AUDIO -->
+      <div class="game-audio-bar">
+        <button class="audio-toggle-btn" id="btn-toggle-music" onclick="toggleGameMusic()">
+          🎵 Música: ON
+        </button>
+        <button class="audio-toggle-btn" id="btn-toggle-sfx" onclick="toggleSfx()">
+          🔊 Efectos: ON
+        </button>
       </div>
 
+      <!-- BOTONES DE MINIJUEGOS -->
+      <div class="game-subtabs">
+        <button class="game-subtab-btn active" id="btn-sub-catch" onclick="selectMinigame('catch')">🍪 Dulces</button>
+        <button class="game-subtab-btn" id="btn-sub-flappy" onclick="selectMinigame('flappy')">🕊️ Flappy</button>
+        <button class="game-subtab-btn" id="btn-sub-jump" onclick="selectMinigame('jump')">☁️ Nubes</button>
+        <button class="game-subtab-btn" id="btn-sub-memory" onclick="selectMinigame('memory')">🧠 Memoria</button>
+        <button class="game-subtab-btn" id="btn-sub-whack" onclick="selectMinigame('whack')">🐾 Toca Munchiz</button>
+        <button class="game-subtab-btn" id="btn-sub-simon" onclick="selectMinigame('simon')">🎵 Simón</button>
+      </div>
+
+      <!-- JUEGO 1: ATRAPA DULCES -->
       <div id="subgame-catch" style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Atrapa dulces para ganar monedas! Si se cae uno pierdes 1 🍪💔</span>
+        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Atrapa dulces para ganar monedas! Si cae uno pierdes 1 🍪💔</span>
         <div class="game-canvas-box">
           <canvas id="game-canvas" class="game-canvas-style" width="410" height="380"></canvas>
         </div>
       </div>
 
+      <!-- JUEGO 2: FLAPPY MUNCHIZ -->
       <div id="subgame-flappy" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
         <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Toca la pantalla para volar suavemente! ✨💖</span>
         <div class="game-canvas-box">
@@ -903,7 +1057,54 @@
         </div>
       </div>
 
-      <button class="selector-btn" style="margin: 0 auto; width: 70%;" onclick="switchView('room')">Volver a la Habitación 🏠</button>
+      <!-- JUEGO 3: SALTO A LAS NUBES -->
+      <div id="subgame-jump" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
+        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Toca izquierda/derecha para rebotar y usa las ⭐ para súper saltos! ☁️✨</span>
+        <div class="game-canvas-box">
+          <canvas id="jump-canvas" class="game-canvas-style" width="410" height="380"></canvas>
+        </div>
+      </div>
+
+      <!-- JUEGO 4: MEMORIA DE GALLETAS -->
+      <div id="subgame-memory" style="display: none; flex-direction: column; align-items: center; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; width: 90%; font-size: 13px; font-weight: 800; color: #ff65a3;">
+          <span>🧠 Parejas: <b id="mem-pairs-txt">0 / 6</b></span>
+          <span>⭐ Bono: <b>15 🪙</b></span>
+        </div>
+        <div class="memory-board" id="memory-board"></div>
+        <button class="selector-btn" style="padding: 6px 14px; font-size: 12px;" onclick="initMemoryGame()">Reiniciar Tablero 🔄</button>
+      </div>
+
+      <!-- JUEGO 5: TOCA AL MUNCHIZ (WHACK-A-MOLE) -->
+      <div id="subgame-whack" style="display: none; flex-direction: column; align-items: center; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; width: 90%; font-size: 13px; font-weight: 800; color: #2b8a3e;">
+          <span>🐾 Aciertos: <b id="whack-score-txt">0</b></span>
+          <span>⏳ Tiempo: <b id="whack-time-txt">30s</b></span>
+        </div>
+        <div class="whack-board" id="whack-board">
+          <div class="whack-hole" onclick="hitWhackHole(0)"><img class="whack-munchiz" src="img/lilo.png" alt="m"></div>
+          <div class="whack-hole" onclick="hitWhackHole(1)"><img class="whack-munchiz" src="img/capy.png" alt="m"></div>
+          <div class="whack-hole" onclick="hitWhackHole(2)"><img class="whack-munchiz" src="img/rodri.png" alt="m"></div>
+          <div class="whack-hole" onclick="hitWhackHole(3)"><img class="whack-munchiz" src="img/sparky.png" alt="m"></div>
+          <div class="whack-hole" onclick="hitWhackHole(4)"><img class="whack-munchiz" src="img/gloop.png" alt="m"></div>
+          <div class="whack-hole" onclick="hitWhackHole(5)"><img class="whack-munchiz" src="img/sofi.png" alt="m"></div>
+        </div>
+        <button class="selector-btn" style="padding: 6px 16px; font-size: 12px; background:#4ade80; color:#fff; border:none;" onclick="startWhackGame()">¡Iniciar Rápido! ⚡</button>
+      </div>
+
+      <!-- JUEGO 6: SIMÓN DICE KAWAII -->
+      <div id="subgame-simon" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
+        <span style="font-size: 13px; font-weight: 800; color: #9c36b5;">🎵 Ronda: <b id="simon-round-txt">1</b> • ¡Sigue el patrón de luces!</span>
+        <div class="simon-board">
+          <button class="simon-btn" id="simon-0" onclick="handleSimonInput(0)"></button>
+          <button class="simon-btn" id="simon-1" onclick="handleSimonInput(1)"></button>
+          <button class="simon-btn" id="simon-2" onclick="handleSimonInput(2)"></button>
+          <button class="simon-btn" id="simon-3" onclick="handleSimonInput(3)"></button>
+        </div>
+        <button class="selector-btn" style="padding: 7px 18px; font-size: 13px; background:#b197fc; color:#fff; border:none;" onclick="startSimonGame()">Iniciar Secuencia 🎶</button>
+      </div>
+
+      <button class="selector-btn" style="margin: 6px auto 0; width: 70%;" onclick="switchView('room')">Volver a la Habitación 🏠</button>
     </div>
 
     <!-- VISTA 3: GRANJA -->
@@ -950,7 +1151,51 @@
   <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+    // ESTADO DE AUDIO (MÚSICA Y EFECTOS)
+    let isMusicMuted = localStorage.getItem('munchiz_music_muted') === 'true';
+    let isSfxMuted = localStorage.getItem('munchiz_sfx_muted') === 'true';
+
+    const gameMusicAudio = document.getElementById('game-music-audio');
+    const partyAudio = document.getElementById('party-audio');
+
+    function updateAudioButtons() {
+      const btnM = document.getElementById('btn-toggle-music');
+      const btnS = document.getElementById('btn-toggle-sfx');
+
+      if (btnM) {
+        btnM.innerText = isMusicMuted ? '🔇 Música: OFF' : '🎵 Música: ON';
+        btnM.classList.toggle('muted', isMusicMuted);
+      }
+      if (btnS) {
+        btnS.innerText = isSfxMuted ? '🔇 Efectos: OFF' : '🔊 Efectos: ON';
+        btnS.classList.toggle('muted', isSfxMuted);
+      }
+    }
+
+    function toggleGameMusic() {
+      isMusicMuted = !isMusicMuted;
+      localStorage.setItem('munchiz_music_muted', isMusicMuted);
+      updateAudioButtons();
+
+      if (isMusicMuted) {
+        gameMusicAudio.pause();
+      } else {
+        const viewGame = document.getElementById('view-game');
+        if (viewGame && viewGame.classList.contains('active')) {
+          gameMusicAudio.play().catch(() => {});
+        }
+      }
+    }
+
+    function toggleSfx() {
+      isSfxMuted = !isSfxMuted;
+      localStorage.setItem('munchiz_sfx_muted', isSfxMuted);
+      updateAudioButtons();
+      if (!isSfxMuted) playTone(700, 0.08);
+    }
+
     function playTone(freq, duration) {
+      if (isSfxMuted) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -963,7 +1208,17 @@
       osc.stop(audioCtx.currentTime + duration);
     }
 
+    function playSuperJumpSound() {
+      if (isSfxMuted) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playTone(freq, 0.08), idx * 45);
+      });
+    }
+
     function playLullabySound() {
+      if (isSfxMuted) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25];
       notes.forEach((freq, idx) => {
@@ -983,6 +1238,7 @@
     }
 
     function playMunchSound() {
+      if (isSfxMuted) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       [0, 0.07, 0.14].forEach((delay, idx) => {
         setTimeout(() => {
@@ -1002,6 +1258,7 @@
     }
 
     function playBubblePopSound() {
+      if (isSfxMuted) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       for (let i = 0; i < 5; i++) {
         setTimeout(() => {
@@ -1081,12 +1338,15 @@
 
     const TOTAL_MUNCHIZ_COUNT = Object.keys(ALL_MUNCHIZ).length;
 
+    // IMÁGENES
     const imgCookie = new Image();
     imgCookie.src = 'img/galleta.png';
     const imgBasket = new Image();
     imgBasket.src = 'img/canasta.png';
     const imgBgGame = new Image();
     imgBgGame.src = 'img/fondo_juego.png';
+    const imgCoin = new Image();
+    imgCoin.src = 'img/moneda.png';
 
     const imgFlappyBg = new Image();
     imgFlappyBg.src = 'img/fondo_flappy.png';
@@ -1096,6 +1356,13 @@
     imgPilarBottom.src = 'img/pilar_abajo.png';
     const imgFlappyFlyer = new Image();
     imgFlappyFlyer.src = 'img/flappy_lilo.png';
+
+    const imgCloudBg = new Image();
+    imgCloudBg.src = 'img/fondo_nubes.png';
+    const imgCloudPlatform = new Image();
+    imgCloudPlatform.src = 'img/nube_plataforma.png';
+    const imgSpringStar = new Image();
+    imgSpringStar.src = 'img/resorte_estrella.png';
 
     // ESTADO DEL JUGADOR
     let currentUser = '';
@@ -1197,6 +1464,9 @@
       stopPartyMusic();
       stopCatchGame();
       stopFlappyGame();
+      stopJumpGame();
+      stopWhackGame();
+      gameMusicAudio.pause();
       renderSavedProfilesMenu();
       document.getElementById('login-overlay').style.display = 'flex';
       playTone(400, 0.08);
@@ -1226,11 +1496,21 @@
       document.getElementById(`view-${viewName}`).classList.add('active');
 
       if (viewName === 'game') {
+        if (!isMusicMuted) {
+          gameMusicAudio.play().catch(() => {});
+        }
         if (currentMinigame === 'catch') startCatchGame();
-        else startFlappyGame();
+        else if (currentMinigame === 'flappy') startFlappyGame();
+        else if (currentMinigame === 'jump') startJumpGame();
+        else if (currentMinigame === 'memory') initMemoryGame();
+        else if (currentMinigame === 'whack') startWhackGame();
+        else if (currentMinigame === 'simon') startSimonGame();
       } else {
+        gameMusicAudio.pause();
         stopCatchGame();
         stopFlappyGame();
+        stopJumpGame();
+        stopWhackGame();
       }
 
       if (viewName === 'farm') renderFarm();
@@ -1240,18 +1520,24 @@
 
     function selectMinigame(type) {
       currentMinigame = type;
-      document.getElementById('btn-sub-catch').classList.toggle('active', type === 'catch');
-      document.getElementById('btn-sub-flappy').classList.toggle('active', type === 'flappy');
-      document.getElementById('subgame-catch').style.display = type === 'catch' ? 'flex' : 'none';
-      document.getElementById('subgame-flappy').style.display = type === 'flappy' ? 'flex' : 'none';
+      ['catch', 'flappy', 'jump', 'memory', 'whack', 'simon'].forEach(g => {
+        const btn = document.getElementById(`btn-sub-${g}`);
+        const box = document.getElementById(`subgame-${g}`);
+        if (btn) btn.classList.toggle('active', g === type);
+        if (box) box.style.display = g === type ? 'flex' : 'none';
+      });
 
-      if (type === 'catch') {
-        stopFlappyGame();
-        startCatchGame();
-      } else {
-        stopCatchGame();
-        startFlappyGame();
-      }
+      stopCatchGame();
+      stopFlappyGame();
+      stopJumpGame();
+      stopWhackGame();
+
+      if (type === 'catch') startCatchGame();
+      else if (type === 'flappy') startFlappyGame();
+      else if (type === 'jump') startJumpGame();
+      else if (type === 'memory') initMemoryGame();
+      else if (type === 'whack') startWhackGame();
+      else if (type === 'simon') startSimonGame();
     }
 
     function renderPetSwitcher() {
@@ -1408,8 +1694,6 @@
       playTone(450 + Math.random() * 300, 0.08);
     }
 
-    const partyAudio = document.getElementById('party-audio');
-
     function togglePartyMusic() {
       if (isPartyMusicPlaying) {
         stopPartyMusic();
@@ -1472,7 +1756,6 @@
       updateBars();
     }, 10000);
 
-    // CUIDADOS CON COSTO DE MONEDAS
     function feedItem(amount, msg, foodEmoji, cost) {
       if (isSleeping) return;
       if (coins < cost) {
@@ -1598,7 +1881,9 @@
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
+    // ==========================================
     // MINIJUEGO 1: ATRAPAR DULCES
+    // ==========================================
     let catchInterval = null;
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
@@ -1688,7 +1973,9 @@
       }
     }
 
+    // ==========================================
     // MINIJUEGO 2: FLAPPY MUNCHIZ
+    // ==========================================
     const fCanvas = document.getElementById('flappy-canvas');
     const fCtx = fCanvas.getContext('2d');
     let fInterval = null;
@@ -1889,13 +2176,461 @@
       }
     }
 
+    // ==========================================
+    // MINIJUEGO 3: SALTO A LAS NUBES
+    // ==========================================
+    const jCanvas = document.getElementById('jump-canvas');
+    const jCtx = jCanvas.getContext('2d');
+    let jInterval = null;
+    let jPlayer = { x: 180, y: 260, vx: 0, vy: 0, size: 46 };
+    let jPlatforms = [];
+    let jCoins = [];
+    let jStars = [];
+    let jScore = 0;
+    let jGameOver = false;
+
+    function initJumpGame() {
+      jPlayer = { x: jCanvas.width / 2 - 23, y: 240, vx: 0, vy: -7.8, size: 46 };
+      jPlatforms = [];
+      jCoins = [];
+      jStars = [];
+      jScore = 0;
+      jGameOver = false;
+
+      jPlatforms.push({ x: jCanvas.width / 2 - 50, y: 320, w: 100, h: 28 });
+
+      for (let y = 250; y > 30; y -= 58) {
+        createJumpPlatform(y);
+      }
+    }
+
+    function createJumpPlatform(y) {
+      const w = 88;
+      const h = 26;
+      const x = Math.random() * (jCanvas.width - w - 20) + 10;
+      jPlatforms.push({ x, y, w, h });
+
+      const rand = Math.random();
+      if (rand < 0.18) {
+        jStars.push({ x: x + w / 2 - 13, y: y - 24, size: 26, collected: false });
+      } else if (rand < 0.50) {
+        jCoins.push({ x: x + w / 2 - 11, y: y - 22, size: 22, collected: false });
+      }
+    }
+
+    function startJumpGame() {
+      stopJumpGame();
+      initJumpGame();
+      jInterval = setInterval(jumpGameLoop, 1000 / 35);
+    }
+
+    function stopJumpGame() {
+      if (jInterval) clearInterval(jInterval);
+      jInterval = null;
+    }
+
+    function handleJumpTouch(clientX) {
+      if (jGameOver) {
+        initJumpGame();
+        return;
+      }
+      const rect = jCanvas.getBoundingClientRect();
+      const touchX = (clientX - rect.left) * (jCanvas.width / rect.width);
+      if (touchX < jPlayer.x + jPlayer.size / 2) {
+        jPlayer.vx = -4.8;
+      } else {
+        jPlayer.vx = 4.8;
+      }
+    }
+
+    jCanvas.onmousedown = (e) => handleJumpTouch(e.clientX);
+    jCanvas.ontouchstart = (e) => {
+      if (e.touches.length > 0) handleJumpTouch(e.touches[0].clientX);
+      e.preventDefault();
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (currentMinigame !== 'jump') return;
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') jPlayer.vx = -5;
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') jPlayer.vx = 5;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (currentMinigame !== 'jump') return;
+      if (['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(e.code)) jPlayer.vx = 0;
+    });
+
+    function jumpGameLoop() {
+      jCtx.clearRect(0, 0, jCanvas.width, jCanvas.height);
+
+      if (imgCloudBg.complete && imgCloudBg.naturalWidth > 0) {
+        jCtx.drawImage(imgCloudBg, 0, 0, jCanvas.width, jCanvas.height);
+      } else {
+        const grad = jCtx.createLinearGradient(0, 0, 0, jCanvas.height);
+        grad.addColorStop(0, '#bae6fd');
+        grad.addColorStop(0.5, '#fce7f3');
+        grad.addColorStop(1, '#fef9c3');
+        jCtx.fillStyle = grad;
+        jCtx.fillRect(0, 0, jCanvas.width, jCanvas.height);
+      }
+
+      if (!jGameOver) {
+        jPlayer.vy += 0.28;
+        jPlayer.y += jPlayer.vy;
+        jPlayer.x += jPlayer.vx;
+        jPlayer.vx *= 0.92;
+
+        if (jPlayer.x < -jPlayer.size / 2) jPlayer.x = jCanvas.width - jPlayer.size / 2;
+        if (jPlayer.x > jCanvas.width - jPlayer.size / 2) jPlayer.x = -jPlayer.size / 2;
+
+        if (jPlayer.vy > 0) {
+          for (let p of jPlatforms) {
+            if (
+              jPlayer.x + jPlayer.size * 0.7 > p.x &&
+              jPlayer.x + jPlayer.size * 0.3 < p.x + p.w &&
+              jPlayer.y + jPlayer.size >= p.y &&
+              jPlayer.y + jPlayer.size <= p.y + p.h + 10
+            ) {
+              jPlayer.vy = -8.6;
+              playTone(620, 0.06);
+              break;
+            }
+          }
+        }
+
+        for (let s of jStars) {
+          if (!s.collected &&
+              Math.hypot((jPlayer.x + jPlayer.size / 2) - (s.x + s.size / 2), (jPlayer.y + jPlayer.size / 2) - (s.y + s.size / 2)) < 28) {
+            s.collected = true;
+            jPlayer.vy = -14.5;
+            playSuperJumpSound();
+            spawnSparkle(jCanvas.getBoundingClientRect().left + s.x, jCanvas.getBoundingClientRect().top + s.y, '⭐✨');
+          }
+        }
+
+        if (jPlayer.y < jCanvas.height * 0.45) {
+          const diff = (jCanvas.height * 0.45) - jPlayer.y;
+          jPlayer.y = jCanvas.height * 0.45;
+          jScore += Math.floor(diff);
+
+          for (let p of jPlatforms) p.y += diff;
+          for (let c of jCoins) c.y += diff;
+          for (let s of jStars) s.y += diff;
+
+          jPlatforms = jPlatforms.filter(p => p.y < jCanvas.height + 20);
+          jCoins = jCoins.filter(c => c.y < jCanvas.height + 20);
+          jStars = jStars.filter(s => s.y < jCanvas.height + 20);
+
+          while (jPlatforms.length < 8) {
+            const highestY = Math.min(...jPlatforms.map(p => p.y));
+            createJumpPlatform(highestY - (Math.random() * 18 + 52));
+          }
+        }
+
+        for (let c of jCoins) {
+          if (!c.collected &&
+              Math.hypot((jPlayer.x + jPlayer.size / 2) - (c.x + c.size / 2), (jPlayer.y + jPlayer.size / 2) - (c.y + c.size / 2)) < 26) {
+            c.collected = true;
+            coins += 2;
+            document.getElementById('coin-txt').innerText = coins;
+            playTone(880, 0.08);
+            saveGame();
+          }
+        }
+
+        if (jPlayer.y > jCanvas.height + 15) {
+          jGameOver = true;
+          playTone(220, 0.22);
+        }
+      }
+
+      for (let p of jPlatforms) {
+        if (imgCloudPlatform.complete && imgCloudPlatform.naturalWidth > 0) {
+          jCtx.drawImage(imgCloudPlatform, p.x, p.y, p.w, p.h);
+        } else {
+          jCtx.save();
+          jCtx.fillStyle = '#ffffff';
+          jCtx.beginPath();
+          jCtx.roundRect(p.x, p.y, p.w, p.h, 12);
+          jCtx.fill();
+          jCtx.lineWidth = 2.5;
+          jCtx.strokeStyle = '#cbe4f9';
+          jCtx.stroke();
+          jCtx.fillStyle = '#ffdeeb';
+          jCtx.beginPath();
+          jCtx.arc(p.x + p.w / 2, p.y + p.h / 2, 4, 0, Math.PI * 2);
+          jCtx.fill();
+          jCtx.restore();
+        }
+      }
+
+      for (let c of jCoins) {
+        if (!c.collected) {
+          if (imgCoin.complete && imgCoin.naturalWidth > 0) {
+            jCtx.drawImage(imgCoin, c.x, c.y, c.size, c.size);
+          } else {
+            jCtx.font = `${c.size}px Quicksand, sans-serif`;
+            jCtx.textAlign = 'center';
+            jCtx.textBaseline = 'middle';
+            jCtx.fillText('🪙', c.x + c.size / 2, c.y + c.size / 2);
+          }
+        }
+      }
+
+      for (let s of jStars) {
+        if (!s.collected) {
+          if (imgSpringStar.complete && imgSpringStar.naturalWidth > 0) {
+            jCtx.drawImage(imgSpringStar, s.x, s.y, s.size, s.size);
+          } else {
+            jCtx.font = `${s.size}px Quicksand, sans-serif`;
+            jCtx.textAlign = 'center';
+            jCtx.textBaseline = 'middle';
+            jCtx.fillText('⭐', s.x + s.size / 2, s.y + s.size / 2);
+          }
+        }
+      }
+
+      const currentImg = document.getElementById('pet-avatar');
+      jCtx.save();
+      if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
+        jCtx.drawImage(currentImg, jPlayer.x, jPlayer.y, jPlayer.size, jPlayer.size);
+      } else {
+        jCtx.fillStyle = '#ff85b3';
+        jCtx.beginPath();
+        jCtx.arc(jPlayer.x + jPlayer.size / 2, jPlayer.y + jPlayer.size / 2, jPlayer.size / 2, 0, Math.PI * 2);
+        jCtx.fill();
+      }
+      jCtx.restore();
+
+      jCtx.fillStyle = '#5c4d61';
+      jCtx.font = 'bold 20px Quicksand';
+      jCtx.textAlign = 'left';
+      jCtx.fillText(`☁️ Altura: ${jScore}`, 16, 34);
+
+      if (jGameOver) {
+        jCtx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+        jCtx.fillRect(40, 110, jCanvas.width - 80, 150);
+        jCtx.strokeStyle = '#ffd1e3';
+        jCtx.lineWidth = 4;
+        jCtx.strokeRect(40, 110, jCanvas.width - 80, 150);
+
+        jCtx.fillStyle = '#ff65a3';
+        jCtx.font = 'bold 22px Quicksand';
+        jCtx.textAlign = 'center';
+        jCtx.fillText('¡Te caíste de la nube! ☁️💔', jCanvas.width / 2, 155);
+
+        jCtx.fillStyle = '#5c4d61';
+        jCtx.font = 'bold 15px Quicksand';
+        jCtx.fillText(`Llegaste a ${jScore} pts`, jCanvas.width / 2, 185);
+        jCtx.fillText('Toca la pantalla para rebotar de nuevo ✨', jCanvas.width / 2, 220);
+      }
+    }
+
+    // ==========================================
+    // MINIJUEGO 4: MEMORIA DE GALLETAS
+    // ==========================================
+    const memoryItems = ['🍪', '🍓', '🍰', '🧁', '⭐', '🪙'];
+    let memoryDeck = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+
+    function initMemoryGame() {
+      const board = document.getElementById('memory-board');
+      board.innerHTML = '';
+      flippedCards = [];
+      matchedPairs = 0;
+      document.getElementById('mem-pairs-txt').innerText = `0 / 6`;
+
+      memoryDeck = [...memoryItems, ...memoryItems].sort(() => Math.random() - 0.5);
+
+      memoryDeck.forEach((icon, idx) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.index = idx;
+        card.dataset.icon = icon;
+        card.innerText = '❓';
+        card.onclick = () => flipMemoryCard(card);
+        board.appendChild(card);
+      });
+    }
+
+    function flipMemoryCard(card) {
+      if (flippedCards.length >= 2 || card.classList.contains('revealed') || card.classList.contains('matched')) return;
+
+      playTone(550, 0.06);
+      card.classList.add('revealed');
+      card.innerText = card.dataset.icon;
+      flippedCards.push(card);
+
+      if (flippedCards.length === 2) {
+        const [c1, c2] = flippedCards;
+        if (c1.dataset.icon === c2.dataset.icon) {
+          playTone(850, 0.1);
+          c1.classList.add('matched');
+          c2.classList.add('matched');
+          matchedPairs++;
+          document.getElementById('mem-pairs-txt').innerText = `${matchedPairs} / 6`;
+          flippedCards = [];
+
+          if (matchedPairs === 6) {
+            playSuperJumpSound();
+            coins += 15;
+            document.getElementById('coin-txt').innerText = coins;
+            saveGame();
+            setTimeout(() => alert('¡Felicidades! 🎉 Completaste la memoria y ganaste 15 🪙'), 200);
+          }
+        } else {
+          setTimeout(() => {
+            c1.classList.remove('revealed');
+            c2.classList.remove('revealed');
+            c1.innerText = '❓';
+            c2.innerText = '❓';
+            flippedCards = [];
+          }, 700);
+        }
+      }
+    }
+
+    // ==========================================
+    // MINIJUEGO 5: TOCA AL MUNCHIZ (WHACK-A-MOLE)
+    // ==========================================
+    let whackTimer = null;
+    let whackMoleTimer = null;
+    let whackScore = 0;
+    let whackTimeLeft = 30;
+    let activeHoleIndex = -1;
+
+    function startWhackGame() {
+      stopWhackGame();
+      whackScore = 0;
+      whackTimeLeft = 30;
+      document.getElementById('whack-score-txt').innerText = whackScore;
+      document.getElementById('whack-time-txt').innerText = `${whackTimeLeft}s`;
+
+      whackTimer = setInterval(() => {
+        whackTimeLeft--;
+        document.getElementById('whack-time-txt').innerText = `${whackTimeLeft}s`;
+        if (whackTimeLeft <= 0) {
+          stopWhackGame();
+          playSuperJumpSound();
+          alert(`¡Tiempo! ⏰ Atrapaste a ${whackScore} monstruitos y ganaste ${whackScore * 2} 🪙`);
+          coins += whackScore * 2;
+          document.getElementById('coin-txt').innerText = coins;
+          saveGame();
+        }
+      }, 1000);
+
+      popupWhackMole();
+    }
+
+    function popupWhackMole() {
+      const holes = document.querySelectorAll('.whack-hole');
+      holes.forEach(h => h.classList.remove('active'));
+
+      activeHoleIndex = Math.floor(Math.random() * holes.length);
+      holes[activeHoleIndex].classList.add('active');
+
+      whackMoleTimer = setTimeout(() => {
+        holes[activeHoleIndex].classList.remove('active');
+        if (whackTimeLeft > 0) {
+          setTimeout(popupWhackMole, Math.random() * 300 + 400);
+        }
+      }, Math.random() * 400 + 750);
+    }
+
+    function hitWhackHole(idx) {
+      const holes = document.querySelectorAll('.whack-hole');
+      if (idx === activeHoleIndex && holes[idx].classList.contains('active')) {
+        playTone(750, 0.08);
+        holes[idx].classList.remove('active');
+        whackScore++;
+        document.getElementById('whack-score-txt').innerText = whackScore;
+        clearTimeout(whackMoleTimer);
+        setTimeout(popupWhackMole, 200);
+      }
+    }
+
+    function stopWhackGame() {
+      if (whackTimer) clearInterval(whackTimer);
+      if (whackMoleTimer) clearTimeout(whackMoleTimer);
+      whackTimer = null;
+      whackMoleTimer = null;
+      document.querySelectorAll('.whack-hole').forEach(h => h.classList.remove('active'));
+    }
+
+    // ==========================================
+    // MINIJUEGO 6: SIMÓN DICE KAWAII
+    // ==========================================
+    let simonSequence = [];
+    let simonUserStep = 0;
+    let simonRound = 1;
+    let isSimonPlayingSequence = false;
+    const simonFrequencies = [330, 440, 554, 659];
+
+    function startSimonGame() {
+      simonSequence = [];
+      simonRound = 1;
+      document.getElementById('simon-round-txt').innerText = simonRound;
+      nextSimonRound();
+    }
+
+    function nextSimonRound() {
+      simonUserStep = 0;
+      document.getElementById('simon-round-txt').innerText = simonRound;
+      simonSequence.push(Math.floor(Math.random() * 4));
+      playSimonSequence();
+    }
+
+    function playSimonSequence() {
+      isSimonPlayingSequence = true;
+      let i = 0;
+      const interval = setInterval(() => {
+        lightSimonButton(simonSequence[i]);
+        i++;
+        if (i >= simonSequence.length) {
+          clearInterval(interval);
+          isSimonPlayingSequence = false;
+        }
+      }, 600);
+    }
+
+    function lightSimonButton(id) {
+      const btn = document.getElementById(`simon-${id}`);
+      playTone(simonFrequencies[id], 0.18);
+      btn.classList.add('active-light');
+      setTimeout(() => btn.classList.remove('active-light'), 300);
+    }
+
+    function handleSimonInput(id) {
+      if (isSimonPlayingSequence) return;
+
+      lightSimonButton(id);
+
+      if (id === simonSequence[simonUserStep]) {
+        simonUserStep++;
+        if (simonUserStep >= simonSequence.length) {
+          coins += 3;
+          document.getElementById('coin-txt').innerText = coins;
+          saveGame();
+          simonRound++;
+          setTimeout(nextSimonRound, 900);
+        }
+      } else {
+        playTone(200, 0.25);
+        alert(`¡Te equivocaste de nota! 💔 Llegaste a la Ronda ${simonRound}.`);
+        simonSequence = [];
+      }
+    }
+
     function renderAll() {
       renderPetSwitcher();
       renderPet();
       renderFarm();
+      updateAudioButtons();
     }
 
     renderSavedProfilesMenu();
+    updateAudioButtons();
     document.getElementById('login-overlay').style.display = 'flex';
   </script>
 
