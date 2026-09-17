@@ -341,9 +341,9 @@
       z-index: 6;
     }
 
-    /* PISTA DE DISCOTECA */
+    /* PISTA DE DISCOTECA AMPLIADA */
     #party-stage {
-      height: 380px;
+      height: 430px;
       border-radius: 30px;
       border: 4px solid #c084fc;
       position: relative;
@@ -399,24 +399,25 @@
       }
     }
 
+    /* FILA DE BAILARINES */
     .dance-floor-dancers {
       position: absolute;
-      bottom: 14px;
+      bottom: 22px;
       left: 0;
       right: 0;
       z-index: 4;
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 12px;
+      gap: 8px;
       width: 100%;
-      overflow: hidden !important;
-      padding: 0 10px;
+      flex-wrap: wrap;
+      padding: 0 12px;
     }
 
     .dancer-munchiz {
-      width: 78px;
-      height: 78px;
+      width: 64px;
+      height: 64px;
       object-fit: contain;
       filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.75));
       flex-shrink: 0;
@@ -424,14 +425,14 @@
 
     .dancing-1 { animation: danceMoveA 0.5s infinite alternate ease-in-out; }
     @keyframes danceMoveA {
-      0% { transform: translateY(0) rotate(-8deg); }
-      100% { transform: translateY(-16px) rotate(8deg); }
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-12px) rotate(6deg); }
     }
 
     .dancing-2 { animation: danceMoveB 0.45s infinite alternate ease-in-out 0.15s; }
     @keyframes danceMoveB {
-      0% { transform: translateY(0) scale(0.95, 1.05) rotate(6deg); }
-      100% { transform: translateY(-20px) scale(1.08, 0.92) rotate(-6deg); }
+      0% { transform: translateY(0) scale(0.96, 1.04) rotate(5deg); }
+      100% { transform: translateY(-14px) scale(1.04, 0.96) rotate(-5deg); }
     }
 
     .party-controls {
@@ -549,6 +550,13 @@
 
     .btn-action img { width: 30px; height: 30px; object-fit: contain; }
     .btn-action:active { transform: translateY(3px); box-shadow: 0 1px 0 #fcc2d7; }
+
+    .action-price-tag {
+      font-size: 9px;
+      color: #e67700;
+      font-weight: 800;
+      margin-top: -2px;
+    }
 
     .popup-modal {
       display: none;
@@ -810,20 +818,23 @@
         <div id="food-modal" class="popup-modal">
           <h3 style="margin: 0; color: #ff65a3;">¿Qué snack le damos? 🍰</h3>
           <div class="items-row">
-            <div class="item-card" onclick="feedItem(6, '¡Ñam! Galletita rica 🍪', '🍪')">
+            <div class="item-card" onclick="feedItem(6, '¡Ñam! Galletita rica 🍪', '🍪', 2)">
               <img src="img/snack_galleta.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Galleta">
               <span>Galleta (+6%)</span>
+              <span style="font-size:10px; color:#e67700; font-weight:bold;">🪙 2</span>
             </div>
-            <div class="item-card" onclick="feedItem(8, '¡Fresita fresca! 🍓', '🍓')">
+            <div class="item-card" onclick="feedItem(8, '¡Fresita fresca! 🍓', '🍓', 4)">
               <img src="img/snack_fresa.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:strawberry.svg'" alt="Fresa">
               <span>Fresa (+8%)</span>
+              <span style="font-size:10px; color:#e67700; font-weight:bold;">🪙 4</span>
             </div>
-            <div class="item-card" onclick="feedItem(12, '¡Poción mágica! 🧪', '✨')">
+            <div class="item-card" onclick="feedItem(12, '¡Poción mágica! 🧪', '✨', 6)">
               <img src="img/snack_pocion.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:magic-wand.svg'" alt="Poción">
               <span>Poción (+12%)</span>
+              <span style="font-size:10px; color:#e67700; font-weight:bold;">🪙 6</span>
             </div>
           </div>
-          <button class="selector-btn" onclick="closeModal('food-modal')">Guardar snacks</button>
+          <button class="selector-btn" onclick="closeModal('food-modal')">Cerrar</button>
         </div>
 
         <div id="shop-modal" class="popup-modal">
@@ -847,26 +858,32 @@
         </div>
       </div>
 
+      <!-- BOTONES DE ACCIÓN CON COSTO DE MONEDAS -->
       <div class="actions-grid">
         <button class="btn-action" onclick="openModal('food-modal')">
           <img src="img/btn_comida.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Comida">
           Snack
+          <span class="action-price-tag">desde 2🪙</span>
         </button>
         <button class="btn-action" onclick="washPet(event)">
           <img src="img/btn_bano.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:soap.svg'" alt="Baño">
           Bañito
+          <span class="action-price-tag">🪙 3</span>
         </button>
         <button class="btn-action" onclick="sleepPet()">
           <img src="img/btn_dormir.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:crescent-moon.svg'" alt="Dormir">
           Siesta
+          <span class="action-price-tag">🪙 5</span>
         </button>
         <button class="btn-action" onclick="switchView('game')">
           <img src="img/btn_jugar.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:video-game.svg'" alt="Jugar">
           Jugar
+          <span class="action-price-tag" style="color:#2b8a3e;">¡Gana 🪙!</span>
         </button>
         <button class="btn-action" onclick="openModal('shop-modal')">
           <img src="img/btn_tienda.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg'" alt="Tienda">
           Boutique
+          <span class="action-price-tag" style="color:#b197fc;">Accesorios</span>
         </button>
       </div>
     </div>
@@ -895,11 +912,11 @@
       <button class="selector-btn" style="margin: 0 auto; width: 70%;" onclick="switchView('room')">Volver a la Habitación 🏠</button>
     </div>
 
-    <!-- VISTA 3: GRANJA Y TIENDA DE MONSTRUITOS -->
+    <!-- VISTA 3: GRANJA -->
     <div id="view-farm" class="view-content">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="margin:0; color:#2b8a3e;">🌻 Santuario & Tienda Munchiz</h3>
-        <span style="font-size:12px; font-weight:800; color:#2b8a3e;" id="farm-count-txt">1 / 17</span>
+        <span style="font-size:12px; font-weight:800; color:#2b8a3e;" id="farm-count-txt">1 / 18</span>
       </div>
       <p style="font-size:12px; margin:0;">¡Desbloquea amigos con monedas para subir de nivel y avance!</p>
       
@@ -1046,7 +1063,7 @@
       }
     }
 
-    // CATÁLOGO OFICIAL: 17 PERSONAJES EN TOTAL
+    // CATÁLOGO OFICIAL COMPLETO: 18 PERSONAJES (INCLUYE RODRI)
     const ALL_MUNCHIZ = {
       lilo: { name: 'Lilo', img: 'img/lilo.png', sound: '🐶', price: 0 },
       capy: { name: 'Capy-Tender', img: 'img/capy.png', sound: '🐹', price: 250 },
@@ -1064,10 +1081,11 @@
       spore_squeak: { name: 'Spore-Squeak', img: 'img/spore_squeak.png', sound: '🍄', price: 480 },
       gear_gizmo: { name: 'Gear-Gizmo', img: 'img/gear_gizmo.png', sound: '🤖', price: 490 },
       sofi: { name: 'Sofi Darlen', img: 'img/sofi.png', sound: '👑', price: 500 },
-      moana: { name: 'Moana', img: 'img/moana.png', sound: '🌺', price: 500 }
+      moana: { name: 'Moana', img: 'img/moana.png', sound: '🌺', price: 500 },
+      rodri: { name: 'Rodri', img: 'img/rodri.png', sound: '🎸', price: 500 }
     };
 
-    const TOTAL_MUNCHIZ_COUNT = Object.keys(ALL_MUNCHIZ).length; // 17
+    const TOTAL_MUNCHIZ_COUNT = Object.keys(ALL_MUNCHIZ).length; // 18
 
     const imgCookie = new Image();
     imgCookie.src = 'img/galleta.png';
@@ -1090,7 +1108,7 @@
     let currentPet = 'lilo';
     let unlockedPets = ['lilo'];
     let level = 1;
-    let coins = 0; // Usuarios nuevos comienzan de CERO
+    let coins = 0;
     let savedAccessory = '';
     let stats = { hunger: 70, fun: 70, energy: 75 };
 
@@ -1103,13 +1121,11 @@
       return JSON.parse(localStorage.getItem('munchiz_all_profiles') || '{}');
     }
 
-    // Calcula porcentaje exacto en base a personajes desbloqueados
     function calculateProgressPercentage(unlockedList) {
       const count = (unlockedList || []).length;
       return Math.round((count / TOTAL_MUNCHIZ_COUNT) * 100);
     }
 
-    // Muestra perfiles existentes con su porcentaje de avance
     function renderSavedProfilesMenu() {
       const store = getProfilesStore();
       const listEl = document.getElementById('saved-profiles-list');
@@ -1135,7 +1151,6 @@
       });
     }
 
-    // Cargar perfil existente
     function loadProfileAndPlay(name) {
       const store = getProfilesStore();
       const p = store[name] || {};
@@ -1143,7 +1158,6 @@
       currentUser = name;
       currentPet = p.currentPet || 'lilo';
       unlockedPets = p.unlockedPets || ['lilo'];
-      // Cada mono desbloqueado es un nivel
       level = unlockedPets.length;
       coins = (p.coins !== undefined) ? p.coins : 0;
       savedAccessory = p.savedAccessory || '';
@@ -1154,7 +1168,6 @@
       playTone(550, 0.1);
     }
 
-    // Crear nuevo perfil (Validación de nombre único y comienzo de cero)
     function handleCreateNewProfile() {
       const input = document.getElementById('player-input');
       const rawName = input.value.trim();
@@ -1166,18 +1179,16 @@
 
       const store = getProfilesStore();
 
-      // Validación estricta: nombre diferente para cada perfil
       if (store.hasOwnProperty(rawName)) {
-        alert(`¡El nombre "${rawName}" ya existe! Para crear un perfil nuevo, escribe un nombre diferente (aunque cambie una sola letra o detalle). O selecciónalo arriba en la lista para continuar su partida.`);
+        alert(`¡El nombre "${rawName}" ya existe! Para crear un perfil nuevo, escribe un nombre diferente. O selecciónalo arriba en la lista para continuar su partida.`);
         return;
       }
 
-      // Usuario nuevo: Comienza de CERO
       currentUser = rawName;
       currentPet = 'lilo';
       unlockedPets = ['lilo'];
-      level = 1; // Nivel 1 inicial (con Lilo)
-      coins = 0; // 0 monedas
+      level = 1;
+      coins = 0;
       savedAccessory = '';
       stats = { hunger: 70, fun: 70, energy: 75 };
 
@@ -1200,7 +1211,6 @@
     function saveGame() {
       if (!currentUser) return;
       const store = getProfilesStore();
-      // Nivel siempre igual a la cantidad de monos desbloqueados
       level = unlockedPets.length;
 
       store[currentUser] = {
@@ -1274,11 +1284,9 @@
       document.getElementById('pet-avatar').src = pet.img;
       document.getElementById('coin-txt').innerText = coins;
       
-      // Nivel = cantidad de monos desbloqueados
       level = unlockedPets.length;
       document.getElementById('level-txt').innerText = `⭐ Niv. ${level}`;
 
-      // Porcentaje de avance
       const progress = calculateProgressPercentage(unlockedPets);
       document.getElementById('progress-txt').innerText = `📊 ${progress}%`;
 
@@ -1331,13 +1339,12 @@
       });
     }
 
-    // Cada mono desbloqueado sube un nivel y el avance de porcentaje
     function buyPet(petKey, price) {
       if (coins >= price) {
         coins -= price;
         unlockedPets.push(petKey);
         currentPet = petKey;
-        level = unlockedPets.length; // Sube de nivel automáticamente
+        level = unlockedPets.length;
         saveGame();
         renderAll();
 
@@ -1353,25 +1360,36 @@
       }
     }
 
+    // PISTA DE FIESTA (CON SOFI, MOANA Y RODRI BAILANDO)
     function renderParty() {
       const partyDancers = document.getElementById('party-dancers');
       partyDancers.innerHTML = '';
 
+      // 1. Sofi Darlen
       const sofiImg = document.createElement('img');
       sofiImg.src = 'img/sofi.png';
       sofiImg.className = 'dancer-munchiz dancing-1';
       sofiImg.title = '¡Sofi Darlen en la pista! 👑💖';
       partyDancers.appendChild(sofiImg);
 
+      // 2. Moana
       const moanaImg = document.createElement('img');
       moanaImg.src = 'img/moana.png';
       moanaImg.className = 'dancer-munchiz dancing-2';
       moanaImg.title = '¡Moana bailando con ritmo! 🌺✨';
       partyDancers.appendChild(moanaImg);
 
+      // 3. Rodri
+      const rodriImg = document.createElement('img');
+      rodriImg.src = 'img/rodri.png';
+      rodriImg.className = 'dancer-munchiz dancing-1';
+      rodriImg.title = '¡Rodri con todo el flow en la fiesta! 🎸🔥';
+      partyDancers.appendChild(rodriImg);
+
+      // Demás Munchiz desbloqueados
       unlockedPets.forEach((petKey, idx) => {
         const pet = ALL_MUNCHIZ[petKey];
-        if (petKey === 'sofi' || petKey === 'moana') return;
+        if (petKey === 'sofi' || petKey === 'moana' || petKey === 'rodri') return;
         const img = document.createElement('img');
         img.src = pet.img;
         img.className = `dancer-munchiz ${idx % 2 === 0 ? 'dancing-2' : 'dancing-1'}`;
@@ -1385,7 +1403,7 @@
     function partyBurst(e) {
       const stage = document.getElementById('party-stage');
       const stageRect = stage.getBoundingClientRect();
-      const partyEmojis = ['✨', '🎶', '💜', '💖', '⭐', '🌈', '🎉', '🌺'];
+      const partyEmojis = ['✨', '🎶', '💜', '💖', '⭐', '🌈', '🎉', '🎸', '🌺'];
 
       const originX = e ? e.clientX : stageRect.left + stageRect.width / 2;
       const originY = e ? e.clientY : stageRect.top + stageRect.height / 2;
@@ -1466,8 +1484,17 @@
       updateBars();
     }, 10000);
 
-    function feedItem(amount, msg, foodEmoji = '🍪') {
+    // CUIDADOS CON COSTO DE MONEDAS
+    function feedItem(amount, msg, foodEmoji, cost) {
       if (isSleeping) return;
+      if (coins < cost) {
+        playTone(220, 0.2);
+        document.getElementById('pet-message').innerText = `¡Te faltan monedas! Cuesta ${cost}🪙. ¡Gana jugando! 🎮`;
+        closeModal('food-modal');
+        return;
+      }
+
+      coins -= cost;
       playMunchSound();
 
       const avatar = document.getElementById('pet-avatar');
@@ -1490,9 +1517,10 @@
       }
 
       stats.hunger = Math.min(100, stats.hunger + amount);
-      document.getElementById('pet-message').innerText = msg;
+      document.getElementById('pet-message').innerText = `${msg} (-${cost}🪙)`;
       closeModal('food-modal');
-      updateBars();
+      renderPet();
+      saveGame();
     }
 
     function petMunchiz(e) {
@@ -1506,18 +1534,35 @@
 
     function washPet(e) {
       if (isSleeping) return;
+      const cost = 3;
+      if (coins < cost) {
+        playTone(220, 0.2);
+        document.getElementById('pet-message').innerText = `¡El baño cuesta ${cost}🪙! Juega minijuegos para ganar más 🎮`;
+        return;
+      }
+
+      coins -= cost;
       playBubblePopSound();
       spawnBubbleStorm();
 
       if (e) spawnSparkle(e.clientX, e.clientY, '🧼');
       stats.fun = Math.min(100, stats.fun + 5);
       stats.energy = Math.min(100, stats.energy + 3);
-      document.getElementById('pet-message').innerText = "¡Super baño de burbujas pop-pop! 🧼🫧";
-      updateBars();
+      document.getElementById('pet-message').innerText = `¡Super baño de burbujas pop-pop! 🧼🫧 (-${cost}🪙)`;
+      renderPet();
+      saveGame();
     }
 
     function sleepPet() {
       if (isSleeping) return;
+      const cost = 5;
+      if (coins < cost) {
+        playTone(220, 0.2);
+        document.getElementById('pet-message').innerText = `¡La siesta cuesta ${cost}🪙! Juega minijuegos para ganar más 🎮`;
+        return;
+      }
+
+      coins -= cost;
       isSleeping = true;
 
       playLullabySound();
@@ -1528,7 +1573,7 @@
 
       nightOverlay.classList.add('active');
       avatar.classList.add('sleeping-anim');
-      msg.innerText = "Zzz... Hora de la siesta con cancioncita de cuna 🌙💤";
+      msg.innerText = `Zzz... Hora de la siesta con cancioncita de cuna 🌙💤 (-${cost}🪙)`;
 
       const avatarRect = avatar.getBoundingClientRect();
       const midX = avatarRect.left + avatarRect.width / 2;
@@ -1550,8 +1595,9 @@
         avatar.classList.remove('sleeping-anim');
         stats.energy = Math.min(100, stats.energy + 18);
         msg.innerText = "¡Buenos días! Se siente descansado ☀️🌸";
-        updateBars();
+        renderPet();
         isSleeping = false;
+        saveGame();
       }, 2600);
     }
 
@@ -1861,7 +1907,6 @@
       renderFarm();
     }
 
-    // SIEMPRE INICIA EN EL MENÚ PRINCIPAL MOSTRANDO LOS PERFILES
     renderSavedProfilesMenu();
     document.getElementById('login-overlay').style.display = 'flex';
   </script>
