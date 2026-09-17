@@ -1,4 +1,4 @@
-const CACHE_NAME = 'munchiz-v3';
+const CACHE_NAME = 'munchiz-v5';
 
 const ESSENTIAL_ASSETS = [
   './',
@@ -14,12 +14,19 @@ const ESSENTIAL_ASSETS = [
   './img/fondo_disco.png',
   './img/fondo_juego.png',
   './img/fondo_flappy.png',
+  './img/fondo_nubes.png',
+  './img/nube_plataforma.png',
+  './img/resorte_estrella.png',
   './img/galleta.png',
   './img/canasta.png',
-  './img/moneda.png'
+  './img/moneda.png',
+  './audio/musica_fiesta.mp3',
+  './audio/musica_juegos.mp3'
 ];
 
+// Instalación: Precarga sin bloquear si algún archivo multimedia aún no se sube
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
       for (const asset of ESSENTIAL_ASSETS) {
@@ -29,10 +36,11 @@ self.addEventListener('install', (event) => {
           console.warn('Recurso no precargado:', asset);
         }
       }
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
+// Activación: Limpia inmediatamente cachés anteriores (v1, v2, v3, v4)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -47,13 +55,28 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Estrategia Network-First: Busca siempre en la red primero para que el celular no retenga la copia vieja
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).catch(() => caches.match('./index.html'));
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          if (event.request.headers.get('accept')?.includes('text/html')) {
+            return caches.match('./index.html');
+          }
+        });
+      })
   );
 });

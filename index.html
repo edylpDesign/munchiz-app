@@ -508,8 +508,7 @@
       touch-action: none;
     }
 
-    /* ESTILOS DE LOS MINIJUEGOS ADICIONALES */
-    /* 1. MEMORIA */
+    /* MINIJUEGOS ADICIONALES */
     .memory-board {
       width: 100%;
       max-width: 380px;
@@ -546,7 +545,6 @@
       pointer-events: none;
     }
 
-    /* 2. TOCA AL MUNCHIZ */
     .whack-board {
       width: 100%;
       max-width: 380px;
@@ -584,7 +582,6 @@
       transform: translateY(0%);
     }
 
-    /* 3. SIMÓN DICE */
     .simon-board {
       width: 260px;
       height: 260px;
@@ -755,7 +752,6 @@
       100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) - 25px)) scale(1.4); }
     }
 
-    /* GLOBO DE HISTORIETA */
     .comic-bubble {
       position: relative;
       background: #ffffff;
@@ -862,7 +858,6 @@
 <body>
 
   <div id="game-container">
-    <!-- PISTAS DE AUDIO -->
     <audio id="party-audio" src="audio/musica_fiesta.mp3" loop></audio>
     <audio id="game-music-audio" src="audio/musica_juegos.mp3" loop></audio>
 
@@ -1019,9 +1014,8 @@
       </div>
     </div>
 
-    <!-- VISTA 2: MINIJUEGOS (6 JUEGOS COMPLETOS) -->
+    <!-- VISTA 2: MINIJUEGOS -->
     <div id="view-game" class="view-content">
-      <!-- BARRA DE AUDIO -->
       <div class="game-audio-bar">
         <button class="audio-toggle-btn" id="btn-toggle-music" onclick="toggleGameMusic()">
           🎵 Música: ON
@@ -1031,7 +1025,6 @@
         </button>
       </div>
 
-      <!-- BOTONES DE MINIJUEGOS -->
       <div class="game-subtabs">
         <button class="game-subtab-btn active" id="btn-sub-catch" onclick="selectMinigame('catch')">🍪 Dulces</button>
         <button class="game-subtab-btn" id="btn-sub-flappy" onclick="selectMinigame('flappy')">🕊️ Flappy</button>
@@ -1075,7 +1068,7 @@
         <button class="selector-btn" style="padding: 6px 14px; font-size: 12px;" onclick="initMemoryGame()">Reiniciar Tablero 🔄</button>
       </div>
 
-      <!-- JUEGO 5: TOCA AL MUNCHIZ (WHACK-A-MOLE) -->
+      <!-- JUEGO 5: TOCA AL MUNCHIZ -->
       <div id="subgame-whack" style="display: none; flex-direction: column; align-items: center; gap: 8px;">
         <div style="display: flex; justify-content: space-between; width: 90%; font-size: 13px; font-weight: 800; color: #2b8a3e;">
           <span>🐾 Aciertos: <b id="whack-score-txt">0</b></span>
@@ -1151,7 +1144,6 @@
   <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // ESTADO DE AUDIO (MÚSICA Y EFECTOS)
     let isMusicMuted = localStorage.getItem('munchiz_music_muted') === 'true';
     let isSfxMuted = localStorage.getItem('munchiz_sfx_muted') === 'true';
 
@@ -2492,7 +2484,7 @@
     }
 
     // ==========================================
-    // MINIJUEGO 5: TOCA AL MUNCHIZ (WHACK-A-MOLE)
+    // MINIJUEGO 5: TOCA AL MUNCHIZ
     // ==========================================
     let whackTimer = null;
     let whackMoleTimer = null;
@@ -2634,10 +2626,24 @@
     document.getElementById('login-overlay').style.display = 'flex';
   </script>
 
+  <!-- AUTO-ACTUALIZACIÓN FORZADA DEL SERVICE WORKER EN CELULARES -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW:', err));
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.update();
+
+          reg.onupdatefound = () => {
+            const installingWorker = reg.installing;
+            if (installingWorker) {
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  window.location.reload();
+                }
+              };
+            }
+          };
+        }).catch(err => console.log('SW error:', err));
       });
     }
   </script>
