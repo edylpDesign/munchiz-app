@@ -5,12 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Munchiz ✨ Por Sofia Darlen LG</title>
   
+  <!-- Configuración PWA y Web App -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ff85b3">
+  
+  <!-- Soporte completo para iOS / Safari -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Munchiz">
-  <link rel="apple-touch-icon" href="img/lilo.png">
+  <link rel="apple-touch-icon" href="img/icon-512.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="img/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/icon-512.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="img/icon-512.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -341,7 +347,7 @@
       z-index: 6;
     }
 
-    /* PISTA DE DISCOTECA AMPLIADA */
+    /* PISTA DISCOTECA AMPLIADA */
     #party-stage {
       height: 430px;
       border-radius: 30px;
@@ -399,7 +405,6 @@
       }
     }
 
-    /* FILA DE BAILARINES */
     .dance-floor-dancers {
       position: absolute;
       bottom: 22px;
@@ -734,14 +739,13 @@
   <div id="game-container">
     <audio id="party-audio" src="audio/musica_fiesta.mp3" loop></audio>
 
-    <!-- MENÚ PRINCIPAL SIEMPRE AL INICIO -->
+    <!-- MENÚ PRINCIPAL -->
     <div id="login-overlay">
       <div class="login-card">
         <div class="logo-box" style="margin: 0 auto; width: 170px;">
           <img src="img/logo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg';" alt="Logo">
         </div>
 
-        <!-- Globo de diálogo de Sofi Darlen -->
         <div class="comic-bubble">
           hola soy sofi darlen bienvenidos al mundo de los munchiz, diviertete.!!
         </div>
@@ -858,7 +862,7 @@
         </div>
       </div>
 
-      <!-- BOTONES DE ACCIÓN CON COSTO DE MONEDAS -->
+      <!-- BOTONES DE ACCIÓN CON COSTOS EN MONEDAS -->
       <div class="actions-grid">
         <button class="btn-action" onclick="openModal('food-modal')">
           <img src="img/btn_comida.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Comida">
@@ -1063,7 +1067,7 @@
       }
     }
 
-    // CATÁLOGO OFICIAL COMPLETO: 18 PERSONAJES (INCLUYE RODRI)
+    // CATÁLOGO OFICIAL: 18 PERSONAJES
     const ALL_MUNCHIZ = {
       lilo: { name: 'Lilo', img: 'img/lilo.png', sound: '🐶', price: 0 },
       capy: { name: 'Capy-Tender', img: 'img/capy.png', sound: '🐹', price: 250 },
@@ -1085,7 +1089,7 @@
       rodri: { name: 'Rodri', img: 'img/rodri.png', sound: '🎸', price: 500 }
     };
 
-    const TOTAL_MUNCHIZ_COUNT = Object.keys(ALL_MUNCHIZ).length; // 18
+    const TOTAL_MUNCHIZ_COUNT = Object.keys(ALL_MUNCHIZ).length;
 
     const imgCookie = new Image();
     imgCookie.src = 'img/galleta.png';
@@ -1103,7 +1107,7 @@
     const imgFlappyFlyer = new Image();
     imgFlappyFlyer.src = 'img/flappy_lilo.png';
 
-    // ESTADO DEL JUGADOR ACTUAL
+    // ESTADO DEL JUGADOR
     let currentUser = '';
     let currentPet = 'lilo';
     let unlockedPets = ['lilo'];
@@ -1300,7 +1304,6 @@
       updateBars();
     }
 
-    // GRANJA / TIENDA
     function renderFarm() {
       const farmStage = document.getElementById('farm-stage');
       farmStage.innerHTML = '';
@@ -1360,7 +1363,6 @@
       }
     }
 
-    // PISTA DE FIESTA (CON SOFI, MOANA Y RODRI BAILANDO)
     function renderParty() {
       const partyDancers = document.getElementById('party-dancers');
       partyDancers.innerHTML = '';
