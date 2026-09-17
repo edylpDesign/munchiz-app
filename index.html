@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Munchiz ✨ Por Sofia Darlen LG</title>
+  
+  <!-- Configuración PWA / Móvil (iOS & Android) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff85b3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Munchiz">
+  <link rel="apple-touch-icon" href="img/lilo.png">
+
+  <!-- Fuente Kawaii -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink-kawaii: #ff85b3;
+      --pink-light: #ffd1e3;
+      --text-color: #5c4d61;
+      --mint: #a8e6cf;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Quicksand', cursive, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffd1dc 0%, #e8dff5 50%, #fcf4dd 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+
+    #game-container {
+      background: #fffffffa;
+      width: 100%;
+      max-width: 450px;
+      border-radius: 46px;
+      box-shadow: 
+        0 20px 45px rgba(240, 98, 146, 0.22),
+        0 0 0 10px #ffffff,
+        0 0 0 16px #ffccde;
+      padding: 18px 18px 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      margin-top: 14px;
+      min-height: 640px;
+    }
+
+    #game-container::before, #game-container::after {
+      content: "";
+      position: absolute;
+      top: -24px;
+      width: 58px;
+      height: 58px;
+      background: #ffccde;
+      border-radius: 50%;
+      border: 6px solid #ffffff;
+      z-index: -1;
+    }
+    #game-container::before { left: 40px; }
+    #game-container::after { right: 40px; }
+
+    /* Pestañas de Navegación */
+    .view-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      background: #fff0f6;
+      padding: 5px;
+      border-radius: 26px;
+      border: 2px solid #ffd1e3;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 7px 4px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #7a5f80;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--pink-kawaii);
+      box-shadow: 0 4px 10px rgba(255, 133, 179, 0.3);
+      transform: scale(1.03);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+      min-height: 52px;
+    }
+
+    .logo-box {
+      width: 170px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .logo-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .header-pills {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .pill {
+      background: #fff9db;
+      border: 2px dashed #ffe066;
+      color: #7a5814;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill img { width: 16px; height: 16px; object-fit: contain; }
+
+    .pet-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pet-choice-btn {
+      background: #fff;
+      border: 2px solid #ffd1e3;
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 0 #fcc2d7;
+      transition: all 0.15s ease;
+    }
+
+    .pet-choice-btn.selected {
+      background: #ffebf3;
+      border-color: #ff85b3;
+      color: #ff4088;
+      box-shadow: 0 3px 0 #ff85b3;
+      transform: translateY(-2px);
+    }
+
+    .pet-choice-btn.locked {
+      opacity: 0.55;
+      background: #f1f3f5;
+      border-color: #ced4da;
+      color: #868e96;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .bars-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      background: #fff1f6;
+      padding: 8px 10px;
+      border-radius: 20px;
+      border: 2px solid #ffe1ec;
+    }
+
+    .stat-box { font-size: 11px; font-weight: 700; }
+
+    .bar-bg {
+      background: #ffffff;
+      height: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 3px;
+      padding: 2px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: 8px;
+      transition: width 0.3s ease;
+    }
+
+    #hunger-bar { background: linear-gradient(90deg, #ffc078, #ffa94d); }
+    #fun-bar { background: linear-gradient(90deg, #b197fc, #9775fa); }
+    #energy-bar { background: linear-gradient(90deg, #96f2d7, #63e6be); }
+
+    .view-content {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .view-content.active { display: flex; }
+
+    #pet-stage {
+      height: 310px;
+      border-radius: 30px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      overflow: hidden;
+      border: 4px solid #ffd4e5;
+      background-color: #fdf2f8;
+    }
+
+    #room-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #night-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(20, 24, 60, 0.72) 20%, rgba(10, 12, 35, 0.88) 100%);
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #night-overlay.active { opacity: 1; }
+
+    #pet-avatar-wrapper {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+
+    #pet-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 16px rgba(233, 114, 156, 0.28));
+      transition: transform 0.2s ease;
+    }
+
+    #pet-accessory {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 3;
+      display: none;
+    }
+
+    .bouncing { animation: cuteBounce 0.8s infinite alternate ease-in-out; }
+    @keyframes cuteBounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-12px); }
+    }
+
+    .eating-anim {
+      animation: munchBounce 0.22s 3 alternate ease-in-out !important;
+    }
+    @keyframes munchBounce {
+      from { transform: scale(1); }
+      to { transform: scale(1.15, 0.88); }
+    }
+
+    .sleeping-anim {
+      animation: sleepSway 1.8s infinite alternate ease-in-out !important;
+      filter: drop-shadow(0 4px 10px rgba(110, 140, 255, 0.4)) !important;
+    }
+    @keyframes sleepSway {
+      from { transform: translateY(4px) scale(0.98, 1.02); }
+      to { transform: translateY(-4px) scale(1.02, 0.98); }
+    }
+
+    #pet-message {
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 6px;
+      color: #9c36b5;
+      background: #ffffffea;
+      padding: 5px 16px;
+      border-radius: 18px;
+      border: 2px solid #f8d7da;
+      z-index: 6;
+    }
+
+    /* PISTA DE DISCOTECA */
+    #party-stage {
+      height: 350px;
+      border-radius: 30px;
+      border: 4px solid #c084fc;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 25px;
+      background: #11052c url('img/fondo_disco.png') center/cover no-repeat;
+      box-shadow: inset 0 0 35px rgba(192, 132, 252, 0.5);
+    }
+
+    .disco-lights-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle, rgba(255, 0, 128, 0.25) 10%, transparent 60%);
+      animation: discoStrobe 1.2s infinite alternate ease-in-out;
+      mix-blend-mode: screen;
+    }
+    @keyframes discoStrobe {
+      0% { background: radial-gradient(circle at 20% 30%, rgba(255, 0, 128, 0.35) 10%, transparent 50%); }
+      33% { background: radial-gradient(circle at 80% 40%, rgba(0, 255, 200, 0.35) 10%, transparent 50%); }
+      66% { background: radial-gradient(circle at 50% 80%, rgba(255, 230, 0, 0.35) 10%, transparent 50%); }
+      100% { background: radial-gradient(circle at 30% 60%, rgba(168, 85, 247, 0.45) 10%, transparent 50%); }
+    }
+
+    .disco-ball {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 46px;
+      z-index: 3;
+      filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.9));
+      animation: rotateBall 3s infinite linear;
+    }
+    @keyframes rotateBall {
+      0% { transform: translateX(-50%) rotate(0deg); }
+      100% { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    .dance-floor-dancers {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 18px;
+      width: 100%;
+    }
+
+    .dancer-munchiz {
+      width: 95px;
+      height: 95px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.6));
+    }
+
+    .dancing-1 {
+      animation: danceMoveA 0.5s infinite alternate ease-in-out;
+    }
+    @keyframes danceMoveA {
+      0% { transform: translateY(0) rotate(-8deg) scale(1, 1); }
+      100% { transform: translateY(-22px) rotate(8deg) scale(1.08, 0.94); }
+    }
+
+    .dancing-2 {
+      animation: danceMoveB 0.45s infinite alternate ease-in-out 0.2s;
+    }
+    @keyframes danceMoveB {
+      0% { transform: translateY(0) scale(0.95, 1.05) rotate(6deg); }
+      100% { transform: translateY(-26px) scale(1.08, 0.92) rotate(-6deg); }
+    }
+
+    .party-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .game-subtabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .game-subtab-btn {
+      border: 2px solid #ffd1e3;
+      background: #fff;
+      border-radius: 16px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-color);
+      cursor: pointer;
+    }
+
+    .game-subtab-btn.active {
+      background: #ffebf3;
+      border-color: #ff85b3;
+      color: #ff4088;
+    }
+
+    .game-canvas-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .game-canvas-style {
+      width: 100%;
+      max-width: 390px;
+      height: 360px;
+      border: 3.5px solid #ffccd5;
+      border-radius: 26px;
+      box-shadow: 0 6px 14px rgba(255, 133, 179, 0.2);
+      cursor: pointer;
+      background: #fff8fc;
+      touch-action: none;
+    }
+
+    #farm-stage {
+      height: 360px;
+      border-radius: 30px;
+      border: 4px solid #bbf7d0;
+      background: radial-gradient(circle, #dcfce7 30%, #86efac 100%);
+      position: relative;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      justify-content: center;
+      gap: 14px;
+      padding: 16px;
+      box-shadow: inset 0 0 20px rgba(74, 222, 128, 0.25);
+    }
+
+    .farm-pet-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px 12px 10px;
+      border-radius: 22px;
+      border: 2px solid #a7f3d0;
+      width: 100px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    }
+
+    .farm-pet-card:hover {
+      transform: scale(1.08) translateY(-4px);
+      background: #ffffff;
+    }
+
+    .farm-pet-card.locked {
+      background: rgba(240, 245, 242, 0.85);
+      border-color: #d1d5db;
+      cursor: default;
+    }
+
+    .farm-pet-card img { width: 75px; height: 75px; object-fit: contain; }
+    .farm-pet-card.locked img { filter: grayscale(1) opacity(0.5); }
+    .farm-pet-card span { font-size: 11px; font-weight: 800; color: #2b8a3e; margin-top: 4px; }
+    .farm-pet-card.locked span { color: #868e96; }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .btn-action {
+      background: #ffffff;
+      border: 2px solid #ffe0ec;
+      padding: 8px 2px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--text-color);
+      cursor: pointer;
+      box-shadow: 0 4px 0 #fcc2d7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .btn-action img { width: 30px; height: 30px; object-fit: contain; }
+    .btn-action:active { transform: translateY(3px); box-shadow: 0 1px 0 #fcc2d7; }
+
+    .popup-modal {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 250, 253, 0.98);
+      border-radius: 34px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 15;
+      border: 4px solid #ffd4e5;
+    }
+
+    .items-row { display: flex; gap: 12px; margin: 12px 0; }
+    .item-card {
+      background: #ffffff;
+      border: 2px solid #e7f5ff;
+      border-radius: 20px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      width: 76px;
+    }
+    .item-card img { width: 44px; height: 44px; object-fit: contain; }
+    .item-card span { font-size: 11px; font-weight: 700; }
+
+    .selector-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 2px solid #ffd1e3;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #egg-image { width: 130px; height: 130px; cursor: pointer; animation: wobble 0.9s infinite alternate; }
+    @keyframes wobble { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+
+    .heart-sparkle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 20px;
+      animation: floatUp 0.85s ease-out forwards;
+      z-index: 25;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-65px) scale(1.3); opacity: 0; }
+    }
+
+    .stage-bubble {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      animation: bubbleFloat ease-out forwards;
+    }
+    @keyframes bubbleFloat {
+      0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+      20% { opacity: 0.95; }
+      80% { opacity: 0.95; transform: translate(var(--dx), var(--dy)) scale(1.15); }
+      100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) - 25px)) scale(1.4); }
+    }
+
+    .author-footer {
+      margin-top: auto;
+      background: linear-gradient(90deg, #ff85b3, #b197fc);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 18px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      box-shadow: 0 3px 8px rgba(255, 133, 179, 0.35);
+    }
+
+    #login-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 245, 248, 0.98);
+      border-radius: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 30;
+    }
+
+    .login-card {
+      background: #ffffff;
+      border: 4px solid #ffccd5;
+      padding: 24px 20px;
+      border-radius: 30px;
+      box-shadow: 0 12px 25px rgba(255, 133, 179, 0.2);
+      width: 100%;
+      max-width: 320px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    
+    <!-- Audio de Fiesta MP3 desde carpeta audio/ -->
+    <audio id="party-audio" src="audio/musica_fiesta.mp3" loop></audio>
+
+    <!-- PANTALLA INICIAL (LOGIN) -->
+    <div id="login-overlay">
+      <div class="login-card">
+        <div class="logo-box" style="margin: 0 auto 12px; width: 180px;">
+          <img src="img/logo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg';" alt="Logo">
+        </div>
+        <h2 style="color: var(--pink-kawaii); margin: 0 0 8px 0; font-size: 22px;">¡Bienvenida! 🌸</h2>
+        <p style="font-size: 13px; margin: 0 0 16px 0;">Ingresa tu nombre para entrar a cuidar tus monstruitos:</p>
+        <input type="text" id="player-input" placeholder="Nombre de cuidador..." 
+          style="padding: 10px 16px; border-radius: 20px; border: 2.5px solid #ffccd5; outline: none; font-size: 15px; font-weight: 700; text-align: center; width: 85%; margin-bottom: 16px;">
+        <br>
+        <button class="selector-btn" style="background:#ff85b3; color:#fff; border:none; padding:10px 24px; font-size:14px;" onclick="loginPlayer()">¡Entrar al juego! ⭐</button>
+      </div>
+    </div>
+
+    <!-- CABECERA -->
+    <header>
+      <div class="logo-box">
+        <img id="main-logo-img" src="img/logo.png" onerror="this.onerror=null; this.style.display='none'; document.getElementById('alt-logo-title').style.display='block';" alt="Logo">
+        <h2 id="alt-logo-title" style="display:none; margin:0; font-size:24px; color:#ff85b3;">MUNCHIZ ✨</h2>
+      </div>
+      <div class="header-pills">
+        <div class="pill" id="level-txt">⭐ Niv. 1</div>
+        <div class="pill">
+          <img src="img/moneda.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:coin.svg'" alt="coin">
+          <span id="coin-txt">20</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- NAVEGACIÓN -->
+    <div class="view-tabs">
+      <button class="tab-btn active" id="tab-room" onclick="switchView('room')">🏠 Cuarto</button>
+      <button class="tab-btn" id="tab-game" onclick="switchView('game')">🎮 Juegos</button>
+      <button class="tab-btn" id="tab-farm" onclick="switchView('farm')">🌻 Granja</button>
+      <button class="tab-btn" id="tab-party" onclick="switchView('party')">🎉 Fiesta</button>
+    </div>
+
+    <!-- VISTA 1: HABITACIÓN -->
+    <div id="view-room" class="view-content active">
+      <div class="pet-switcher" id="pet-switcher-container"></div>
+
+      <div class="bars-container">
+        <div class="stat-box">
+          🍪 Comidita
+          <div class="bar-bg"><div id="hunger-bar" class="bar-fill"></div></div>
+        </div>
+        <div class="stat-box">
+          ⭐ Alegría
+          <div class="bar-bg"><div id="fun-bar" class="bar-fill"></div></div>
+        </div>
+        <div class="stat-box">
+          💤 Sueño
+          <div class="bar-bg"><div id="energy-bar" class="bar-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="pet-stage" onclick="petMunchiz(event)">
+        <img id="room-bg-img" src="img/fondo_cuarto.png" onerror="this.onerror=null; this.style.display='none';" alt="Fondo">
+        <div id="night-overlay"></div>
+
+        <div id="pet-avatar-wrapper" class="bouncing">
+          <img id="pet-accessory" src="" alt="accesorio">
+          <img id="pet-avatar" src="img/lilo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:dog-face.svg';" alt="Mascota">
+        </div>
+        <div id="pet-message">¡Tócame con amor! 🐶💖</div>
+
+        <div id="food-modal" class="popup-modal">
+          <h3 style="margin: 0; color: #ff65a3;">¿Qué snack le damos? 🍰</h3>
+          <div class="items-row">
+            <div class="item-card" onclick="feedItem(8, '¡Ñam! Galletita rica 🍪', '🍪')">
+              <img src="img/snack_galleta.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Galleta">
+              <span>Galleta (+8%)</span>
+            </div>
+            <div class="item-card" onclick="feedItem(12, '¡Fresita fresca! 🍓', '🍓')">
+              <img src="img/snack_fresa.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:strawberry.svg'" alt="Fresa">
+              <span>Fresa (+12%)</span>
+            </div>
+            <div class="item-card" onclick="feedItem(18, '¡Poción de energía! 🧪', '✨')">
+              <img src="img/snack_pocion.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:magic-wand.svg'" alt="Poción">
+              <span>Poción (+18%)</span>
+            </div>
+          </div>
+          <button class="selector-btn" onclick="closeModal('food-modal')">Guardar snacks</button>
+        </div>
+
+        <div id="shop-modal" class="popup-modal">
+          <h3 style="margin: 0; color: #9c36b5;">Boutique Munchiz 🎀</h3>
+          <div class="items-row">
+            <div class="item-card" onclick="wearAccessory('img/acc_gorro.png')">
+              <img src="img/acc_gorro.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:party-popper.svg'" alt="Gorro">
+              <span>Gorro</span>
+            </div>
+            <div class="item-card" onclick="wearAccessory('img/acc_lentes.png')">
+              <img src="img/acc_lentes.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sunglasses.svg'" alt="Lentes">
+              <span>Lentes</span>
+            </div>
+            <div class="item-card" onclick="wearAccessory('img/acc_mono.png')">
+              <img src="img/acc_mono.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:ribbon.svg'" alt="Moño">
+              <span>Moñito</span>
+            </div>
+          </div>
+          <button class="selector-btn" onclick="wearAccessory('')">Quitar todo</button>
+          <button class="selector-btn" style="margin-top:6px;" onclick="closeModal('shop-modal')">Listo ✨</button>
+        </div>
+
+        <div id="egg-modal" class="popup-modal">
+          <h3 style="margin: 0; color: #ff65a3;">¡Nace un nuevo Munchiz! 🥚✨</h3>
+          <img id="egg-image" src="img/huevo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:egg.svg'" onclick="tapEgg(event)" alt="Huevo">
+          <div id="egg-taps" style="font-weight:bold; color:#795548; margin-top:6px;">💖 Golpecitos: 0 / 3</div>
+        </div>
+      </div>
+
+      <div class="actions-grid">
+        <button class="btn-action" onclick="openModal('food-modal')">
+          <img src="img/btn_comida.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Comida">
+          Snack
+        </button>
+        <button class="btn-action" onclick="washPet(event)">
+          <img src="img/btn_bano.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:soap.svg'" alt="Baño">
+          Bañito
+        </button>
+        <button class="btn-action" onclick="sleepPet()">
+          <img src="img/btn_dormir.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:crescent-moon.svg'" alt="Dormir">
+          Siesta
+        </button>
+        <button class="btn-action" onclick="switchView('game')">
+          <img src="img/btn_jugar.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:video-game.svg'" alt="Jugar">
+          Jugar
+        </button>
+        <button class="btn-action" onclick="openModal('shop-modal')">
+          <img src="img/btn_tienda.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg'" alt="Tienda">
+          Boutique
+        </button>
+      </div>
+    </div>
+
+    <!-- VISTA 2: MINIJUEGOS -->
+    <div id="view-game" class="view-content">
+      <div class="game-subtabs">
+        <button class="game-subtab-btn active" id="btn-sub-catch" onclick="selectMinigame('catch')">🍪 Atrapa Dulces</button>
+        <button class="game-subtab-btn" id="btn-sub-flappy" onclick="selectMinigame('flappy')">🕊️ Flappy Munchiz</button>
+      </div>
+
+      <div id="subgame-catch" style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Atrapa dulces! Si se cae uno pierdes 1 moneda 🍪💔</span>
+        <div class="game-canvas-box">
+          <canvas id="game-canvas" class="game-canvas-style" width="390" height="360"></canvas>
+        </div>
+      </div>
+
+      <div id="subgame-flappy" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
+        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Toca la pantalla para volar suavemente! ✨💖</span>
+        <div class="game-canvas-box">
+          <canvas id="flappy-canvas" class="game-canvas-style" width="390" height="360"></canvas>
+        </div>
+      </div>
+
+      <button class="selector-btn" style="margin: 0 auto; width: 70%;" onclick="switchView('room')">Volver a la Habitación 🏠</button>
+    </div>
+
+    <!-- VISTA 3: GRANJA -->
+    <div id="view-farm" class="view-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; color:#2b8a3e;">🌻 Santuario de Munchiz</h3>
+        <span style="font-size:12px; font-weight:700; color:#2b8a3e;" id="farm-count-txt">1 Desbloqueado</span>
+      </div>
+      <p style="font-size:12px; margin:0;">Toca a tu Munchiz desbloqueado para llevarlo al cuarto:</p>
+      <div id="farm-stage"></div>
+    </div>
+
+    <!-- VISTA 4: FIESTA DISCO -->
+    <div id="view-party" class="view-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; color:#c084fc;">🪩 Fiesta Disco de Sofi</h3>
+        <span style="font-size:12px; font-weight:800; color:#ff4088;">¡A bailar! 🎶</span>
+      </div>
+      
+      <div id="party-stage" onclick="partyBurst(event)">
+        <div class="disco-lights-overlay"></div>
+        <div class="disco-ball">🪩</div>
+        <div class="dance-floor-dancers" id="party-dancers"></div>
+      </div>
+
+      <div class="party-controls">
+        <button class="selector-btn" id="btn-party-music" style="background:#c084fc; color:#fff; border:none; padding:8px 18px;" onclick="togglePartyMusic()">
+          ▶️ Poner Música MP3
+        </button>
+        <button class="selector-btn" onclick="partyBurst()">
+          ✨ Chispas Disco
+        </button>
+      </div>
+      <span style="font-size:11px; color:#9c36b5;">Toca la pista de baile para lanzar luces y confeti 🎉</span>
+    </div>
+
+    <!-- CRÉDITO SOFIA -->
+    <div class="author-footer">
+      ✨ APP DESARROLLADA POR SOFIA DARLEN LG ✨
+    </div>
+
+  </div>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(freq, duration) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playLullabySound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.48);
+        }, idx * 260);
+      });
+    }
+
+    function playMunchSound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      [0, 0.07, 0.14].forEach((delay, idx) => {
+        setTimeout(() => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320 + idx * 80, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(540 + idx * 100, audioCtx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.24, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.065);
+        }, delay * 1000);
+      });
+    }
+
+    function playBubblePopSound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          const startF = 450 + Math.random() * 350;
+          osc.frequency.setValueAtTime(startF, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(startF * 1.6, audioCtx.currentTime + 0.06);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.065);
+        }, i * 90);
+      }
+    }
+
+    function spawnSparkle(x, y, emoji = '💖') {
+      const el = document.createElement('div');
+      el.className = 'heart-sparkle';
+      el.innerText = emoji;
+      el.style.left = (x - 10) + 'px';
+      el.style.top = (y - 10) + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 850);
+    }
+
+    function spawnBubbleStorm() {
+      const stage = document.getElementById('pet-stage');
+      const stageRect = stage.getBoundingClientRect();
+      const bubbleIcons = ['🫧', '🧼', '🫧', '✨', '🫧'];
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const b = document.createElement('div');
+          b.className = 'stage-bubble';
+          const size = Math.random() * 22 + 18;
+          b.style.fontSize = size + 'px';
+          b.innerText = bubbleIcons[Math.floor(Math.random() * bubbleIcons.length)];
+          const startX = Math.random() * (stageRect.width - 60) + 20;
+          const startY = Math.random() * 100 + 160;
+          b.style.left = startX + 'px';
+          b.style.top = startY + 'px';
+          const dx = (Math.random() - 0.5) * 120 + 'px';
+          const dy = -(Math.random() * 150 + 90) + 'px';
+          b.style.setProperty('--dx', dx);
+          b.style.setProperty('--dy', dy);
+          b.style.animationDuration = (Math.random() * 0.4 + 0.9) + 's';
+          stage.appendChild(b);
+          setTimeout(() => b.remove(), 1400);
+        }, i * 45);
+      }
+    }
+
+    // CATÁLOGO COMPLETO
+    const ALL_MUNCHIZ = {
+      lilo: { name: 'Lilo', img: 'img/lilo.png', sound: '🐶', unlockedDefault: true, desc: 'Perrito travieso' },
+      capy: { name: 'Capy-Tender', img: 'img/capy.png', sound: '🐹', unlockedDefault: false, desc: 'Capibara relajado (Niv. 2)' },
+      munchi3: { name: 'Bunny-Hop', img: 'img/lilo.png', sound: '🐰', unlockedDefault: false, desc: 'Conejito saltarín (Niv. 3)' }
+    };
+
+    const imgCookie = new Image();
+    imgCookie.src = 'img/galleta.png';
+    const imgBasket = new Image();
+    imgBasket.src = 'img/canasta.png';
+    const imgBgGame = new Image();
+    imgBgGame.src = 'img/fondo_juego.png';
+
+    const imgFlappyBg = new Image();
+    imgFlappyBg.src = 'img/fondo_flappy.png';
+    const imgPilarTop = new Image();
+    imgPilarTop.src = 'img/pilar_arriba.png';
+    const imgPilarBottom = new Image();
+    imgPilarBottom.src = 'img/pilar_abajo.png';
+    const imgFlappyFlyer = new Image();
+    imgFlappyFlyer.src = 'img/flappy_lilo.png';
+
+    let playerName = localStorage.getItem('munchiz_user') || '';
+    let currentPet = localStorage.getItem('munchiz_active_pet') || 'lilo';
+    let unlockedPets = JSON.parse(localStorage.getItem('munchiz_pets')) || ['lilo'];
+    let level = parseInt(localStorage.getItem('munchiz_level')) || 1;
+    let coins = parseInt(localStorage.getItem('munchiz_coins')) || 20;
+    let xp = parseInt(localStorage.getItem('munchiz_xp')) || 0;
+    let savedAccessory = localStorage.getItem('munchiz_acc') || '';
+    let stats = JSON.parse(localStorage.getItem('munchiz_stats')) || { hunger: 75, fun: 75, energy: 80 };
+    let eggTaps = 0;
+    let isSleeping = false;
+    let currentMinigame = 'catch';
+    let isPartyMusicPlaying = false;
+    let synthBassInterval = null;
+
+    function switchView(viewName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
+
+      document.getElementById(`tab-${viewName}`).classList.add('active');
+      document.getElementById(`view-${viewName}`).classList.add('active');
+
+      if (viewName === 'game') {
+        if (currentMinigame === 'catch') startCatchGame();
+        else startFlappyGame();
+      } else {
+        stopCatchGame();
+        stopFlappyGame();
+      }
+
+      if (viewName === 'farm') renderFarm();
+      if (viewName === 'party') renderParty();
+      else stopPartyMusic();
+    }
+
+    function selectMinigame(type) {
+      currentMinigame = type;
+      document.getElementById('btn-sub-catch').classList.toggle('active', type === 'catch');
+      document.getElementById('btn-sub-flappy').classList.toggle('active', type === 'flappy');
+      document.getElementById('subgame-catch').style.display = type === 'catch' ? 'flex' : 'none';
+      document.getElementById('subgame-flappy').style.display = type === 'flappy' ? 'flex' : 'none';
+
+      if (type === 'catch') {
+        stopFlappyGame();
+        startCatchGame();
+      } else {
+        stopCatchGame();
+        startFlappyGame();
+      }
+    }
+
+    function loginPlayer() {
+      const input = document.getElementById('player-input');
+      playerName = input.value.trim() || 'Sofi';
+      localStorage.setItem('munchiz_user', playerName);
+      document.getElementById('login-overlay').style.display = 'none';
+      renderAll();
+    }
+
+    function saveGame() {
+      localStorage.setItem('munchiz_user', playerName);
+      localStorage.setItem('munchiz_active_pet', currentPet);
+      localStorage.setItem('munchiz_pets', JSON.stringify(unlockedPets));
+      localStorage.setItem('munchiz_level', level);
+      localStorage.setItem('munchiz_coins', coins);
+      localStorage.setItem('munchiz_xp', xp);
+      localStorage.setItem('munchiz_acc', savedAccessory);
+      localStorage.setItem('munchiz_stats', JSON.stringify(stats));
+    }
+
+    function renderPetSwitcher() {
+      const container = document.getElementById('pet-switcher-container');
+      container.innerHTML = '';
+
+      Object.keys(ALL_MUNCHIZ).forEach(petKey => {
+        const pet = ALL_MUNCHIZ[petKey];
+        const isUnlocked = unlockedPets.includes(petKey);
+        const btn = document.createElement('button');
+
+        if (isUnlocked) {
+          btn.className = `pet-choice-btn ${petKey === currentPet ? 'selected' : ''}`;
+          btn.innerHTML = `${pet.sound} ${pet.name}`;
+          btn.onclick = () => {
+            currentPet = petKey;
+            saveGame();
+            renderAll();
+          };
+        } else {
+          btn.className = 'pet-choice-btn locked';
+          btn.innerHTML = `🔒 ${pet.name}`;
+          btn.title = pet.desc;
+          btn.onclick = () => {
+            document.getElementById('pet-message').innerText = `¡Desbloquea a ${pet.name} en el Nivel 2 cuidando a Lilo! 🥚⭐`;
+            playTone(280, 0.15);
+          };
+        }
+        container.appendChild(btn);
+      });
+    }
+
+    function renderPet() {
+      const pet = ALL_MUNCHIZ[currentPet] || ALL_MUNCHIZ['lilo'];
+      document.getElementById('pet-avatar').src = pet.img;
+      document.getElementById('coin-txt').innerText = coins;
+      document.getElementById('level-txt').innerText = `⭐ Niv. ${level}`;
+
+      const accEl = document.getElementById('pet-accessory');
+      if (savedAccessory) {
+        accEl.src = savedAccessory;
+        accEl.style.display = 'block';
+      } else {
+        accEl.style.display = 'none';
+      }
+      updateBars();
+    }
+
+    function renderFarm() {
+      const farmStage = document.getElementById('farm-stage');
+      farmStage.innerHTML = '';
+      document.getElementById('farm-count-txt').innerText = `${unlockedPets.length} Desbloqueado(s)`;
+
+      Object.keys(ALL_MUNCHIZ).forEach((petKey) => {
+        const pet = ALL_MUNCHIZ[petKey];
+        const isUnlocked = unlockedPets.includes(petKey);
+        const card = document.createElement('div');
+        card.className = `farm-pet-card ${isUnlocked ? '' : 'locked'}`;
+
+        card.innerHTML = `
+          <img src="${pet.img}" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:dog-face.svg';" alt="${pet.name}">
+          <span>${isUnlocked ? pet.name : '🔒 Bloqueado'}</span>
+        `;
+
+        if (isUnlocked) {
+          card.onclick = () => {
+            currentPet = petKey;
+            saveGame();
+            renderAll();
+            switchView('room');
+            playTone(600, 0.1);
+          };
+        } else {
+          card.onclick = () => {
+            document.getElementById('pet-message').innerText = `${pet.name}: ${pet.desc} 🥚`;
+            playTone(260, 0.1);
+          };
+        }
+        farmStage.appendChild(card);
+      });
+    }
+
+    function renderParty() {
+      const partyDancers = document.getElementById('party-dancers');
+      partyDancers.innerHTML = '';
+
+      unlockedPets.forEach((petKey, idx) => {
+        const pet = ALL_MUNCHIZ[petKey];
+        const img = document.createElement('img');
+        img.src = pet.img;
+        img.className = `dancer-munchiz ${idx % 2 === 0 ? 'dancing-1' : 'dancing-2'}`;
+        img.title = `${pet.name} está dándolo todo en la pista! 💃🕺`;
+        partyDancers.appendChild(img);
+      });
+      partyBurst();
+    }
+
+    function partyBurst(e) {
+      const stage = document.getElementById('party-stage');
+      const stageRect = stage.getBoundingClientRect();
+      const partyEmojis = ['🪩', '✨', '🎶', '💜', '💖', '⭐', '🌈', '🎉'];
+
+      const originX = e ? e.clientX : stageRect.left + stageRect.width / 2;
+      const originY = e ? e.clientY : stageRect.top + stageRect.height / 2;
+
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          spawnSparkle(
+            originX + (Math.random() * 80 - 40),
+            originY + (Math.random() * 60 - 30),
+            partyEmojis[Math.floor(Math.random() * partyEmojis.length)]
+          );
+        }, i * 50);
+      }
+      playTone(450 + Math.random() * 300, 0.08);
+    }
+
+    const partyAudio = document.getElementById('party-audio');
+
+    function togglePartyMusic() {
+      if (isPartyMusicPlaying) {
+        stopPartyMusic();
+      } else {
+        startPartyMusic();
+      }
+    }
+
+    function startPartyMusic() {
+      isPartyMusicPlaying = true;
+      document.getElementById('btn-party-music').innerText = "⏸️ Pausar Fiesta";
+      document.getElementById('btn-party-music').style.background = "#ff4088";
+
+      partyAudio.play().catch(() => {
+        startSynthPartyBeat();
+      });
+    }
+
+    function stopPartyMusic() {
+      isPartyMusicPlaying = false;
+      const btn = document.getElementById('btn-party-music');
+      if (btn) {
+        btn.innerText = "▶️ Poner Música MP3";
+        btn.style.background = "#c084fc";
+      }
+      partyAudio.pause();
+      if (synthBassInterval) {
+        clearInterval(synthBassInterval);
+        synthBassInterval = null;
+      }
+    }
+
+    function startSynthPartyBeat() {
+      if (synthBassInterval) clearInterval(synthBassInterval);
+      const bassNotes = [130.81, 146.83, 164.81, 196.00];
+      let step = 0;
+
+      synthBassInterval = setInterval(() => {
+        if (!isPartyMusicPlaying) return;
+        playTone(bassNotes[step % bassNotes.length], 0.12);
+        if (step % 2 === 0) {
+          setTimeout(() => playTone(650, 0.04), 120);
+        }
+        step++;
+      }, 240);
+    }
+
+    function updateBars() {
+      document.getElementById('hunger-bar').style.width = stats.hunger + '%';
+      document.getElementById('fun-bar').style.width = stats.fun + '%';
+      document.getElementById('energy-bar').style.width = stats.energy + '%';
+      saveGame();
+    }
+
+    setInterval(() => {
+      stats.hunger = Math.max(0, stats.hunger - 1);
+      stats.fun = Math.max(0, stats.fun - 1);
+      stats.energy = Math.max(0, stats.energy - 0.5);
+      updateBars();
+    }, 15000);
+
+    function feedItem(amount, msg, foodEmoji = '🍪') {
+      if (isSleeping) return;
+      playMunchSound();
+
+      const avatar = document.getElementById('pet-avatar');
+      avatar.classList.remove('eating-anim');
+      void avatar.offsetWidth;
+      avatar.classList.add('eating-anim');
+
+      const avatarRect = avatar.getBoundingClientRect();
+      const midX = avatarRect.left + avatarRect.width / 2;
+      const midY = avatarRect.top + avatarRect.height / 2;
+
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          spawnSparkle(
+            midX + (Math.random() * 70 - 35),
+            midY + (Math.random() * 60 - 30),
+            i % 2 === 0 ? foodEmoji : '💖'
+          );
+        }, i * 70);
+      }
+
+      stats.hunger = Math.min(100, stats.hunger + amount);
+      addXP(8);
+      document.getElementById('pet-message').innerText = msg;
+      closeModal('food-modal');
+      updateBars();
+    }
+
+    function petMunchiz(e) {
+      if (isSleeping) return;
+      playTone(620, 0.08);
+      if (e) spawnSparkle(e.clientX, e.clientY, '💖');
+      stats.fun = Math.min(100, stats.fun + 5);
+      addXP(5);
+      document.getElementById('pet-message').innerText = `¡${ALL_MUNCHIZ[currentPet].name} sonríe feliz! 💕`;
+      updateBars();
+    }
+
+    function washPet(e) {
+      if (isSleeping) return;
+      playBubblePopSound();
+      spawnBubbleStorm();
+
+      if (e) spawnSparkle(e.clientX, e.clientY, '🧼');
+      stats.fun = Math.min(100, stats.fun + 6);
+      stats.energy = Math.min(100, stats.energy + 4);
+      addXP(8);
+      document.getElementById('pet-message').innerText = "¡Super baño de burbujas pop-pop! 🧼🫧";
+      updateBars();
+    }
+
+    function sleepPet() {
+      if (isSleeping) return;
+      isSleeping = true;
+
+      playLullabySound();
+
+      const nightOverlay = document.getElementById('night-overlay');
+      const avatar = document.getElementById('pet-avatar');
+      const msg = document.getElementById('pet-message');
+
+      nightOverlay.classList.add('active');
+      avatar.classList.add('sleeping-anim');
+      msg.innerText = "Zzz... Hora de la siesta con cancioncita de cuna 🌙💤";
+
+      const avatarRect = avatar.getBoundingClientRect();
+      const midX = avatarRect.left + avatarRect.width / 2;
+      const midY = avatarRect.top + avatarRect.height / 2;
+
+      const sleepIcons = ['💤', '🌙', '⭐', '☁️', '💤'];
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          spawnSparkle(
+            midX + (Math.random() * 50 - 25),
+            midY - 20 - (i * 8),
+            sleepIcons[i % sleepIcons.length]
+          );
+        }, i * 280);
+      }
+
+      setTimeout(() => {
+        nightOverlay.classList.remove('active');
+        avatar.classList.remove('sleeping-anim');
+        stats.energy = Math.min(100, stats.energy + 30);
+        addXP(10);
+        msg.innerText = "¡Buenos días! Se siente súper descansado ☀️🌸";
+        updateBars();
+        isSleeping = false;
+      }, 2600);
+    }
+
+    function addXP(amount) {
+      xp += amount;
+      if (xp >= 60 && level === 1) openModal('egg-modal');
+      saveGame();
+    }
+
+    function tapEgg(e) {
+      eggTaps++;
+      if (e) spawnSparkle(e.clientX, e.clientY, '✨');
+      playTone(400 + eggTaps * 140, 0.1);
+      document.getElementById('egg-taps').innerText = `💖 Golpecitos: ${eggTaps} / 3`;
+      if (eggTaps >= 3) {
+        level = 2;
+        coins += 50;
+        if (!unlockedPets.includes('capy')) unlockedPets.push('capy');
+        closeModal('egg-modal');
+        playTone(650, 0.15);
+        document.getElementById('pet-message').innerText = "¡Nació Capy-Tender y está listo para la fiesta! 🐹🎉";
+        saveGame();
+        renderAll();
+      }
+    }
+
+    function wearAccessory(src) {
+      savedAccessory = src;
+      renderPet();
+      saveGame();
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // MINIJUEGO 1: ATRAPAR DULCES
+    let catchInterval = null;
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    let basketX = 150;
+    let cookieY = 0;
+    let cookieX = 180;
+    const basketWidth = 85;
+    const basketHeight = 55;
+    const cookieSize = 42;
+
+    function moveBasket(clientX) {
+      const rect = canvas.getBoundingClientRect();
+      basketX = (clientX - rect.left) * (canvas.width / rect.width) - basketWidth / 2;
+      if (basketX < 0) basketX = 0;
+      if (basketX > canvas.width - basketWidth) basketX = canvas.width - basketWidth;
+    }
+
+    canvas.onmousemove = (e) => moveBasket(e.clientX);
+    canvas.ontouchmove = (e) => {
+      if (e.touches.length > 0) moveBasket(e.touches[0].clientX);
+      e.preventDefault();
+    };
+
+    function startCatchGame() {
+      stopCatchGame();
+      cookieY = 0;
+      cookieX = Math.random() * (canvas.width - cookieSize - 30) + 15;
+      catchInterval = setInterval(catchGameLoop, 1000 / 35);
+    }
+
+    function stopCatchGame() {
+      if (catchInterval) clearInterval(catchInterval);
+      catchInterval = null;
+    }
+
+    function catchGameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (imgBgGame.complete && imgBgGame.naturalWidth > 0) {
+        ctx.drawImage(imgBgGame, 0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.fillStyle = "#fff0f6";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      if (imgCookie.complete && imgCookie.naturalWidth > 0) {
+        ctx.drawImage(imgCookie, cookieX, cookieY, cookieSize, cookieSize);
+      } else {
+        ctx.fillStyle = "#ffb6c1";
+        ctx.beginPath();
+        ctx.arc(cookieX + cookieSize/2, cookieY + cookieSize/2, cookieSize/2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const basketY = canvas.height - basketHeight - 10;
+      if (imgBasket.complete && imgBasket.naturalWidth > 0) {
+        ctx.drawImage(imgBasket, basketX, basketY, basketWidth, basketHeight);
+      } else {
+        ctx.fillStyle = "#ff85b3";
+        ctx.fillRect(basketX, basketY + 20, basketWidth, 25);
+      }
+
+      cookieY += 5.2;
+
+      if (
+        cookieY + cookieSize >= basketY &&
+        cookieX + cookieSize >= basketX &&
+        cookieX <= basketX + basketWidth
+      ) {
+        playTone(720, 0.08);
+        coins += 2;
+        document.getElementById('coin-txt').innerText = coins;
+        stats.fun = Math.min(100, stats.fun + 4);
+        cookieY = 0;
+        cookieX = Math.random() * (canvas.width - cookieSize - 30) + 15;
+        updateBars();
+      } else if (cookieY > canvas.height) {
+        playTone(240, 0.18);
+        if (coins > 0) {
+          coins = Math.max(0, coins - 1);
+          document.getElementById('coin-txt').innerText = coins;
+        }
+        spawnSparkle(canvas.getBoundingClientRect().left + basketX + 20, canvas.getBoundingClientRect().top + 100, '💔 -1🪙');
+        cookieY = 0;
+        cookieX = Math.random() * (canvas.width - cookieSize - 30) + 15;
+        saveGame();
+      }
+    }
+
+    // MINIJUEGO 2: FLAPPY MUNCHIZ
+    const fCanvas = document.getElementById('flappy-canvas');
+    const fCtx = fCanvas.getContext('2d');
+    let fInterval = null;
+    let birdY = 150, birdVel = 0;
+    let pipes = [];
+    let fScore = 0;
+    let fGameOver = false;
+
+    let trailParticles = [];
+    const trailEmojis = ['✨', '💖', '🌸', '⭐', '🫧'];
+
+    const pipeWidth = 58;
+    const birdSize = 44;
+
+    function addTrailSparkle(x, y, extra = false) {
+      const count = extra ? 4 : 1;
+      for (let i = 0; i < count; i++) {
+        trailParticles.push({
+          x: x + (Math.random() * 8 - 4),
+          y: y + (Math.random() * 12 - 6),
+          size: Math.random() * 12 + 10,
+          emoji: trailEmojis[Math.floor(Math.random() * trailEmojis.length)],
+          vx: -(Math.random() * 2.2 + 1.8),
+          vy: (Math.random() - 0.5) * 1.8,
+          alpha: 1.0,
+          life: 1.0
+        });
+      }
+    }
+
+    function flap() {
+      if (fGameOver) {
+        resetFlappy();
+        return;
+      }
+      playTone(560, 0.07);
+      birdVel = -5.4;
+      addTrailSparkle(75, birdY + birdSize/2, true);
+    }
+
+    fCanvas.onclick = flap;
+    fCanvas.ontouchstart = (e) => { flap(); e.preventDefault(); };
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && currentMinigame === 'flappy') flap();
+    });
+
+    function resetFlappy() {
+      birdY = 150;
+      birdVel = 0;
+      pipes = [];
+      trailParticles = [];
+      fScore = 0;
+      fGameOver = false;
+    }
+
+    function startFlappyGame() {
+      stopFlappyGame();
+      resetFlappy();
+      fInterval = setInterval(flappyLoop, 1000 / 35);
+    }
+
+    function stopFlappyGame() {
+      if (fInterval) clearInterval(fInterval);
+      fInterval = null;
+    }
+
+    function flappyLoop() {
+      fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+
+      if (imgFlappyBg.complete && imgFlappyBg.naturalWidth > 0) {
+        fCtx.drawImage(imgFlappyBg, 0, 0, fCanvas.width, fCanvas.height);
+      } else {
+        fCtx.fillStyle = "#e0f2fe";
+        fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+        fCtx.fillStyle = "#ffffff99";
+        fCtx.beginPath();
+        fCtx.arc(100, 80, 40, 0, Math.PI * 2);
+        fCtx.arc(140, 80, 48, 0, Math.PI * 2);
+        fCtx.arc(180, 80, 36, 0, Math.PI * 2);
+        fCtx.fill();
+      }
+
+      if (!fGameOver) {
+        birdVel += 0.29;
+        birdY += birdVel;
+
+        addTrailSparkle(72, birdY + birdSize/2 + Math.sin(Date.now() / 120) * 4);
+
+        if (pipes.length === 0 || pipes[pipes.length - 1].x < fCanvas.width - 200) {
+          const gap = 175;
+          const topH = Math.random() * (fCanvas.height - gap - 90) + 35;
+          pipes.push({ x: fCanvas.width, top: topH, bottom: topH + gap, passed: false });
+        }
+      }
+
+      for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const part = trailParticles[i];
+        part.x += part.vx;
+        part.y += part.vy;
+        part.life -= 0.04;
+        part.alpha = Math.max(0, part.life);
+
+        fCtx.save();
+        fCtx.globalAlpha = part.alpha;
+        fCtx.font = `${part.size}px Quicksand, sans-serif`;
+        fCtx.textAlign = "center";
+        fCtx.textBaseline = "middle";
+        fCtx.fillText(part.emoji, part.x, part.y);
+        fCtx.restore();
+
+        if (part.life <= 0) trailParticles.splice(i, 1);
+      }
+
+      for (let i = pipes.length - 1; i >= 0; i--) {
+        const p = pipes[i];
+        if (!fGameOver) p.x -= 2.3;
+
+        if (imgPilarTop.complete && imgPilarTop.naturalWidth > 0) {
+          fCtx.drawImage(imgPilarTop, p.x, p.top - 500, pipeWidth, 500);
+        } else {
+          fCtx.fillStyle = "#ffb3c6";
+          fCtx.fillRect(p.x, 0, pipeWidth, p.top);
+          fCtx.fillStyle = "#ff85a2";
+          fCtx.fillRect(p.x - 3, p.top - 14, pipeWidth + 6, 14);
+        }
+
+        if (imgPilarBottom.complete && imgPilarBottom.naturalWidth > 0) {
+          fCtx.drawImage(imgPilarBottom, p.x, p.bottom, pipeWidth, 500);
+        } else {
+          fCtx.fillStyle = "#ffb3c6";
+          fCtx.fillRect(p.x, p.bottom, pipeWidth, fCanvas.height - p.bottom);
+          fCtx.fillStyle = "#ff85a2";
+          fCtx.fillRect(p.x - 3, p.bottom, pipeWidth + 6, 14);
+        }
+
+        const birdBox = { x: 75, y: birdY, w: birdSize, h: birdSize };
+        if (
+          birdBox.x + birdBox.w - 8 > p.x && birdBox.x + 8 < p.x + pipeWidth &&
+          (birdBox.y + 7 < p.top || birdBox.y + birdBox.h - 7 > p.bottom)
+        ) {
+          fGameOver = true;
+          playTone(200, 0.25);
+        }
+
+        if (!p.passed && p.x + pipeWidth < birdBox.x) {
+          p.passed = true;
+          fScore++;
+          coins += 1;
+          document.getElementById('coin-txt').innerText = coins;
+          playTone(850, 0.08);
+          saveGame();
+        }
+
+        if (p.x < -pipeWidth - 20) pipes.splice(i, 1);
+      }
+
+      if (birdY > fCanvas.height - birdSize || birdY < -15) {
+        fGameOver = true;
+      }
+
+      fCtx.save();
+      fCtx.translate(75 + birdSize/2, birdY + birdSize/2);
+      fCtx.rotate(Math.min(Math.PI / 5, Math.max(-Math.PI / 5, birdVel * 0.07)));
+
+      let flyerImg = imgFlappyFlyer;
+      if (!flyerImg.complete || flyerImg.naturalWidth === 0) {
+        flyerImg = document.getElementById('pet-avatar');
+      }
+
+      if (flyerImg.complete && flyerImg.naturalWidth > 0) {
+        fCtx.drawImage(flyerImg, -birdSize/2, -birdSize/2, birdSize, birdSize);
+      } else {
+        fCtx.fillStyle = "#ff85b3";
+        fCtx.beginPath();
+        fCtx.arc(0, 0, birdSize/2, 0, Math.PI * 2);
+        fCtx.fill();
+      }
+      fCtx.restore();
+
+      fCtx.fillStyle = "#5c4d61";
+      fCtx.font = "bold 22px Quicksand";
+      fCtx.fillText(`⭐ Puntos: ${fScore}`, 20, 36);
+
+      if (fGameOver) {
+        fCtx.fillStyle = "rgba(255, 255, 255, 0.88)";
+        fCtx.fillRect(40, 110, fCanvas.width - 80, 140);
+        fCtx.strokeStyle = "#ffd1e3";
+        fCtx.lineWidth = 4;
+        fCtx.strokeRect(40, 110, fCanvas.width - 80, 140);
+
+        fCtx.fillStyle = "#ff65a3";
+        fCtx.font = "bold 22px Quicksand";
+        fCtx.textAlign = "center";
+        fCtx.fillText("¡Casi lo logras! 🌸", fCanvas.width / 2, 155);
+        fCtx.fillStyle = "#5c4d61";
+        fCtx.font = "bold 15px Quicksand";
+        fCtx.fillText("Toca para volver a volar 🕊️", fCanvas.width / 2, 195);
+        fCtx.textAlign = "left";
+      }
+    }
+
+    function renderAll() {
+      renderPetSwitcher();
+      renderPet();
+      renderFarm();
+    }
+
+    if (playerName) document.getElementById('login-overlay').style.display = 'none';
+    renderAll();
+  </script>
+
+  <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW:', err));
+      });
+    }
+  </script>
+</body>
+</html>
