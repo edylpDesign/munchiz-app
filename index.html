@@ -1,2651 +1,1712 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Munchiz ✨ Por Sofia Darlen LG</title>
-  
-  <!-- Configuración PWA y Web App -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ff85b3">
-  
-  <!-- Soporte para iOS / Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Munchiz">
-  <link rel="apple-touch-icon" href="img/icon-512.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="img/icon-512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="img/icon-512.png">
-  <link rel="apple-touch-icon" sizes="167x167" href="img/icon-512.png">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --pink-kawaii: #ff85b3;
-      --pink-light: #ffd1e3;
-      --text-color: #5c4d61;
-      --mint: #a8e6cf;
-    }
-
-    * {
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      font-family: 'Quicksand', cursive, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      padding: 8px;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ffd1dc 0%, #e8dff5 50%, #fcf4dd 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--text-color);
-      overflow-x: hidden;
-    }
-
-    #game-container {
-      background: #fffffffa;
-      width: 100%;
-      max-width: 460px;
-      border-radius: 36px;
-      box-shadow: 
-        0 15px 35px rgba(240, 98, 146, 0.2),
-        0 0 0 6px #ffffff,
-        0 0 0 12px #ffccde;
-      padding: 14px 12px 10px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      min-height: 94vh;
-    }
-
-    .view-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      background: #fff0f6;
-      padding: 5px;
-      border-radius: 24px;
-      border: 2px solid #ffd1e3;
-    }
-
-    .tab-btn {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 8px 4px;
-      border-radius: 18px;
-      font-size: 12px;
-      font-weight: 800;
-      color: #7a5f80;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-    }
-
-    .tab-btn.active {
-      background: #ffffff;
-      color: var(--pink-kawaii);
-      box-shadow: 0 4px 10px rgba(255, 133, 179, 0.3);
-      transform: scale(1.02);
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 2px;
-      min-height: 52px;
-    }
-
-    .logo-box {
-      width: 130px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    .logo-box img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .header-pills {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-
-    .pill {
-      background: #fff9db;
-      border: 2px dashed #ffe066;
-      color: #7a5814;
-      font-weight: 700;
-      padding: 5px 8px;
-      border-radius: 18px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .pill img { width: 15px; height: 15px; object-fit: contain; }
-
-    .btn-exit-menu {
-      background: #fff0f6;
-      border: 2px solid #ffd1e3;
-      color: #d6336c;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 5px 9px;
-      border-radius: 16px;
-      cursor: pointer;
-      box-shadow: 0 2px 0 #fcc2d7;
-    }
-    .btn-exit-menu:active { transform: translateY(1px); }
-
-    .pet-switcher {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      align-items: center;
-      flex-wrap: wrap;
-      max-height: 75px;
-      overflow-y: auto;
-      padding: 4px;
-    }
-
-    .pet-choice-btn {
-      background: #fff;
-      border: 2px solid #ffd1e3;
-      padding: 5px 12px;
-      border-radius: 14px;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text-color);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 2px 0 #fcc2d7;
-      transition: all 0.15s ease;
-    }
-
-    .pet-choice-btn.selected {
-      background: #ffebf3;
-      border-color: #ff85b3;
-      color: #ff4088;
-      box-shadow: 0 3px 0 #ff85b3;
-      transform: translateY(-2px);
-    }
-
-    .bars-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      background: #fff1f6;
-      padding: 8px 10px;
-      border-radius: 20px;
-      border: 2px solid #ffe1ec;
-    }
-
-    .stat-box { font-size: 11px; font-weight: 700; }
-
-    .bar-bg {
-      background: #ffffff;
-      height: 12px;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 3px;
-      padding: 2px;
-    }
-
-    .bar-fill {
-      height: 100%;
-      width: 100%;
-      border-radius: 8px;
-      transition: width 0.3s ease;
-    }
-
-    #hunger-bar { background: linear-gradient(90deg, #ffc078, #ffa94d); }
-    #fun-bar { background: linear-gradient(90deg, #b197fc, #9775fa); }
-    #energy-bar { background: linear-gradient(90deg, #96f2d7, #63e6be); }
-
-    .view-content {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .view-content.active { display: flex; }
-
-    #pet-stage {
-      height: 330px;
-      border-radius: 30px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      overflow: hidden;
-      border: 4px solid #ffd4e5;
-      background-color: #fdf2f8;
-    }
-
-    #room-bg-img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    #night-overlay {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle, rgba(20, 24, 60, 0.72) 20%, rgba(10, 12, 35, 0.88) 100%);
-      z-index: 5;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-    #night-overlay.active { opacity: 1; }
-
-    #pet-avatar-wrapper {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2;
-    }
-
-    #pet-avatar {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-      filter: drop-shadow(0 10px 16px rgba(233, 114, 156, 0.28));
-      transition: transform 0.2s ease;
-    }
-
-    #pet-accessory {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      pointer-events: none;
-      z-index: 3;
-      display: none;
-    }
-
-    .bouncing { animation: cuteBounce 0.8s infinite alternate ease-in-out; }
-    @keyframes cuteBounce {
-      from { transform: translateY(0); }
-      to { transform: translateY(-12px); }
-    }
-
-    .eating-anim { animation: munchBounce 0.22s 3 alternate ease-in-out !important; }
-    @keyframes munchBounce {
-      from { transform: scale(1); }
-      to { transform: scale(1.15, 0.88); }
-    }
-
-    .sleeping-anim {
-      animation: sleepSway 1.8s infinite alternate ease-in-out !important;
-      filter: drop-shadow(0 4px 10px rgba(110, 140, 255, 0.4)) !important;
-    }
-    @keyframes sleepSway {
-      from { transform: translateY(4px) scale(0.98, 1.02); }
-      to { transform: translateY(-4px) scale(1.02, 0.98); }
-    }
-
-    #pet-message {
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 6px;
-      color: #9c36b5;
-      background: #ffffffea;
-      padding: 6px 18px;
-      border-radius: 18px;
-      border: 2px solid #f8d7da;
-      z-index: 6;
-    }
-
-    /* PISTA DISCOTECA */
-    #party-stage {
-      height: 430px;
-      border-radius: 30px;
-      border: 4px solid #c084fc;
-      position: relative;
-      overflow: hidden !important;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 0;
-      background: #080214 url('img/fondo_disco.png') center/cover no-repeat;
-      box-shadow: inset 0 0 35px rgba(192, 132, 252, 0.6);
-      animation: discoStrobeFlash 2.8s infinite ease-in-out;
-    }
-
-    @keyframes discoStrobeFlash {
-      0% { filter: brightness(0.72) contrast(1.1); }
-      20% { filter: brightness(1.22) contrast(1.25); }
-      40% { filter: brightness(0.65) contrast(1.05); }
-      65% { filter: brightness(1.35) contrast(1.3); }
-      80% { filter: brightness(0.75) contrast(1.1); }
-      100% { filter: brightness(0.72) contrast(1.1); }
-    }
-
-    .disco-lights-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 2;
-      animation: discoPulseLights 1.6s infinite alternate ease-in-out;
-      mix-blend-mode: screen;
-    }
-
-    @keyframes discoPulseLights {
-      0% {
-        opacity: 0.25;
-        background: 
-          radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 0, 128, 0.35) 30%, transparent 65%),
-          radial-gradient(circle at 15% 40%, rgba(0, 255, 220, 0.3) 0%, transparent 50%);
-      }
-      50% {
-        opacity: 0.75;
-        background: 
-          radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 230, 0, 0.5) 35%, transparent 70%),
-          radial-gradient(circle at 85% 50%, rgba(192, 132, 252, 0.6) 0%, transparent 55%),
-          radial-gradient(circle at 20% 75%, rgba(255, 0, 100, 0.5) 0%, transparent 55%);
-      }
-      100% {
-        opacity: 0.85;
-        background: 
-          radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.95) 0%, rgba(168, 85, 247, 0.6) 40%, transparent 75%),
-          radial-gradient(circle at 15% 80%, rgba(0, 255, 200, 0.6) 0%, transparent 60%),
-          radial-gradient(circle at 85% 80%, rgba(255, 200, 0, 0.6) 0%, transparent 60%);
-      }
-    }
-
-    .dance-floor-dancers {
-      position: absolute;
-      bottom: 22px;
-      left: 0;
-      right: 0;
-      z-index: 4;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 8px;
-      width: 100%;
-      flex-wrap: wrap;
-      padding: 0 12px;
-    }
-
-    .dancer-munchiz {
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
-      filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.75));
-      flex-shrink: 0;
-    }
-
-    .dancing-1 { animation: danceMoveA 0.5s infinite alternate ease-in-out; }
-    @keyframes danceMoveA {
-      0% { transform: translateY(0) rotate(-6deg); }
-      100% { transform: translateY(-12px) rotate(6deg); }
-    }
-
-    .dancing-2 { animation: danceMoveB 0.45s infinite alternate ease-in-out 0.15s; }
-    @keyframes danceMoveB {
-      0% { transform: translateY(0) scale(0.96, 1.04) rotate(5deg); }
-      100% { transform: translateY(-14px) scale(1.04, 0.96) rotate(-5deg); }
-    }
-
-    .party-controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 4px;
-    }
-
-    /* BARRA DE CONTROL DE AUDIO */
-    .game-audio-bar {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      background: #fff0f6;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1.5px dashed #ffd1e3;
-      margin: 0 auto;
-      width: fit-content;
-    }
-
-    .audio-toggle-btn {
-      background: #ffffff;
-      border: 2px solid #ffd1e3;
-      border-radius: 14px;
-      padding: 3px 9px;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-color);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-    .audio-toggle-btn.muted {
-      background: #f1f3f5;
-      color: #adb5bd;
-      border-color: #dee2e6;
-    }
-
-    .game-subtabs {
-      display: flex;
-      justify-content: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .game-subtab-btn {
-      border: 2px solid #ffd1e3;
-      background: #fff;
-      border-radius: 16px;
-      padding: 5px 9px;
-      font-size: 10.5px;
-      font-weight: 800;
-      color: var(--text-color);
-      cursor: pointer;
-    }
-
-    .game-subtab-btn.active {
-      background: #ffebf3;
-      border-color: #ff85b3;
-      color: #ff4088;
-    }
-
-    .game-canvas-box {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    .game-canvas-style {
-      width: 100%;
-      max-width: 410px;
-      height: 380px;
-      border: 3.5px solid #ffccd5;
-      border-radius: 26px;
-      box-shadow: 0 6px 14px rgba(255, 133, 179, 0.2);
-      cursor: pointer;
-      background: #fff8fc;
-      touch-action: none;
-    }
-
-    /* MINIJUEGOS ADICIONALES */
-    .memory-board {
-      width: 100%;
-      max-width: 380px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      padding: 8px;
-      background: #fff0f6;
-      border-radius: 24px;
-      border: 3px solid #ffccd5;
-      margin: 0 auto;
-    }
-    .memory-card {
-      aspect-ratio: 1;
-      background: #ffffff;
-      border: 2.5px solid #ffd1e3;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      cursor: pointer;
-      box-shadow: 0 3px 0 #fcc2d7;
-      transition: all 0.2s ease;
-    }
-    .memory-card.revealed {
-      background: #ffe3ec;
-      border-color: #ff85b3;
-      transform: scale(0.96);
-    }
-    .memory-card.matched {
-      background: #dcfce7;
-      border-color: #86efac;
-      pointer-events: none;
-    }
-
-    .whack-board {
-      width: 100%;
-      max-width: 380px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 12px;
-      background: #dcfce7;
-      border-radius: 26px;
-      border: 3.5px solid #86efac;
-      margin: 0 auto;
-    }
-    .whack-hole {
-      aspect-ratio: 1;
-      background: #a7f3d0;
-      border-radius: 50%;
-      border: 4px solid #34d399;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: inset 0 6px 10px rgba(0,0,0,0.15);
-    }
-    .whack-munchiz {
-      width: 70%;
-      height: 70%;
-      object-fit: contain;
-      transform: translateY(100%);
-      transition: transform 0.15s ease-out;
-      pointer-events: none;
-    }
-    .whack-hole.active .whack-munchiz {
-      transform: translateY(0%);
-    }
-
-    .simon-board {
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 8px solid #ffd1e3;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding: 10px;
-      margin: 8px auto;
-      box-shadow: 0 8px 18px rgba(255, 133, 179, 0.25);
-    }
-    .simon-btn {
-      border: none;
-      cursor: pointer;
-      transition: filter 0.1s ease, transform 0.1s ease;
-      opacity: 0.8;
-    }
-    .simon-btn.active-light {
-      opacity: 1 !important;
-      filter: brightness(1.4) drop-shadow(0 0 10px #ffffff);
-      transform: scale(0.96);
-    }
-    #simon-0 { background: #ff85b3; border-top-left-radius: 100%; }
-    #simon-1 { background: #60a5fa; border-top-right-radius: 100%; }
-    #simon-2 { background: #facc15; border-bottom-left-radius: 100%; }
-    #simon-3 { background: #4ade80; border-bottom-right-radius: 100%; }
-
-    #farm-stage {
-      height: 380px;
-      border-radius: 30px;
-      border: 4px solid #bbf7d0;
-      background: radial-gradient(circle, #dcfce7 30%, #86efac 100%);
-      position: relative;
-      overflow-y: auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 12px;
-      box-shadow: inset 0 0 20px rgba(74, 222, 128, 0.25);
-    }
-
-    .farm-pet-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 8px 4px;
-      border-radius: 20px;
-      border: 2px solid #a7f3d0;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-    }
-
-    .farm-pet-card img { width: 62px; height: 62px; object-fit: contain; }
-    .farm-pet-card.locked img { filter: grayscale(1) opacity(0.4); }
-
-    .btn-buy-pet {
-      margin-top: 4px;
-      background: #ffd43b;
-      border: 2px solid #fab005;
-      color: #7a5814;
-      font-weight: 800;
-      font-size: 11px;
-      border-radius: 12px;
-      padding: 3px 8px;
-      cursor: pointer;
-    }
-    .btn-buy-pet:active { transform: translateY(1px); }
-
-    .actions-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-    }
-
-    .btn-action {
-      background: #ffffff;
-      border: 2px solid #ffe0ec;
-      padding: 8px 2px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 11px;
-      color: var(--text-color);
-      cursor: pointer;
-      box-shadow: 0 4px 0 #fcc2d7;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .btn-action img { width: 32px; height: 32px; object-fit: contain; }
-    .btn-action:active { transform: translateY(3px); box-shadow: 0 1px 0 #fcc2d7; }
-
-    .action-price-tag {
-      font-size: 9px;
-      color: #e67700;
-      font-weight: 800;
-      margin-top: -2px;
-    }
-
-    .popup-modal {
-      display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 250, 253, 0.98);
-      border-radius: 34px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 15;
-      border: 4px solid #ffd4e5;
-    }
-
-    .items-row { display: flex; gap: 12px; margin: 12px 0; }
-    .item-card {
-      background: #ffffff;
-      border: 2px solid #e7f5ff;
-      border-radius: 20px;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      width: 76px;
-    }
-    .item-card img { width: 44px; height: 44px; object-fit: contain; }
-    .item-card span { font-size: 11px; font-weight: 700; }
-
-    .selector-btn {
-      padding: 8px 16px;
-      font-size: 13px;
-      border-radius: 18px;
-      background: #ffffff;
-      border: 2px solid #ffd1e3;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .heart-sparkle {
-      position: absolute;
-      pointer-events: none;
-      font-size: 20px;
-      animation: floatUp 0.85s ease-out forwards;
-      z-index: 25;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(0.6); opacity: 1; }
-      100% { transform: translateY(-65px) scale(1.3); opacity: 0; }
-    }
-
-    .stage-bubble {
-      position: absolute;
-      pointer-events: none;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-      animation: bubbleFloat ease-out forwards;
-    }
-    @keyframes bubbleFloat {
-      0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
-      20% { opacity: 0.95; }
-      80% { opacity: 0.95; transform: translate(var(--dx), var(--dy)) scale(1.15); }
-      100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) - 25px)) scale(1.4); }
-    }
-
-    .comic-bubble {
-      position: relative;
-      background: #ffffff;
-      border: 3.5px solid #ff85b3;
-      border-radius: 24px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 800;
-      color: #5c4d61;
-      box-shadow: 0 6px 14px rgba(255, 133, 179, 0.25);
-      margin: 10px auto 16px;
-      width: 96%;
-      line-height: 1.4;
-    }
-    .comic-bubble::after {
-      content: "";
-      position: absolute;
-      bottom: -14px;
-      left: 55px;
-      border-width: 14px 12px 0 0;
-      border-style: solid;
-      border-color: #ffffff transparent;
-    }
-    .comic-bubble::before {
-      content: "";
-      position: absolute;
-      bottom: -18px;
-      left: 53px;
-      border-width: 17px 15px 0 0;
-      border-style: solid;
-      border-color: #ff85b3 transparent;
-    }
-
-    .saved-profiles-box {
-      max-height: 140px;
-      overflow-y: auto;
-      margin: 8px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      width: 100%;
-    }
-
-    .profile-item-btn {
-      background: #fff0f6;
-      border: 2.5px solid #ffccd5;
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--text-color);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.15s ease;
-    }
-    .profile-item-btn:hover {
-      background: #ffe3ec;
-      border-color: #ff85b3;
-      transform: translateY(-1px);
-    }
-
-    .author-footer {
-      margin-top: auto;
-      background: linear-gradient(90deg, #ff85b3, #b197fc);
-      color: #ffffff;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 7px 14px;
-      border-radius: 18px;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      box-shadow: 0 3px 8px rgba(255, 133, 179, 0.35);
-    }
-
-    #login-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 245, 248, 0.98);
-      border-radius: 36px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      z-index: 30;
-    }
-
-    .login-card {
-      background: #ffffff;
-      border: 4px solid #ffccd5;
-      padding: 20px 16px;
-      border-radius: 32px;
-      box-shadow: 0 14px 28px rgba(255, 133, 179, 0.22);
-      width: 100%;
-      max-width: 430px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>11Padel Point Pro</title>
+    
+    <!-- CONFIGURACIÓN PWA PARA INSTALACIÓN -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2980b9">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- ICONO PARA IPHONE / IPAD (iOS Safari) -->
+    <link rel="apple-touch-icon" href="img/app_icon.png">
+
+    <!-- MANIFEST PARA ANDROID / CHROME -->
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root {
+            --padel-blue: #2980b9;
+            --padel-green: #27ae60;
+            --padel-orange: #e67e22;
+            --padel-purple: #8e44ad;
+            --padel-light: #f8f9fa;
+            --padel-dark: #2c3e50;
+            --padel-gray: #7f8c8d;
+            --padel-light-gray: #ecf0f1;
+            --padel-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Eliminar flechas nativas en inputs numéricos */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        body {
+            background: linear-gradient(135deg, #d1e8d5 0%, #c3e3c9 100%);
+            min-height: 100vh;
+            padding: 12px;
+            padding-bottom: 75px;
+            color: var(--padel-dark);
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .container { max-width: 680px; margin: 0 auto; width: 100%; }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(90deg, var(--padel-blue) 0%, var(--padel-green) 100%);
+            border-radius: 18px;
+            padding: 8px 16px;
+            box-shadow: var(--padel-shadow);
+            border: 2px solid white;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-logos-zone { display: flex; align-items: center; gap: 16px; flex: 1; }
+        
+        .app-logo-link {
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; transition: transform 0.2s;
+            background: transparent !important;
+        }
+        .app-logo-link:active { transform: scale(0.95); }
+        .logo-app-img {
+            height: 52px; width: auto; max-width: 140px; object-fit: contain;
+            background: transparent !important; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .sponsor-main-link {
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; transition: transform 0.2s;
+            background: transparent !important;
+        }
+        .sponsor-main-link:active { transform: scale(0.95); }
+        .sponsor-main-logo {
+            height: 48px; width: auto; max-width: 150px; object-fit: contain;
+            background: transparent !important; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .btn-gear-admin {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.6);
+            color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.1rem;
+        }
+
+        /* BANNER PATROCINADORES (3 FILAS DE 2) */
+        .sponsors-card-container {
+            background: white; border-radius: 16px; padding: 12px;
+            margin-bottom: 12px; box-shadow: var(--padel-shadow); border: 1px solid rgba(0,0,0,0.06); text-align: center;
+        }
+        .sponsors-label-top {
+            font-size: 0.68rem; font-weight: 800; color: var(--padel-gray);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .sponsors-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .sponsor-box-btn {
+            background: #111827;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 0 !important;
+            height: 52px !important;
+            width: 100% !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+        .sponsor-box-btn:active { transform: scale(0.96); }
+        .sponsor-btn-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block;
+        }
+        .sponsor-btn-fallback { font-size: 0.72rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 4px; }
+        .sponsors-footer-text { font-size: 0.82rem; font-weight: 800; color: var(--padel-orange); margin-top: 10px; }
+
+        /* CARRUSEL DE TORNEOS (200 x 355 px) */
+        .tournaments-container {
+            background: white; border-radius: 16px; padding: 12px;
+            margin-bottom: 14px; box-shadow: var(--padel-shadow); border: 1px solid rgba(0,0,0,0.06);
+        }
+        .tournaments-header-title {
+            font-size: 0.82rem; font-weight: 800; color: var(--padel-blue);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .tournaments-carousel {
+            display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+            padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .tournaments-carousel::-webkit-scrollbar { display: none; }
+        
+        .tournament-item-card {
+            flex: 0 0 200px !important;
+            width: 200px !important;
+            max-width: 200px !important;
+            scroll-snap-align: start;
+            background: var(--padel-light);
+            border: 1.5px solid #cbd5e1;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        .tournament-flyer-wrapper {
+            width: 200px !important;
+            height: 355px !important;
+            background: #0f172a;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .tournament-flyer-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            display: block;
+            background: #0f172a;
+        }
+        .tournament-fallback-icon {
+            color: #94a3b8; font-size: 2.2rem; display: flex; flex-direction: column;
+            align-items: center; gap: 6px; font-weight: bold; font-size: 0.75rem; text-align: center;
+        }
+        .tournament-content-box {
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 8px;
+            height: 95px !important;
+        }
+        .tournament-name-txt {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--padel-dark);
+            line-height: 1.2;
+            text-align: center;
+            height: 34px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .btn-tournament-link {
+            background: linear-gradient(135deg, var(--padel-green) 0%, #1e8449 100%);
+            color: white;
+            text-decoration: none;
+            width: 100% !important;
+            height: 36px !important;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-tournament-link:active { transform: scale(0.96); }
+
+        /* MODOS DE JUEGO */
+        .section-title { font-size: 0.88rem; font-weight: 700; color: var(--padel-dark); margin: 10px 0 8px 4px; }
+        .mode-box-card {
+            background: white; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
+            cursor: pointer; display: flex; align-items: center; gap: 14px; box-shadow: var(--padel-shadow);
+            border-left: 5px solid var(--padel-green); transition: transform 0.15s;
+        }
+        .mode-box-card:active { transform: scale(0.98); }
+        .mode-box-card.pozo { border-left-color: var(--padel-blue); }
+        .mode-box-card.padron { border-left-color: var(--padel-purple); }
+        .mode-icon-circle {
+            width: 44px; height: 44px; min-width: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: white; background: var(--padel-green);
+        }
+        .mode-box-card.pozo .mode-icon-circle { background: var(--padel-blue); }
+        .mode-box-card.padron .mode-icon-circle { background: var(--padel-purple); }
+        .mode-info-title { font-size: 0.98rem; font-weight: 800; color: var(--padel-dark); }
+        .mode-info-sub { font-size: 0.76rem; color: var(--padel-gray); font-weight: 500; }
+
+        /* COMPONENTES GENERALES */
+        .card { background: white; border-radius: 16px; box-shadow: var(--padel-shadow); padding: 16px; margin-bottom: 14px; }
+        .card-header {
+            background: linear-gradient(90deg, var(--padel-blue) 0%, var(--padel-green) 100%);
+            color: white; padding: 12px 16px; border-radius: 12px; margin: -16px -16px 14px -16px;
+            font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn { padding: 9px 14px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; }
+        .btn-green { background: var(--padel-green); color: white; }
+        .btn-dark { background: var(--padel-light-gray); color: var(--padel-dark); border: 1px solid #cbd5e1; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-wa { background: #25d366; color: white; }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 6px; }
+
+        .tabs { display: flex; background: var(--padel-light-gray); border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+        .tab { flex: 1; padding: 8px; text-align: center; cursor: pointer; font-weight: 700; font-size: 0.8rem; }
+        .tab.active { background: linear-gradient(135deg, var(--padel-blue) 0%, var(--padel-green) 100%); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .scroll-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; }
+        .chip-pill { background: white; padding: 6px 14px; border-radius: 18px; font-size: 0.8rem; font-weight: 700; cursor: pointer; border: 1px solid #cbd5e1; white-space: nowrap; }
+        .chip-pill.active { background: var(--padel-blue); color: white; border-color: var(--padel-blue); }
+
+        /* FILA POZO */
+        .pozo-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+        .caguama-badge {
+            background: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fde68a;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* CANCHA DE PÁDEL REALISTA PARA PARTIDOS */
+        .padel-court-card {
+            background: linear-gradient(180deg, #1b4d79 0%, #153b5d 100%);
+            border: 2px solid #38bdf8;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            color: white;
+        }
+        .padel-court-net {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-top: 1px dashed rgba(255, 255, 255, 0.6);
+            margin: 8px 0;
+            position: relative;
+        }
+        .padel-court-net::after {
+            content: "RED";
+            position: absolute;
+            right: 0;
+            top: -7px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.55rem;
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+        .court-title-badge {
+            display: inline-block; background: #0284c7; color: white; font-size: 0.7rem;
+            font-weight: 800; padding: 2px 8px; border-radius: 6px; margin-bottom: 6px;
+        }
+        .court-side-team { display: flex; justify-content: space-between; align-items: center; }
+
+        /* CONTROLES DE MARCADOR TÁCTIL BLINDADOS */
+        .score-ctrl { display: flex; align-items: center; gap: 5px; }
+        .score-btn {
+            width: 34px; height: 34px; border-radius: 8px; border: 1px solid #cbd5e1;
+            background: white; color: var(--padel-dark); font-weight: 900;
+            cursor: pointer; font-size: 1.15rem; display: flex; align-items: center; justify-content: center;
+            user-select: none;
+        }
+        .score-btn:active { background: #e2e8f0; transform: scale(0.95); }
+        .score-in {
+            width: 50px !important; height: 34px !important; text-align: center;
+            font-weight: 900 !important; border-radius: 8px; border: 1.5px solid #cbd5e1;
+            color: #0f172a !important; font-size: 1.1rem !important; margin-top: 0 !important;
+            background: #ffffff !important; padding: 0 !important;
+        }
+
+        .bye-banner {
+            background: #fef3c7; color: #b45309; border: 1px solid #f59e0b; border-radius: 8px;
+            padding: 6px 10px; font-size: 0.78rem; font-weight: bold; margin-bottom: 10px; text-align: center;
+        }
+
+        /* PODIO VISUAL */
+        .podium-1 { background: rgba(254, 240, 138, 0.45) !important; font-weight: bold; }
+        .podium-icon { font-size: 1.1rem; vertical-align: middle; margin-right: 2px; }
+
+        /* BOTÓN FLOTANTE WHATSAPP */
+        .floating-wa-btn {
+            position: fixed; bottom: 20px; right: 20px; width: 52px; height: 52px;
+            border-radius: 50%; background: #25d366; color: white; display: flex;
+            align-items: center; justify-content: center; font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 999; cursor: pointer;
+            border: 2px solid white; transition: transform 0.2s;
+        }
+        .floating-wa-btn:active { transform: scale(0.9); }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: linear-gradient(135deg, var(--padel-blue) 0%, var(--padel-green) 100%); color: white; padding: 8px 6px; font-weight: 700; text-align: center; }
+        td { padding: 8px 6px; border-bottom: 1px solid var(--padel-light-gray); text-align: center; white-space: nowrap; font-weight: 600; }
+
+        input, textarea { width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; margin-top: 4px; }
+        textarea { resize: vertical; min-height: 60px; font-family: inherit; font-size: 0.85rem; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; padding: 12px; }
+        .modal.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: white; border-radius: 16px; width: 100%; max-width: 480px; padding: 18px; max-height: 85vh; overflow-y: auto; }
+        .hidden { display: none !important; }
+
+        footer { text-align: center; font-size: 0.75rem; color: var(--padel-gray); margin-top: 20px; font-weight: 600; }
+        footer strong { color: var(--padel-green); }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--padel-dark); color: white; padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; opacity: 0; z-index: 3000; transition: 0.3s; }
+        .toast.show { opacity: 1; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="brand-logos-zone">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="app-logo-link" id="appLogoLink" title="11Padel Oficial">
+                    <img src="img/logo_11padel.png" alt="11Padel" class="logo-app-img" onerror="this.style.display='none'">
+                </a>
 
-  <div id="game-container">
-    <audio id="party-audio" src="audio/musica_fiesta.mp3" loop></audio>
-    <audio id="game-music-audio" src="audio/musica_juegos.mp3" loop></audio>
+                <a href="https://instagram.com/sbtotalpadel" target="_blank" rel="noopener noreferrer" class="sponsor-main-link" id="sponsorMainLink" title="SB TOTAL PADEL">
+                    <img src="img/patrocinador_principal.png" alt="SB TOTAL PADEL" class="sponsor-main-logo" onerror="this.style.display='none'">
+                </a>
+            </div>
+            <button class="btn-gear-admin" onclick="solicitarAccesoAdmin()" title="Acceso Administrador">
+                <i class="fas fa-lock"></i>
+            </button>
+        </header>
 
-    <!-- MENÚ PRINCIPAL -->
-    <div id="login-overlay">
-      <div class="login-card">
-        <div class="logo-box" style="margin: 0 auto 4px; width: 210px; height: 60px;">
-          <img src="img/logo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg';" alt="Logo">
+        <!-- BANNER DE PATROCINADORES (3 FILAS DE 2) -->
+        <div class="sponsors-card-container">
+            <div class="sponsors-label-top">
+                <i class="fas fa-ad"></i> PATROCINADORES OFICIALES • TOCA CADA UNO PARA VISITAR
+            </div>
+            
+            <div class="sponsors-grid-layout">
+                <a href="https://instagram.com/chuletasnkrs" target="_blank" rel="noopener noreferrer" class="sponsor-box-btn" id="linkBanner1">
+                    <img src="img/banner_patrocinador1.png" alt="1" class="sponsor-btn-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="sponsor-btn-fallback" style="display:none;"><i class="fas fa-tag"></i> 1</div>
+                </a>
+                <a href="https://instagram.com/motio" target="_blank" rel="noopener noreferrer" class="sponsor-box-btn" id="linkBanner2">
+                    <img src="img/banner_patrocinador2.png" alt="2" class="sponsor-btn-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="sponsor-btn-fallback" style="display:none;"><i class="fas fa-tag"></i> 2</div>
+                </a>
+                <a href="https://instagram.com/room" target="_blank" rel="noopener noreferrer" class="sponsor-box-btn" id="linkBanner3">
+                    <img src="img/banner_patrocinador3.png" alt="3" class="sponsor-btn-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="sponsor-btn-fallback" style="display:none;"><i class="fas fa-tag"></i> 3</div>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="sponsor-box-btn" id="linkBanner4">
+                    <img src="img/banner_patrocinador4.png" alt="4" class="sponsor-btn-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="sponsor-btn-fallback" style="display:none;"><i class="fas fa-tag"></i> 4</div>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="sponsor-box-btn" id="linkBanner5">
+                    <img src="img/banner_patrocinador5.png" alt="5" class="sponsor-btn-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="sponsor-btn-fallback" style="display:none;"><i class="fas fa-tag"></i> 5</div>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="sponsor-box-btn" id="linkBanner6">
+                    <img src="img/banner_patrocinador6.png" alt="6" class="sponsor-btn-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="sponsor-btn-fallback" style="display:none;"><i class="fas fa-tag"></i> 6</div>
+                </a>
+            </div>
+
+            <div class="sponsors-footer-text">
+                Patrocinado por: SB TOTAL PADEL
+            </div>
         </div>
 
-        <div class="comic-bubble">
-          hola soy sofi darlen bienvenidos al mundo de los munchiz, diviertete.!!
+        <!-- SECCIÓN: PRÓXIMOS TORNEOS (CARRUSEL HORIZONTAL 4 ESPACIOS VERTICALES 9:16) -->
+        <div class="tournaments-container" id="sectionTournaments">
+            <div class="tournaments-header-title">
+                <span><i class="fas fa-calendar-alt"></i> Próximos Torneos & Convocatorias</span>
+                <small style="color:var(--padel-gray); font-size:0.68rem; font-weight:bold;">Desliza ➔</small>
+            </div>
+            <div class="tournaments-carousel" id="tournamentsGridContainer">
+                <!-- 4 flyers dinámicos -->
+            </div>
         </div>
 
-        <div style="display: flex; justify-content: center; margin: 4px 0 12px;">
-          <img src="img/sofi.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:princess.svg';" alt="Sofi Darlen" style="width: 135px; height: 135px; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(255, 105, 180, 0.35));">
+        <!-- MODAL DE AUTENTICACIÓN ADMIN -->
+        <div id="modalAuthAdmin" class="modal">
+            <div class="modal-content" style="max-width:340px; text-align:center;">
+                <div style="font-size:2rem; color:var(--padel-blue); margin-bottom:8px;"><i class="fas fa-shield-alt"></i></div>
+                <h3 style="margin-bottom:6px;">Acceso Administrador</h3>
+                <p style="font-size:0.75rem; color:var(--padel-gray); margin-bottom:12px;">Introduce tu clave maestra para desbloquear los controles:</p>
+                <input type="password" id="inputMasterPinPrompt" placeholder="PIN Maestro" style="text-align:center; font-size:1.1rem; letter-spacing:2px;">
+                <div style="display:flex; justify-content:center; gap:8px; margin-top:14px;">
+                    <button class="btn btn-dark btn-sm" onclick="closeModal('modalAuthAdmin')">Cancelar</button>
+                    <button class="btn btn-green btn-sm" onclick="verificarPinAdmin()">Acceder</button>
+                </div>
+            </div>
         </div>
 
-        <div style="font-size: 12px; font-weight: 800; color: #ff85b3; width: 100%; text-align: left; margin-bottom: 2px;">👤 Selecciona tu perfil guardado:</div>
-        <div class="saved-profiles-box" id="saved-profiles-list"></div>
+        <!-- PANEL DE ADMINISTRACIÓN COMPLETO -->
+        <div id="viewAdmin" class="card hidden">
+            <div class="card-header">
+                <span><i class="fas fa-lock-open"></i> Panel Global de Configuración</span>
+                <button class="btn btn-sm btn-dark" onclick="cerrarPanelAdmin()">Cerrar</button>
+            </div>
+            
+            <h4 style="color:var(--padel-green); font-size:0.85rem; margin-top:4px;"><i class="fas fa-share-alt"></i> Redes Sociales de la App</h4>
+            <label style="font-size:0.75rem; font-weight:bold;">Enlace Redes 11Padel (Logo Principal):</label>
+            <input type="url" id="adminAppLogoUrl" placeholder="https://instagram.com/11padelpro">
 
-        <div style="font-size: 12px; font-weight: 800; color: #7a5f80; width: 100%; text-align: left; margin-top: 8px;">✨ O crea un nuevo perfil (nombre único):</div>
-        <input type="text" id="player-input" placeholder="Escribe tu nuevo nombre..." 
-          style="padding: 12px 16px; border-radius: 22px; border: 3px solid #ffccd5; outline: none; font-size: 15px; font-weight: 700; text-align: center; width: 100%; margin: 6px 0 12px;">
+            <!-- MENSAJE GENERAL PARA WHATSAPP -->
+            <h4 style="color:#25d366; font-size:0.85rem; margin-top:14px; border-top:1px solid #cbd5e1; padding-top:10px;"><i class="fab fa-whatsapp"></i> Mensaje de Pie para WhatsApp</h4>
+            <label style="font-size:0.75rem; font-weight:bold;">Este texto aparecerá al final de todos los reportes de WhatsApp:</label>
+            <textarea id="adminWaCustomMsg" placeholder="Ej: Síguenos en @11padelpro • Torneo patrocinado por SB TOTAL PADEL"></textarea>
+
+            <h4 style="color:var(--padel-orange); font-size:0.85rem; margin-top:14px; border-top:1px solid #cbd5e1; padding-top:10px;"><i class="fas fa-star"></i> Enlaces de Patrocinadores</h4>
+            <label style="font-size:0.75rem; font-weight:bold;">Patrocinador Principal (Header):</label>
+            <input type="url" id="adminMainSponsorUrl" placeholder="https://instagram.com/sbtotalpadel">
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:6px;">
+                <div><label style="font-size:0.72rem; font-weight:bold;">Banner 1:</label><input type="url" id="adminBanner1Url" placeholder="https://..."></div>
+                <div><label style="font-size:0.72rem; font-weight:bold;">Banner 2:</label><input type="url" id="adminBanner2Url" placeholder="https://..."></div>
+                <div><label style="font-size:0.72rem; font-weight:bold;">Banner 3:</label><input type="url" id="adminBanner3Url" placeholder="https://..."></div>
+                <div><label style="font-size:0.72rem; font-weight:bold;">Banner 4:</label><input type="url" id="adminBanner4Url" placeholder="https://..."></div>
+                <div><label style="font-size:0.72rem; font-weight:bold;">Banner 5:</label><input type="url" id="adminBanner5Url" placeholder="https://..."></div>
+                <div><label style="font-size:0.72rem; font-weight:bold;">Banner 6:</label><input type="url" id="adminBanner6Url" placeholder="https://..."></div>
+            </div>
+
+            <h4 style="color:var(--padel-blue); font-size:0.85rem; margin-top:16px; border-top:1px solid #cbd5e1; padding-top:10px;"><i class="fas fa-trophy"></i> 4 Flyers de Torneos</h4>
+            
+            <div style="background:var(--padel-light); border:1px solid #cbd5e1; border-radius:10px; padding:8px; margin-top:8px;">
+                <strong>Torneo 1</strong>
+                <input type="text" id="adminT1Name" placeholder="Nombre: Open Anual Club Central">
+                <input type="url" id="adminT1Link" placeholder="Link WhatsApp/Web: https://wa.me/52...">
+                <input type="text" id="adminT1Img" placeholder="Ruta Flyer: img/torneo1.png">
+            </div>
+
+            <div style="background:var(--padel-light); border:1px solid #cbd5e1; border-radius:10px; padding:8px; margin-top:8px;">
+                <strong>Torneo 2</strong>
+                <input type="text" id="adminT2Name" placeholder="Nombre: Nocturno Americano SB">
+                <input type="url" id="adminT2Link" placeholder="Link WhatsApp/Web: https://wa.me/52...">
+                <input type="text" id="adminT2Img" placeholder="Ruta Flyer: img/torneo2.png">
+            </div>
+
+            <div style="background:var(--padel-light); border:1px solid #cbd5e1; border-radius:10px; padding:8px; margin-top:8px;">
+                <strong>Torneo 3</strong>
+                <input type="text" id="adminT3Name" placeholder="Nombre: Relámpago Padel Pro">
+                <input type="url" id="adminT3Link" placeholder="Link WhatsApp/Web: https://wa.me/52...">
+                <input type="text" id="adminT3Img" placeholder="Ruta Flyer: img/torneo3.png">
+            </div>
+
+            <div style="background:var(--padel-light); border:1px solid #cbd5e1; border-radius:10px; padding:8px; margin-top:8px;">
+                <strong>Torneo 4</strong>
+                <input type="text" id="adminT4Name" placeholder="Nombre: Torneo Mixto de Verano">
+                <input type="url" id="adminT4Link" placeholder="Link WhatsApp/Web: https://wa.me/52...">
+                <input type="text" id="adminT4Img" placeholder="Ruta Flyer: img/torneo4.png">
+            </div>
+
+            <button class="btn btn-green" style="width:100%; margin-top:14px;" onclick="guardarEnlacesEnFirebase()">
+                <i class="fas fa-cloud-upload-alt"></i> Guardar y Sincronizar en Todos los Dispositivos
+            </button>
+        </div>
+
+        <!-- HUB PRINCIPAL DE MODOS -->
+        <div id="viewHubModos">
+            <div class="section-title">Selecciona el modo de juego:</div>
+
+            <div class="mode-box-card" onclick="entrarModo('americano')">
+                <div class="mode-icon-circle"><i class="fas fa-dice"></i></div>
+                <div>
+                    <div class="mode-info-title">Modo 8 Loco / Americano</div>
+                    <div class="mode-info-sub">Partidos rotativos con rondas y descansos equitativos.</div>
+                </div>
+            </div>
+
+            <div class="mode-box-card pozo" onclick="entrarModo('pozo')">
+                <div class="mode-icon-circle"><i class="fas fa-trophy"></i></div>
+                <div>
+                    <div class="mode-info-title">Modo Pozo / Rey de la Pista</div>
+                    <div class="mode-info-sub">Puntos individuales directos acumulativos por ronda.</div>
+                </div>
+            </div>
+
+            <div class="mode-box-card padron" onclick="abrirPadronJugadores()">
+                <div class="mode-icon-circle"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="mode-info-title">Padrón de Jugadores</div>
+                    <div class="mode-info-sub">Administra tu lista de jugadores habituales.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: LIGAS DEL MODO SELECCIONADO -->
+        <div id="viewLigasModo" class="hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <button class="btn btn-sm btn-dark" onclick="backToHubModos()"><i class="fas fa-arrow-left"></i> Modos</button>
+                <button class="btn btn-sm btn-green" onclick="abrirModalCrearLiga()">+ Crear Liga</button>
+            </div>
+            <div class="card">
+                <div class="card-header"><span id="tituloModoLigas">Ligas</span></div>
+                <div id="listaLigasContenedor"></div>
+            </div>
+        </div>
+
+        <!-- VISTA: PADRÓN DE JUGADORES -->
+        <div id="viewPadron" class="card hidden">
+            <div class="card-header">
+                <span>Padrón de Jugadores</span>
+                <button class="btn btn-sm btn-dark" onclick="backToHubModos()"><i class="fas fa-arrow-left"></i> Volver</button>
+            </div>
+            <div style="display:flex; gap:6px; margin-bottom:12px;">
+                <input type="text" id="inputNuevoJugador" placeholder="Nombre completo" style="margin:0;">
+                <button class="btn btn-sm btn-green" onclick="agregarJugadorPadron()">Añadir</button>
+            </div>
+            <div id="listaJugadoresPadron"></div>
+        </div>
+
+        <!-- VISTA: DETALLE DE LIGA (BOTÓN DE WHATSAPP GENERAL AGREGADO) -->
+        <div id="viewLigaDetalle" class="hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:6px;">
+                <button class="btn btn-sm btn-dark" onclick="backToLigasModo()"><i class="fas fa-arrow-left"></i> Ligas</button>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-sm btn-wa" onclick="compartirWhatsAppTablaGeneralLiga()" title="Enviar Tabla General de la Liga por WhatsApp">
+                        <i class="fab fa-whatsapp"></i> Tabla General
+                    </button>
+                    <button class="btn btn-sm btn-green" id="btnNuevaJornadaLiga" onclick="abrirModalNuevaJornada()">+ Nueva Jornada</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span id="ligaDetalleNombre">Liga</span>
+                    <button class="btn btn-sm btn-danger" onclick="terminarLigaOficial()">🏁 Cerrar Liga</button>
+                </div>
+                <div class="tabs">
+                    <div class="tab active" onclick="switchLigaTab('tabla')">📊 TABLA GENERAL</div>
+                    <div class="tab" onclick="switchLigaTab('jornadas')">📅 JORNADAS</div>
+                </div>
+                <div id="tabLigaTabla" class="tab-content active">
+                    <div class="table-responsive"><table id="tablaLigaGeneral"><thead id="tablaLigaHead"></thead><tbody id="tablaLigaBody"></tbody></table></div>
+                </div>
+                <div id="tabLigaJornadas" class="tab-content">
+                    <div id="listaJornadasContenedor"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: JORNADA EN VIVO POZO -->
+        <div id="viewJornadaPozoVivo" class="hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <button class="btn btn-sm btn-dark" onclick="backToLigaDetalle()"><i class="fas fa-arrow-left"></i> Volver</button>
+                <div style="text-align:center;"><h3 id="pozoLiveTitulo" style="font-size:1rem; color:var(--padel-blue);">Jornada Pozo</h3></div>
+                <button class="btn btn-sm btn-wa" onclick="compartirWhatsAppPozo()"><i class="fab fa-whatsapp"></i></button>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" id="tabLiveBtnPozoPistas" onclick="switchLiveTab('pozo', 'pistas')">🎾 PISTAS / EN VIVO</div>
+                <div class="tab" id="tabLiveBtnPozoTabla" onclick="switchLiveTab('pozo', 'tabla')">📊 TABLA EN VIVO</div>
+            </div>
+
+            <div id="pozoLivePartidosView">
+                <div class="scroll-chips" id="pozoRoundsNav"></div>
+                <div class="card">
+                    <div class="card-header"><span id="pozoRondaActualLabel">Ronda 1</span></div>
+                    <div id="pozoPlayersRondaContainer"></div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-dark btn-sm" style="flex:1;" onclick="agregarRondaPozo()">➕ Ronda Extra</button>
+                    <button class="btn btn-green btn-sm" style="flex:1;" onclick="finalizarJornadaPozoOficial()">🏁 Finalizar Jornada</button>
+                </div>
+            </div>
+
+            <div id="pozoLiveTablaView" class="hidden card">
+                <h4 style="color:var(--padel-blue); margin-bottom:8px; font-size:0.9rem;"><i class="fas fa-trophy"></i> Clasificación de la Jornada</h4>
+                <div class="table-responsive"><table id="tablaPozoLive"><thead><tr><th>Pos</th><th>Jugador</th><th>Puntos Jornada</th><th>🍺</th></tr></thead><tbody id="tablaPozoLiveBody"></tbody></table></div>
+            </div>
+        </div>
+
+        <!-- VISTA: JORNADA EN VIVO 8 LOCO -->
+        <div id="viewJornada8LocoVivo" class="hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <button class="btn btn-sm btn-dark" onclick="backToLigaDetalle()"><i class="fas fa-arrow-left"></i> Volver</button>
+                <div style="text-align:center;"><h3 id="amLiveTitulo" style="font-size:1rem; color:var(--padel-blue);">Jornada 8 Loco</h3></div>
+                <button class="btn btn-sm btn-wa" onclick="compartirWhatsApp8Loco()"><i class="fab fa-whatsapp"></i></button>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" id="tabLiveBtn8LocoPistas" onclick="switchLiveTab('8loco', 'pistas')">🎾 PISTAS / EN VIVO</div>
+                <div class="tab" id="tabLiveBtn8LocoTabla" onclick="switchLiveTab('8loco', 'tabla')">📊 TABLA EN VIVO</div>
+            </div>
+
+            <div id="amLivePartidosView">
+                <div class="scroll-chips" id="amRoundsNav"></div>
+                <div id="amMatchesContainer"></div>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="btn btn-dark btn-sm" style="flex:1;" onclick="agregarRondaExtra8Loco()">➕ Ronda Extra</button>
+                    <button class="btn btn-green btn-sm" style="flex:1;" onclick="finalizarJornada8LocoOficial()">🏁 Finalizar Jornada</button>
+                </div>
+            </div>
+
+            <div id="amLiveTablaView" class="hidden card">
+                <h4 style="color:var(--padel-blue); margin-bottom:8px; font-size:0.9rem;"><i class="fas fa-trophy"></i> Clasificación en Tiempo Real</h4>
+                <div class="table-responsive"><table id="tabla8LocoLive"><thead><tr><th>Pos</th><th>Jugador</th><th>PJ</th><th>W</th><th>Pts</th><th>+/-</th><th>🍺</th></tr></thead><tbody id="tabla8LocoLiveBody"></tbody></table></div>
+            </div>
+        </div>
+
+        <!-- BOTÓN FLOTANTE RÁPIDO WHATSAPP EN JORNADA -->
+        <div class="floating-wa-btn hidden" id="globalFloatingWaBtn" onclick="compartirWhatsAppRapido()" title="Enviar Marcadores por WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+
+        <footer>
+            Desarrollado por <strong>EdyLPDSng</strong> • 11Padel Point Pro© 2026
+        </footer>
+    </div>
+
+    <!-- MODALES DE LIGAS Y JORNADAS -->
+    <div id="modalCrearLiga" class="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--padel-blue); margin-bottom:8px;">Nueva Liga</h3>
+            <input type="text" id="ligaNombreInput" placeholder="Nombre de la Liga">
+            <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:12px;">
+                <button class="btn btn-dark btn-sm" onclick="closeModal('modalCrearLiga')">Cancelar</button>
+                <button class="btn btn-green btn-sm" onclick="guardarNuevaLiga()">Crear</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalNuevaJornada" class="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--padel-blue); margin-bottom:8px;">Nueva Jornada</h3>
+            <input type="text" id="jornadaNombreInput" placeholder="Nombre de la Jornada">
+            <div style="background:var(--padel-light); padding:8px; border-radius:8px; margin:10px 0; border:1px solid #cbd5e1;">
+                <span style="font-size:0.75rem; font-weight:bold;">Registro rápido al vuelo:</span>
+                <div style="display:flex; gap:4px; margin-top:4px;">
+                    <input type="text" id="inputRegistroExpress" placeholder="Nombre completo" style="margin:0;">
+                    <button class="btn btn-sm btn-green" onclick="registrarJugadorExpress()">+</button>
+                </div>
+            </div>
+            <p style="font-size:0.75rem; font-weight:bold;">Convocados (<span id="countConvocados">0</span>):</p>
+            <div id="pillsConvocadosContainer" style="display:flex; flex-wrap:wrap; gap:4px; max-height:140px; overflow-y:auto; margin-bottom:10px;"></div>
+            <button class="btn btn-green" style="width:100%;" onclick="iniciarJornadaConfirmada()">Iniciar Jornada ➔</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Notificación</div>
+
+    <script>
+        const CLOUD_DB_URL = "https://padel-pro-4c4d7-default-rtdb.firebaseio.com/sponsors.json";
         
-        <button class="selector-btn" style="background:#ff85b3; color:#fff; border:none; padding:12px 28px; font-size:15px; font-weight:800; width:100%; border-radius:24px;" onclick="handleCreateNewProfile()">¡Crear y comenzar desde cero! ⭐</button>
-      </div>
-    </div>
+        // HASH CRIPTOGRÁFICO SHA-256 DEL PIN "lopl1984" (Protegido contra inspección de código)
+        const MASTER_PIN_HASH = "805a5a9a47d2d38fa45d6542fc7d7d33d9c7bb09146fe494a317e34ef30c8227";
 
-    <!-- CABECERA -->
-    <header>
-      <div class="logo-box">
-        <img id="main-logo-img" src="img/logo.png" onerror="this.onerror=null; this.style.display='none'; document.getElementById('alt-logo-title').style.display='block';" alt="Logo">
-        <h2 id="alt-logo-title" style="display:none; margin:0; font-size:24px; color:#ff85b3;">MUNCHIZ ✨</h2>
-      </div>
-      <div class="header-pills">
-        <div class="pill" id="level-txt">⭐ Niv. 1</div>
-        <div class="pill" id="progress-txt" style="background:#e0f2fe; border-color:#7dd3fc; color:#0369a1;">📊 6%</div>
-        <div class="pill">
-          <img src="img/moneda.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:coin.svg'" alt="coin">
-          <span id="coin-txt">0</span>
-        </div>
-        <button class="btn-exit-menu" onclick="openMainMenu()" title="Salir al menú principal">👤 Salir</button>
-      </div>
-    </header>
-
-    <!-- NAVEGACIÓN -->
-    <div class="view-tabs">
-      <button class="tab-btn active" id="tab-room" onclick="switchView('room')">🏠 Cuarto</button>
-      <button class="tab-btn" id="tab-game" onclick="switchView('game')">🎮 Juegos</button>
-      <button class="tab-btn" id="tab-farm" onclick="switchView('farm')">🌻 Granja</button>
-      <button class="tab-btn" id="tab-party" onclick="switchView('party')">🎉 Fiesta</button>
-    </div>
-
-    <!-- VISTA 1: HABITACIÓN -->
-    <div id="view-room" class="view-content active">
-      <div class="pet-switcher" id="pet-switcher-container"></div>
-
-      <div class="bars-container">
-        <div class="stat-box">
-          🍪 Comidita
-          <div class="bar-bg"><div id="hunger-bar" class="bar-fill"></div></div>
-        </div>
-        <div class="stat-box">
-          ⭐ Alegría
-          <div class="bar-bg"><div id="fun-bar" class="bar-fill"></div></div>
-        </div>
-        <div class="stat-box">
-          💤 Sueño
-          <div class="bar-bg"><div id="energy-bar" class="bar-fill"></div></div>
-        </div>
-      </div>
-
-      <div id="pet-stage" onclick="petMunchiz(event)">
-        <img id="room-bg-img" src="img/fondo_cuarto.png" onerror="this.onerror=null; this.style.display='none';" alt="Fondo">
-        <div id="night-overlay"></div>
-
-        <div id="pet-avatar-wrapper" class="bouncing">
-          <img id="pet-accessory" src="" alt="accesorio">
-          <img id="pet-avatar" src="img/lilo.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:dog-face.svg';" alt="Mascota">
-        </div>
-        <div id="pet-message">¡Tócame con amor! 🐶💖</div>
-
-        <div id="food-modal" class="popup-modal">
-          <h3 style="margin: 0; color: #ff65a3;">¿Qué snack le damos? 🍰</h3>
-          <div class="items-row">
-            <div class="item-card" onclick="feedItem(6, '¡Ñam! Galletita rica 🍪', '🍪', 2)">
-              <img src="img/snack_galleta.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Galleta">
-              <span>Galleta (+6%)</span>
-              <span style="font-size:10px; color:#e67700; font-weight:bold;">🪙 2</span>
-            </div>
-            <div class="item-card" onclick="feedItem(8, '¡Fresita fresca! 🍓', '🍓', 4)">
-              <img src="img/snack_fresa.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:strawberry.svg'" alt="Fresa">
-              <span>Fresa (+8%)</span>
-              <span style="font-size:10px; color:#e67700; font-weight:bold;">🪙 4</span>
-            </div>
-            <div class="item-card" onclick="feedItem(12, '¡Poción mágica! 🧪', '✨', 6)">
-              <img src="img/snack_pocion.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:magic-wand.svg'" alt="Poción">
-              <span>Poción (+12%)</span>
-              <span style="font-size:10px; color:#e67700; font-weight:bold;">🪙 6</span>
-            </div>
-          </div>
-          <button class="selector-btn" onclick="closeModal('food-modal')">Cerrar</button>
-        </div>
-
-        <div id="shop-modal" class="popup-modal">
-          <h3 style="margin: 0; color: #9c36b5;">Boutique Munchiz 🎀</h3>
-          <div class="items-row">
-            <div class="item-card" onclick="wearAccessory('img/acc_gorro.png')">
-              <img src="img/acc_gorro.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:party-popper.svg'" alt="Gorro">
-              <span>Gorro</span>
-            </div>
-            <div class="item-card" onclick="wearAccessory('img/acc_lentes.png')">
-              <img src="img/acc_lentes.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sunglasses.svg'" alt="Lentes">
-              <span>Lentes</span>
-            </div>
-            <div class="item-card" onclick="wearAccessory('img/acc_mono.png')">
-              <img src="img/acc_mono.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:ribbon.svg'" alt="Moño">
-              <span>Moñito</span>
-            </div>
-          </div>
-          <button class="selector-btn" onclick="wearAccessory('')">Quitar todo</button>
-          <button class="selector-btn" style="margin-top:6px;" onclick="closeModal('shop-modal')">Listo ✨</button>
-        </div>
-      </div>
-
-      <!-- BOTONES DE ACCIÓN -->
-      <div class="actions-grid">
-        <button class="btn-action" onclick="openModal('food-modal')">
-          <img src="img/btn_comida.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:cookie.svg'" alt="Comida">
-          Snack
-          <span class="action-price-tag">desde 2🪙</span>
-        </button>
-        <button class="btn-action" onclick="washPet(event)">
-          <img src="img/btn_bano.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:soap.svg'" alt="Baño">
-          Bañito
-          <span class="action-price-tag">🪙 3</span>
-        </button>
-        <button class="btn-action" onclick="sleepPet()">
-          <img src="img/btn_dormir.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:crescent-moon.svg'" alt="Dormir">
-          Siesta
-          <span class="action-price-tag">🪙 5</span>
-        </button>
-        <button class="btn-action" onclick="switchView('game')">
-          <img src="img/btn_jugar.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:video-game.svg'" alt="Jugar">
-          Jugar
-          <span class="action-price-tag" style="color:#2b8a3e;">¡Gana 🪙!</span>
-        </button>
-        <button class="btn-action" onclick="openModal('shop-modal')">
-          <img src="img/btn_tienda.png" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:sparkles.svg'" alt="Tienda">
-          Boutique
-          <span class="action-price-tag" style="color:#b197fc;">Accesorios</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- VISTA 2: MINIJUEGOS -->
-    <div id="view-game" class="view-content">
-      <div class="game-audio-bar">
-        <button class="audio-toggle-btn" id="btn-toggle-music" onclick="toggleGameMusic()">
-          🎵 Música: ON
-        </button>
-        <button class="audio-toggle-btn" id="btn-toggle-sfx" onclick="toggleSfx()">
-          🔊 Efectos: ON
-        </button>
-      </div>
-
-      <div class="game-subtabs">
-        <button class="game-subtab-btn active" id="btn-sub-catch" onclick="selectMinigame('catch')">🍪 Dulces</button>
-        <button class="game-subtab-btn" id="btn-sub-flappy" onclick="selectMinigame('flappy')">🕊️ Flappy</button>
-        <button class="game-subtab-btn" id="btn-sub-jump" onclick="selectMinigame('jump')">☁️ Nubes</button>
-        <button class="game-subtab-btn" id="btn-sub-memory" onclick="selectMinigame('memory')">🧠 Memoria</button>
-        <button class="game-subtab-btn" id="btn-sub-whack" onclick="selectMinigame('whack')">🐾 Toca Munchiz</button>
-        <button class="game-subtab-btn" id="btn-sub-simon" onclick="selectMinigame('simon')">🎵 Simón</button>
-      </div>
-
-      <!-- JUEGO 1: ATRAPA DULCES -->
-      <div id="subgame-catch" style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Atrapa dulces para ganar monedas! Si cae uno pierdes 1 🍪💔</span>
-        <div class="game-canvas-box">
-          <canvas id="game-canvas" class="game-canvas-style" width="410" height="380"></canvas>
-        </div>
-      </div>
-
-      <!-- JUEGO 2: FLAPPY MUNCHIZ -->
-      <div id="subgame-flappy" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
-        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Toca la pantalla para volar suavemente! ✨💖</span>
-        <div class="game-canvas-box">
-          <canvas id="flappy-canvas" class="game-canvas-style" width="410" height="380"></canvas>
-        </div>
-      </div>
-
-      <!-- JUEGO 3: SALTO A LAS NUBES -->
-      <div id="subgame-jump" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
-        <span style="font-size: 12px; font-weight: 700; color: #ff65a3;">¡Toca izquierda/derecha para rebotar y usa las ⭐ para súper saltos! ☁️✨</span>
-        <div class="game-canvas-box">
-          <canvas id="jump-canvas" class="game-canvas-style" width="410" height="380"></canvas>
-        </div>
-      </div>
-
-      <!-- JUEGO 4: MEMORIA DE GALLETAS -->
-      <div id="subgame-memory" style="display: none; flex-direction: column; align-items: center; gap: 8px;">
-        <div style="display: flex; justify-content: space-between; width: 90%; font-size: 13px; font-weight: 800; color: #ff65a3;">
-          <span>🧠 Parejas: <b id="mem-pairs-txt">0 / 6</b></span>
-          <span>⭐ Bono: <b>15 🪙</b></span>
-        </div>
-        <div class="memory-board" id="memory-board"></div>
-        <button class="selector-btn" style="padding: 6px 14px; font-size: 12px;" onclick="initMemoryGame()">Reiniciar Tablero 🔄</button>
-      </div>
-
-      <!-- JUEGO 5: TOCA AL MUNCHIZ -->
-      <div id="subgame-whack" style="display: none; flex-direction: column; align-items: center; gap: 8px;">
-        <div style="display: flex; justify-content: space-between; width: 90%; font-size: 13px; font-weight: 800; color: #2b8a3e;">
-          <span>🐾 Aciertos: <b id="whack-score-txt">0</b></span>
-          <span>⏳ Tiempo: <b id="whack-time-txt">30s</b></span>
-        </div>
-        <div class="whack-board" id="whack-board">
-          <div class="whack-hole" onclick="hitWhackHole(0)"><img class="whack-munchiz" src="img/lilo.png" alt="m"></div>
-          <div class="whack-hole" onclick="hitWhackHole(1)"><img class="whack-munchiz" src="img/capy.png" alt="m"></div>
-          <div class="whack-hole" onclick="hitWhackHole(2)"><img class="whack-munchiz" src="img/rodri.png" alt="m"></div>
-          <div class="whack-hole" onclick="hitWhackHole(3)"><img class="whack-munchiz" src="img/sparky.png" alt="m"></div>
-          <div class="whack-hole" onclick="hitWhackHole(4)"><img class="whack-munchiz" src="img/gloop.png" alt="m"></div>
-          <div class="whack-hole" onclick="hitWhackHole(5)"><img class="whack-munchiz" src="img/sofi.png" alt="m"></div>
-        </div>
-        <button class="selector-btn" style="padding: 6px 16px; font-size: 12px; background:#4ade80; color:#fff; border:none;" onclick="startWhackGame()">¡Iniciar Rápido! ⚡</button>
-      </div>
-
-      <!-- JUEGO 6: SIMÓN DICE KAWAII -->
-      <div id="subgame-simon" style="display: none; flex-direction: column; align-items: center; gap: 6px;">
-        <span style="font-size: 13px; font-weight: 800; color: #9c36b5;">🎵 Ronda: <b id="simon-round-txt">1</b> • ¡Sigue el patrón de luces!</span>
-        <div class="simon-board">
-          <button class="simon-btn" id="simon-0" onclick="handleSimonInput(0)"></button>
-          <button class="simon-btn" id="simon-1" onclick="handleSimonInput(1)"></button>
-          <button class="simon-btn" id="simon-2" onclick="handleSimonInput(2)"></button>
-          <button class="simon-btn" id="simon-3" onclick="handleSimonInput(3)"></button>
-        </div>
-        <button class="selector-btn" style="padding: 7px 18px; font-size: 13px; background:#b197fc; color:#fff; border:none;" onclick="startSimonGame()">Iniciar Secuencia 🎶</button>
-      </div>
-
-      <button class="selector-btn" style="margin: 6px auto 0; width: 70%;" onclick="switchView('room')">Volver a la Habitación 🏠</button>
-    </div>
-
-    <!-- VISTA 3: GRANJA -->
-    <div id="view-farm" class="view-content">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0; color:#2b8a3e;">🌻 Santuario & Tienda Munchiz</h3>
-        <span style="font-size:12px; font-weight:800; color:#2b8a3e;" id="farm-count-txt">1 / 18</span>
-      </div>
-      <p style="font-size:12px; margin:0;">¡Desbloquea amigos con monedas para subir de nivel y avance!</p>
-      
-      <div id="farm-stage"></div>
-    </div>
-
-    <!-- VISTA 4: FIESTA DISCO -->
-    <div id="view-party" class="view-content">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0; color:#c084fc;">🪩 Pista Disco de Sofi</h3>
-        <span style="font-size:12px; font-weight:800; color:#ff4088;">¡A bailar! 🎶</span>
-      </div>
-      
-      <div id="party-stage" onclick="partyBurst(event)">
-        <div class="disco-lights-overlay"></div>
-        <div class="dance-floor-dancers" id="party-dancers"></div>
-      </div>
-
-      <div class="party-controls">
-        <button class="selector-btn" id="btn-party-music" style="background:#c084fc; color:#fff; border:none; padding:8px 18px;" onclick="togglePartyMusic()">
-          ▶️ Poner Música MP3
-        </button>
-        <button class="selector-btn" onclick="partyBurst()">
-          ✨ Chispas Disco
-        </button>
-      </div>
-      <span style="font-size:11px; color:#9c36b5;">¡Toca la pista de baile para soltar confeti y luces! 🎉</span>
-    </div>
-
-    <!-- CRÉDITO SOFIA -->
-    <div class="author-footer">
-      ✨ APP DESARROLLADA POR SOFIA DARLEN LG ✨
-    </div>
-
-  </div>
-
-  <script>
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    let isMusicMuted = localStorage.getItem('munchiz_music_muted') === 'true';
-    let isSfxMuted = localStorage.getItem('munchiz_sfx_muted') === 'true';
-
-    const gameMusicAudio = document.getElementById('game-music-audio');
-    const partyAudio = document.getElementById('party-audio');
-
-    function updateAudioButtons() {
-      const btnM = document.getElementById('btn-toggle-music');
-      const btnS = document.getElementById('btn-toggle-sfx');
-
-      if (btnM) {
-        btnM.innerText = isMusicMuted ? '🔇 Música: OFF' : '🎵 Música: ON';
-        btnM.classList.toggle('muted', isMusicMuted);
-      }
-      if (btnS) {
-        btnS.innerText = isSfxMuted ? '🔇 Efectos: OFF' : '🔊 Efectos: ON';
-        btnS.classList.toggle('muted', isSfxMuted);
-      }
-    }
-
-    function toggleGameMusic() {
-      isMusicMuted = !isMusicMuted;
-      localStorage.setItem('munchiz_music_muted', isMusicMuted);
-      updateAudioButtons();
-
-      if (isMusicMuted) {
-        gameMusicAudio.pause();
-      } else {
-        const viewGame = document.getElementById('view-game');
-        if (viewGame && viewGame.classList.contains('active')) {
-          gameMusicAudio.play().catch(() => {});
+        // Función para calcular SHA-256 de forma nativa en el navegador
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
-      }
-    }
 
-    function toggleSfx() {
-      isSfxMuted = !isSfxMuted;
-      localStorage.setItem('munchiz_sfx_muted', isSfxMuted);
-      updateAudioButtons();
-      if (!isSfxMuted) playTone(700, 0.08);
-    }
+        // Variable en memoria RAM durante la sesión activa del admin
+        let sesionAdminHash = null;
 
-    function playTone(freq, duration) {
-      if (isSfxMuted) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    }
-
-    function playSuperJumpSound() {
-      if (isSfxMuted) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach((freq, idx) => {
-        setTimeout(() => playTone(freq, 0.08), idx * 45);
-      });
-    }
-
-    function playLullabySound() {
-      if (isSfxMuted) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25];
-      notes.forEach((freq, idx) => {
-        setTimeout(() => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.48);
-        }, idx * 260);
-      });
-    }
-
-    function playMunchSound() {
-      if (isSfxMuted) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      [0, 0.07, 0.14].forEach((delay, idx) => {
-        setTimeout(() => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(320 + idx * 80, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(540 + idx * 100, audioCtx.currentTime + 0.05);
-          gain.gain.setValueAtTime(0.24, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.065);
-        }, delay * 1000);
-      });
-    }
-
-    function playBubblePopSound() {
-      if (isSfxMuted) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          const startF = 450 + Math.random() * 350;
-          osc.frequency.setValueAtTime(startF, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(startF * 1.6, audioCtx.currentTime + 0.06);
-          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.065);
-        }, i * 90);
-      }
-    }
-
-    function spawnSparkle(x, y, emoji = '💖') {
-      const el = document.createElement('div');
-      el.className = 'heart-sparkle';
-      el.innerText = emoji;
-      el.style.left = (x - 10) + 'px';
-      el.style.top = (y - 10) + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 850);
-    }
-
-    function spawnBubbleStorm() {
-      const stage = document.getElementById('pet-stage');
-      const stageRect = stage.getBoundingClientRect();
-      const bubbleIcons = ['🫧', '🧼', '🫧', '✨', '🫧'];
-      for (let i = 0; i < 20; i++) {
-        setTimeout(() => {
-          const b = document.createElement('div');
-          b.className = 'stage-bubble';
-          const size = Math.random() * 22 + 18;
-          b.style.fontSize = size + 'px';
-          b.innerText = bubbleIcons[Math.floor(Math.random() * bubbleIcons.length)];
-          const startX = Math.random() * (stageRect.width - 60) + 20;
-          const startY = Math.random() * 100 + 160;
-          b.style.left = startX + 'px';
-          b.style.top = startY + 'px';
-          const dx = (Math.random() - 0.5) * 120 + 'px';
-          const dy = -(Math.random() * 150 + 90) + 'px';
-          b.style.setProperty('--dx', dx);
-          b.style.setProperty('--dy', dy);
-          b.style.animationDuration = (Math.random() * 0.4 + 0.9) + 's';
-          stage.appendChild(b);
-          setTimeout(() => b.remove(), 1400);
-        }, i * 45);
-      }
-    }
-
-    // CATÁLOGO OFICIAL: 18 PERSONAJES
-    const ALL_MUNCHIZ = {
-      lilo: { name: 'Lilo', img: 'img/lilo.png', sound: '🐶', price: 0 },
-      capy: { name: 'Capy-Tender', img: 'img/capy.png', sound: '🐹', price: 250 },
-      capy_bite: { name: 'Capy-Bite', img: 'img/capy_bite.png', sound: '🌿', price: 260 },
-      sparky: { name: 'Sparky', img: 'img/sparky.png', sound: '⚡', price: 280 },
-      gloop: { name: 'Gloop', img: 'img/gloop.png', sound: '🫧', price: 300 },
-      fluffy: { name: 'Fluffy', img: 'img/fluffy.png', sound: '🌸', price: 320 },
-      rolo: { name: 'Rolo', img: 'img/rolo.png', sound: '🦄', price: 340 },
-      chomp: { name: 'Chomp', img: 'img/chomp.png', sound: '🔥', price: 360 },
-      shelly: { name: 'Shelly', img: 'img/shelly.png', sound: '🐢', price: 380 },
-      zorbit: { name: 'Zorbit', img: 'img/zorbit.png', sound: '👽', price: 400 },
-      tri_pet: { name: 'Tri-Pet', img: 'img/tri_pet.png', sound: '🐉', price: 420 },
-      piglet_plague: { name: 'Piglet-Plague', img: 'img/piglet_plague.png', sound: '🐷', price: 440 },
-      rune_ghost: { name: 'Rune-Ghost', img: 'img/rune_ghost.png', sound: '👻', price: 460 },
-      spore_squeak: { name: 'Spore-Squeak', img: 'img/spore_squeak.png', sound: '🍄', price: 480 },
-      gear_gizmo: { name: 'Gear-Gizmo', img: 'img/gear_gizmo.png', sound: '🤖', price: 490 },
-      sofi: { name: 'Sofi Darlen', img: 'img/sofi.png', sound: '👑', price: 500 },
-      moana: { name: 'Moana', img: 'img/moana.png', sound: '🌺', price: 500 },
-      rodri: { name: 'Rodri', img: 'img/rodri.png', sound: '🎸', price: 500 }
-    };
-
-    const TOTAL_MUNCHIZ_COUNT = Object.keys(ALL_MUNCHIZ).length;
-
-    // IMÁGENES
-    const imgCookie = new Image();
-    imgCookie.src = 'img/galleta.png';
-    const imgBasket = new Image();
-    imgBasket.src = 'img/canasta.png';
-    const imgBgGame = new Image();
-    imgBgGame.src = 'img/fondo_juego.png';
-    const imgCoin = new Image();
-    imgCoin.src = 'img/moneda.png';
-
-    const imgFlappyBg = new Image();
-    imgFlappyBg.src = 'img/fondo_flappy.png';
-    const imgPilarTop = new Image();
-    imgPilarTop.src = 'img/pilar_arriba.png';
-    const imgPilarBottom = new Image();
-    imgPilarBottom.src = 'img/pilar_abajo.png';
-    const imgFlappyFlyer = new Image();
-    imgFlappyFlyer.src = 'img/flappy_lilo.png';
-
-    const imgCloudBg = new Image();
-    imgCloudBg.src = 'img/fondo_nubes.png';
-    const imgCloudPlatform = new Image();
-    imgCloudPlatform.src = 'img/nube_plataforma.png';
-    const imgSpringStar = new Image();
-    imgSpringStar.src = 'img/resorte_estrella.png';
-
-    // ESTADO DEL JUGADOR
-    let currentUser = '';
-    let currentPet = 'lilo';
-    let unlockedPets = ['lilo'];
-    let level = 1;
-    let coins = 0;
-    let savedAccessory = '';
-    let stats = { hunger: 70, fun: 70, energy: 75 };
-
-    let isSleeping = false;
-    let currentMinigame = 'catch';
-    let isPartyMusicPlaying = false;
-    let synthBassInterval = null;
-
-    function getProfilesStore() {
-      return JSON.parse(localStorage.getItem('munchiz_all_profiles') || '{}');
-    }
-
-    function calculateProgressPercentage(unlockedList) {
-      const count = (unlockedList || []).length;
-      return Math.round((count / TOTAL_MUNCHIZ_COUNT) * 100);
-    }
-
-    function renderSavedProfilesMenu() {
-      const store = getProfilesStore();
-      const listEl = document.getElementById('saved-profiles-list');
-      listEl.innerHTML = '';
-
-      const userKeys = Object.keys(store);
-      if (userKeys.length === 0) {
-        listEl.innerHTML = '<span style="font-size:12px; color:#868e96; padding:6px 0;">No hay perfiles creados todavía. ¡Crea el primero abajo!</span>';
-        return;
-      }
-
-      userKeys.forEach(name => {
-        const p = store[name];
-        const progress = calculateProgressPercentage(p.unlockedPets);
-        const btn = document.createElement('div');
-        btn.className = 'profile-item-btn';
-        btn.innerHTML = `
-          <span>🌸 <b>${name}</b></span>
-          <span style="font-size:11px; color:#c2255c;">Niv. ${p.level} • 📊 ${progress}% • 🪙 ${p.coins}</span>
-        `;
-        btn.onclick = () => loadProfileAndPlay(name);
-        listEl.appendChild(btn);
-      });
-    }
-
-    function loadProfileAndPlay(name) {
-      const store = getProfilesStore();
-      const p = store[name] || {};
-
-      currentUser = name;
-      currentPet = p.currentPet || 'lilo';
-      unlockedPets = p.unlockedPets || ['lilo'];
-      level = unlockedPets.length;
-      coins = (p.coins !== undefined) ? p.coins : 0;
-      savedAccessory = p.savedAccessory || '';
-      stats = p.stats || { hunger: 70, fun: 70, energy: 75 };
-
-      document.getElementById('login-overlay').style.display = 'none';
-      renderAll();
-      playTone(550, 0.1);
-    }
-
-    function handleCreateNewProfile() {
-      const input = document.getElementById('player-input');
-      const rawName = input.value.trim();
-
-      if (!rawName) {
-        alert('Por favor escribe un nombre para tu perfil.');
-        return;
-      }
-
-      const store = getProfilesStore();
-
-      if (store.hasOwnProperty(rawName)) {
-        alert(`¡El nombre "${rawName}" ya existe! Para crear un perfil nuevo, escribe un nombre diferente. O selecciónalo arriba en la lista para continuar su partida.`);
-        return;
-      }
-
-      currentUser = rawName;
-      currentPet = 'lilo';
-      unlockedPets = ['lilo'];
-      level = 1;
-      coins = 0;
-      savedAccessory = '';
-      stats = { hunger: 70, fun: 70, energy: 75 };
-
-      saveGame();
-      input.value = '';
-      document.getElementById('login-overlay').style.display = 'none';
-      renderAll();
-      playTone(650, 0.12);
-    }
-
-    function openMainMenu() {
-      stopPartyMusic();
-      stopCatchGame();
-      stopFlappyGame();
-      stopJumpGame();
-      stopWhackGame();
-      gameMusicAudio.pause();
-      renderSavedProfilesMenu();
-      document.getElementById('login-overlay').style.display = 'flex';
-      playTone(400, 0.08);
-    }
-
-    function saveGame() {
-      if (!currentUser) return;
-      const store = getProfilesStore();
-      level = unlockedPets.length;
-
-      store[currentUser] = {
-        currentPet,
-        unlockedPets,
-        level,
-        coins,
-        savedAccessory,
-        stats
-      };
-      localStorage.setItem('munchiz_all_profiles', JSON.stringify(store));
-    }
-
-    function switchView(viewName) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
-
-      document.getElementById(`tab-${viewName}`).classList.add('active');
-      document.getElementById(`view-${viewName}`).classList.add('active');
-
-      if (viewName === 'game') {
-        if (!isMusicMuted) {
-          gameMusicAudio.play().catch(() => {});
-        }
-        if (currentMinigame === 'catch') startCatchGame();
-        else if (currentMinigame === 'flappy') startFlappyGame();
-        else if (currentMinigame === 'jump') startJumpGame();
-        else if (currentMinigame === 'memory') initMemoryGame();
-        else if (currentMinigame === 'whack') startWhackGame();
-        else if (currentMinigame === 'simon') startSimonGame();
-      } else {
-        gameMusicAudio.pause();
-        stopCatchGame();
-        stopFlappyGame();
-        stopJumpGame();
-        stopWhackGame();
-      }
-
-      if (viewName === 'farm') renderFarm();
-      if (viewName === 'party') renderParty();
-      else stopPartyMusic();
-    }
-
-    function selectMinigame(type) {
-      currentMinigame = type;
-      ['catch', 'flappy', 'jump', 'memory', 'whack', 'simon'].forEach(g => {
-        const btn = document.getElementById(`btn-sub-${g}`);
-        const box = document.getElementById(`subgame-${g}`);
-        if (btn) btn.classList.toggle('active', g === type);
-        if (box) box.style.display = g === type ? 'flex' : 'none';
-      });
-
-      stopCatchGame();
-      stopFlappyGame();
-      stopJumpGame();
-      stopWhackGame();
-
-      if (type === 'catch') startCatchGame();
-      else if (type === 'flappy') startFlappyGame();
-      else if (type === 'jump') startJumpGame();
-      else if (type === 'memory') initMemoryGame();
-      else if (type === 'whack') startWhackGame();
-      else if (type === 'simon') startSimonGame();
-    }
-
-    function renderPetSwitcher() {
-      const container = document.getElementById('pet-switcher-container');
-      container.innerHTML = '';
-
-      unlockedPets.forEach(petKey => {
-        const pet = ALL_MUNCHIZ[petKey];
-        if (!pet) return;
-        const btn = document.createElement('button');
-        btn.className = `pet-choice-btn ${petKey === currentPet ? 'selected' : ''}`;
-        btn.innerHTML = `${pet.sound} ${pet.name}`;
-        btn.onclick = () => {
-          currentPet = petKey;
-          saveGame();
-          renderAll();
+        let appConfig = JSON.parse(localStorage.getItem("11padel_app_config")) || {
+            appLogoUrl: "https://instagram.com",
+            mainUrl: "https://instagram.com/sbtotalpadel",
+            waCustomMsg: "",
+            banner1Url: "https://instagram.com/chuletasnkrs",
+            banner2Url: "https://instagram.com/motio",
+            banner3Url: "https://instagram.com/room",
+            banner4Url: "https://instagram.com",
+            banner5Url: "https://instagram.com",
+            banner6Url: "https://instagram.com",
+            torneos: [
+                { nombre: "Torneo Open SB", link: "https://wa.me/", img: "img/torneo1.png" },
+                { nombre: "Americano Nocturno", link: "https://wa.me/", img: "img/torneo2.png" },
+                { nombre: "Relámpago de Fin de Semana", link: "https://wa.me/", img: "img/torneo3.png" },
+                { nombre: "Torneo de Verano", link: "https://wa.me/", img: "img/torneo4.png" }
+            ]
         };
-        container.appendChild(btn);
-      });
-    }
 
-    function renderPet() {
-      const pet = ALL_MUNCHIZ[currentPet] || ALL_MUNCHIZ['lilo'];
-      document.getElementById('pet-avatar').src = pet.img;
-      document.getElementById('coin-txt').innerText = coins;
-      
-      level = unlockedPets.length;
-      document.getElementById('level-txt').innerText = `⭐ Niv. ${level}`;
-
-      const progress = calculateProgressPercentage(unlockedPets);
-      document.getElementById('progress-txt').innerText = `📊 ${progress}%`;
-
-      const accEl = document.getElementById('pet-accessory');
-      if (savedAccessory) {
-        accEl.src = savedAccessory;
-        accEl.style.display = 'block';
-      } else {
-        accEl.style.display = 'none';
-      }
-      updateBars();
-    }
-
-    function renderFarm() {
-      const farmStage = document.getElementById('farm-stage');
-      farmStage.innerHTML = '';
-      
-      const progress = calculateProgressPercentage(unlockedPets);
-      document.getElementById('farm-count-txt').innerText = `${unlockedPets.length} / ${TOTAL_MUNCHIZ_COUNT} (${progress}%)`;
-
-      Object.keys(ALL_MUNCHIZ).forEach((petKey) => {
-        const pet = ALL_MUNCHIZ[petKey];
-        const isUnlocked = unlockedPets.includes(petKey);
-        const card = document.createElement('div');
-        card.className = `farm-pet-card ${isUnlocked ? '' : 'locked'}`;
-
-        if (isUnlocked) {
-          card.innerHTML = `
-            <img src="${pet.img}" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:dog-face.svg';" alt="${pet.name}">
-            <span style="font-weight:800; color:#2b8a3e; font-size:11px; margin-top:3px;">${pet.name}</span>
-            <span style="font-size:10px; color:#6b7280;">${petKey === currentPet ? '✨ En cuarto' : 'Elegir'}</span>
-          `;
-          card.style.cursor = 'pointer';
-          card.onclick = () => {
-            currentPet = petKey;
-            saveGame();
-            renderAll();
-            switchView('room');
-            playTone(600, 0.1);
-          };
-        } else {
-          card.innerHTML = `
-            <img src="${pet.img}" onerror="this.onerror=null; this.src='https://api.iconify.design/fluent-emoji:dog-face.svg';" alt="${pet.name}">
-            <span style="font-weight:800; color:#868e96; font-size:11px; margin-top:3px;">${pet.name}</span>
-            <button class="btn-buy-pet" onclick="buyPet('${petKey}', ${pet.price})">🪙 ${pet.price}</button>
-          `;
-        }
-        farmStage.appendChild(card);
-      });
-    }
-
-    function buyPet(petKey, price) {
-      if (coins >= price) {
-        coins -= price;
-        unlockedPets.push(petKey);
-        currentPet = petKey;
-        level = unlockedPets.length;
-        saveGame();
-        renderAll();
-
-        playTone(600, 0.1);
-        setTimeout(() => playTone(880, 0.25), 120);
-
-        const progress = calculateProgressPercentage(unlockedPets);
-        document.getElementById('pet-message').innerText = `¡Desbloqueaste a ${ALL_MUNCHIZ[petKey].name}! Subiste a Nivel ${level} (${progress}% de avance) 🎉🪙`;
-        switchView('room');
-      } else {
-        playTone(220, 0.2);
-        alert(`¡Te faltan monedas! Tienes ${coins} y necesitas ${price}. Juega a los minijuegos para ganar más.`);
-      }
-    }
-
-    function renderParty() {
-      const partyDancers = document.getElementById('party-dancers');
-      partyDancers.innerHTML = '';
-
-      const sofiImg = document.createElement('img');
-      sofiImg.src = 'img/sofi.png';
-      sofiImg.className = 'dancer-munchiz dancing-1';
-      sofiImg.title = '¡Sofi Darlen en la pista! 👑💖';
-      partyDancers.appendChild(sofiImg);
-
-      const moanaImg = document.createElement('img');
-      moanaImg.src = 'img/moana.png';
-      moanaImg.className = 'dancer-munchiz dancing-2';
-      moanaImg.title = '¡Moana bailando con ritmo! 🌺✨';
-      partyDancers.appendChild(moanaImg);
-
-      const rodriImg = document.createElement('img');
-      rodriImg.src = 'img/rodri.png';
-      rodriImg.className = 'dancer-munchiz dancing-1';
-      rodriImg.title = '¡Rodri con todo el flow en la fiesta! 🎸🔥';
-      partyDancers.appendChild(rodriImg);
-
-      unlockedPets.forEach((petKey, idx) => {
-        const pet = ALL_MUNCHIZ[petKey];
-        if (petKey === 'sofi' || petKey === 'moana' || petKey === 'rodri') return;
-        const img = document.createElement('img');
-        img.src = pet.img;
-        img.className = `dancer-munchiz ${idx % 2 === 0 ? 'dancing-2' : 'dancing-1'}`;
-        img.title = `${pet.name} bailando! 💃`;
-        partyDancers.appendChild(img);
-      });
-
-      partyBurst();
-    }
-
-    function partyBurst(e) {
-      const stage = document.getElementById('party-stage');
-      const stageRect = stage.getBoundingClientRect();
-      const partyEmojis = ['✨', '🎶', '💜', '💖', '⭐', '🌈', '🎉', '🎸', '🌺'];
-
-      const originX = e ? e.clientX : stageRect.left + stageRect.width / 2;
-      const originY = e ? e.clientY : stageRect.top + stageRect.height / 2;
-
-      for (let i = 0; i < 10; i++) {
-        setTimeout(() => {
-          spawnSparkle(
-            originX + (Math.random() * 80 - 40),
-            originY + (Math.random() * 60 - 30),
-            partyEmojis[Math.floor(Math.random() * partyEmojis.length)]
-          );
-        }, i * 50);
-      }
-      playTone(450 + Math.random() * 300, 0.08);
-    }
-
-    function togglePartyMusic() {
-      if (isPartyMusicPlaying) {
-        stopPartyMusic();
-      } else {
-        startPartyMusic();
-      }
-    }
-
-    function startPartyMusic() {
-      isPartyMusicPlaying = true;
-      document.getElementById('btn-party-music').innerText = "⏸️ Pausar Fiesta";
-      document.getElementById('btn-party-music').style.background = "#ff4088";
-
-      partyAudio.play().catch(() => {
-        startSynthPartyBeat();
-      });
-    }
-
-    function stopPartyMusic() {
-      isPartyMusicPlaying = false;
-      const btn = document.getElementById('btn-party-music');
-      if (btn) {
-        btn.innerText = "▶️ Poner Música MP3";
-        btn.style.background = "#c084fc";
-      }
-      partyAudio.pause();
-      if (synthBassInterval) {
-        clearInterval(synthBassInterval);
-        synthBassInterval = null;
-      }
-    }
-
-    function startSynthPartyBeat() {
-      if (synthBassInterval) clearInterval(synthBassInterval);
-      const bassNotes = [130.81, 146.83, 164.81, 196.00];
-      let step = 0;
-
-      synthBassInterval = setInterval(() => {
-        if (!isPartyMusicPlaying) return;
-        playTone(bassNotes[step % bassNotes.length], 0.12);
-        if (step % 2 === 0) {
-          setTimeout(() => playTone(650, 0.04), 120);
-        }
-        step++;
-      }, 240);
-    }
-
-    function updateBars() {
-      document.getElementById('hunger-bar').style.width = stats.hunger + '%';
-      document.getElementById('fun-bar').style.width = stats.fun + '%';
-      document.getElementById('energy-bar').style.width = stats.energy + '%';
-      saveGame();
-    }
-
-    setInterval(() => {
-      if (!currentUser) return;
-      stats.hunger = Math.max(0, stats.hunger - 1.2);
-      stats.fun = Math.max(0, stats.fun - 1.0);
-      stats.energy = Math.max(0, stats.energy - 0.8);
-      updateBars();
-    }, 10000);
-
-    function feedItem(amount, msg, foodEmoji, cost) {
-      if (isSleeping) return;
-      if (coins < cost) {
-        playTone(220, 0.2);
-        document.getElementById('pet-message').innerText = `¡Te faltan monedas! Cuesta ${cost}🪙. ¡Gana jugando! 🎮`;
-        closeModal('food-modal');
-        return;
-      }
-
-      coins -= cost;
-      playMunchSound();
-
-      const avatar = document.getElementById('pet-avatar');
-      avatar.classList.remove('eating-anim');
-      void avatar.offsetWidth;
-      avatar.classList.add('eating-anim');
-
-      const avatarRect = avatar.getBoundingClientRect();
-      const midX = avatarRect.left + avatarRect.width / 2;
-      const midY = avatarRect.top + avatarRect.height / 2;
-
-      for (let i = 0; i < 6; i++) {
-        setTimeout(() => {
-          spawnSparkle(
-            midX + (Math.random() * 70 - 35),
-            midY + (Math.random() * 60 - 30),
-            i % 2 === 0 ? foodEmoji : '💖'
-          );
-        }, i * 70);
-      }
-
-      stats.hunger = Math.min(100, stats.hunger + amount);
-      document.getElementById('pet-message').innerText = `${msg} (-${cost}🪙)`;
-      closeModal('food-modal');
-      renderPet();
-      saveGame();
-    }
-
-    function petMunchiz(e) {
-      if (isSleeping) return;
-      playTone(620, 0.08);
-      if (e) spawnSparkle(e.clientX, e.clientY, '💖');
-      stats.fun = Math.min(100, stats.fun + 3);
-      document.getElementById('pet-message').innerText = `¡${ALL_MUNCHIZ[currentPet].name} te quiere mucho! 💕`;
-      updateBars();
-    }
-
-    function washPet(e) {
-      if (isSleeping) return;
-      const cost = 3;
-      if (coins < cost) {
-        playTone(220, 0.2);
-        document.getElementById('pet-message').innerText = `¡El baño cuesta ${cost}🪙! Juega minijuegos para ganar más 🎮`;
-        return;
-      }
-
-      coins -= cost;
-      playBubblePopSound();
-      spawnBubbleStorm();
-
-      if (e) spawnSparkle(e.clientX, e.clientY, '🧼');
-      stats.fun = Math.min(100, stats.fun + 5);
-      stats.energy = Math.min(100, stats.energy + 3);
-      document.getElementById('pet-message').innerText = `¡Super baño de burbujas pop-pop! 🧼🫧 (-${cost}🪙)`;
-      renderPet();
-      saveGame();
-    }
-
-    function sleepPet() {
-      if (isSleeping) return;
-      const cost = 5;
-      if (coins < cost) {
-        playTone(220, 0.2);
-        document.getElementById('pet-message').innerText = `¡La siesta cuesta ${cost}🪙! Juega minijuegos para ganar más 🎮`;
-        return;
-      }
-
-      coins -= cost;
-      isSleeping = true;
-
-      playLullabySound();
-
-      const nightOverlay = document.getElementById('night-overlay');
-      const avatar = document.getElementById('pet-avatar');
-      const msg = document.getElementById('pet-message');
-
-      nightOverlay.classList.add('active');
-      avatar.classList.add('sleeping-anim');
-      msg.innerText = `Zzz... Hora de la siesta con cancioncita de cuna 🌙💤 (-${cost}🪙)`;
-
-      const avatarRect = avatar.getBoundingClientRect();
-      const midX = avatarRect.left + avatarRect.width / 2;
-      const midY = avatarRect.top + avatarRect.height / 2;
-
-      const sleepIcons = ['💤', '🌙', '⭐', '☁️', '💤'];
-      for (let i = 0; i < 8; i++) {
-        setTimeout(() => {
-          spawnSparkle(
-            midX + (Math.random() * 50 - 25),
-            midY - 20 - (i * 8),
-            sleepIcons[i % sleepIcons.length]
-          );
-        }, i * 280);
-      }
-
-      setTimeout(() => {
-        nightOverlay.classList.remove('active');
-        avatar.classList.remove('sleeping-anim');
-        stats.energy = Math.min(100, stats.energy + 18);
-        msg.innerText = "¡Buenos días! Se siente descansado ☀️🌸";
-        renderPet();
-        isSleeping = false;
-        saveGame();
-      }, 2600);
-    }
-
-    function wearAccessory(src) {
-      savedAccessory = src;
-      renderPet();
-      saveGame();
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    // ==========================================
-    // MINIJUEGO 1: ATRAPAR DULCES
-    // ==========================================
-    let catchInterval = null;
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-    let basketX = 150;
-    let cookieY = 0;
-    let cookieX = 180;
-    const basketWidth = 85;
-    const basketHeight = 55;
-    const cookieSize = 42;
-
-    function moveBasket(clientX) {
-      const rect = canvas.getBoundingClientRect();
-      basketX = (clientX - rect.left) * (canvas.width / rect.width) - basketWidth / 2;
-      if (basketX < 0) basketX = 0;
-      if (basketX > canvas.width - basketWidth) basketX = canvas.width - basketWidth;
-    }
-
-    canvas.onmousemove = (e) => moveBasket(e.clientX);
-    canvas.ontouchmove = (e) => {
-      if (e.touches.length > 0) moveBasket(e.touches[0].clientX);
-      e.preventDefault();
-    };
-
-    function startCatchGame() {
-      stopCatchGame();
-      cookieY = 0;
-      cookieX = Math.random() * (canvas.width - cookieSize - 30) + 15;
-      catchInterval = setInterval(catchGameLoop, 1000 / 35);
-    }
-
-    function stopCatchGame() {
-      if (catchInterval) clearInterval(catchInterval);
-      catchInterval = null;
-    }
-
-    function catchGameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (imgBgGame.complete && imgBgGame.naturalWidth > 0) {
-        ctx.drawImage(imgBgGame, 0, 0, canvas.width, canvas.height);
-      } else {
-        ctx.fillStyle = "#fff0f6";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      if (imgCookie.complete && imgCookie.naturalWidth > 0) {
-        ctx.drawImage(imgCookie, cookieX, cookieY, cookieSize, cookieSize);
-      } else {
-        ctx.fillStyle = "#ffb6c1";
-        ctx.beginPath();
-        ctx.arc(cookieX + cookieSize/2, cookieY + cookieSize/2, cookieSize/2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      const basketY = canvas.height - basketHeight - 10;
-      if (imgBasket.complete && imgBasket.naturalWidth > 0) {
-        ctx.drawImage(imgBasket, basketX, basketY, basketWidth, basketHeight);
-      } else {
-        ctx.fillStyle = "#ff85b3";
-        ctx.fillRect(basketX, basketY + 20, basketWidth, 25);
-      }
-
-      cookieY += 5.2;
-
-      if (
-        cookieY + cookieSize >= basketY &&
-        cookieX + cookieSize >= basketX &&
-        cookieX <= basketX + basketWidth
-      ) {
-        playTone(720, 0.08);
-        coins += 2;
-        document.getElementById('coin-txt').innerText = coins;
-        stats.fun = Math.min(100, stats.fun + 4);
-        cookieY = 0;
-        cookieX = Math.random() * (canvas.width - cookieSize - 30) + 15;
-        updateBars();
-      } else if (cookieY > canvas.height) {
-        playTone(240, 0.18);
-        if (coins > 0) {
-          coins = Math.max(0, coins - 1);
-          document.getElementById('coin-txt').innerText = coins;
-        }
-        spawnSparkle(canvas.getBoundingClientRect().left + basketX + 20, canvas.getBoundingClientRect().top + 100, '💔 -1🪙');
-        cookieY = 0;
-        cookieX = Math.random() * (canvas.width - cookieSize - 30) + 15;
-        saveGame();
-      }
-    }
-
-    // ==========================================
-    // MINIJUEGO 2: FLAPPY MUNCHIZ
-    // ==========================================
-    const fCanvas = document.getElementById('flappy-canvas');
-    const fCtx = fCanvas.getContext('2d');
-    let fInterval = null;
-    let birdY = 150, birdVel = 0;
-    let pipes = [];
-    let fScore = 0;
-    let fGameOver = false;
-
-    let trailParticles = [];
-    const trailEmojis = ['✨', '💖', '🌸', '⭐', '🫧'];
-    const pipeWidth = 58;
-    const birdSize = 44;
-
-    function addTrailSparkle(x, y, extra = false) {
-      const count = extra ? 4 : 1;
-      for (let i = 0; i < count; i++) {
-        trailParticles.push({
-          x: x + (Math.random() * 8 - 4),
-          y: y + (Math.random() * 12 - 6),
-          size: Math.random() * 12 + 10,
-          emoji: trailEmojis[Math.floor(Math.random() * trailEmojis.length)],
-          vx: -(Math.random() * 2.2 + 1.8),
-          vy: (Math.random() - 0.5) * 1.8,
-          alpha: 1.0,
-          life: 1.0
-        });
-      }
-    }
-
-    function flap() {
-      if (fGameOver) {
-        resetFlappy();
-        return;
-      }
-      playTone(560, 0.07);
-      birdVel = -5.4;
-      addTrailSparkle(75, birdY + birdSize/2, true);
-    }
-
-    fCanvas.onclick = flap;
-    fCanvas.ontouchstart = (e) => { flap(); e.preventDefault(); };
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' && currentMinigame === 'flappy') flap();
-    });
-
-    function resetFlappy() {
-      birdY = 150;
-      birdVel = 0;
-      pipes = [];
-      trailParticles = [];
-      fScore = 0;
-      fGameOver = false;
-    }
-
-    function startFlappyGame() {
-      stopFlappyGame();
-      resetFlappy();
-      fInterval = setInterval(flappyLoop, 1000 / 35);
-    }
-
-    function stopFlappyGame() {
-      if (fInterval) clearInterval(fInterval);
-      fInterval = null;
-    }
-
-    function flappyLoop() {
-      fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
-
-      if (imgFlappyBg.complete && imgFlappyBg.naturalWidth > 0) {
-        fCtx.drawImage(imgFlappyBg, 0, 0, fCanvas.width, fCanvas.height);
-      } else {
-        fCtx.fillStyle = "#e0f2fe";
-        fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
-        fCtx.fillStyle = "#ffffff99";
-        fCtx.beginPath();
-        fCtx.arc(100, 80, 40, 0, Math.PI * 2);
-        fCtx.arc(140, 80, 48, 0, Math.PI * 2);
-        fCtx.arc(180, 80, 36, 0, Math.PI * 2);
-        fCtx.fill();
-      }
-
-      if (!fGameOver) {
-        birdVel += 0.29;
-        birdY += birdVel;
-
-        addTrailSparkle(72, birdY + birdSize/2 + Math.sin(Date.now() / 120) * 4);
-
-        if (pipes.length === 0 || pipes[pipes.length - 1].x < fCanvas.width - 200) {
-          const gap = 175;
-          const topH = Math.random() * (fCanvas.height - gap - 90) + 35;
-          pipes.push({ x: fCanvas.width, top: topH, bottom: topH + gap, passed: false });
-        }
-      }
-
-      for (let i = trailParticles.length - 1; i >= 0; i--) {
-        const part = trailParticles[i];
-        part.x += part.vx;
-        part.y += part.vy;
-        part.life -= 0.04;
-        part.alpha = Math.max(0, part.life);
-
-        fCtx.save();
-        fCtx.globalAlpha = part.alpha;
-        fCtx.font = `${part.size}px Quicksand, sans-serif`;
-        fCtx.textAlign = "center";
-        fCtx.textBaseline = "middle";
-        fCtx.fillText(part.emoji, part.x, part.y);
-        fCtx.restore();
-
-        if (part.life <= 0) trailParticles.splice(i, 1);
-      }
-
-      for (let i = pipes.length - 1; i >= 0; i--) {
-        const p = pipes[i];
-        if (!fGameOver) p.x -= 2.3;
-
-        if (imgPilarTop.complete && imgPilarTop.naturalWidth > 0) {
-          fCtx.drawImage(imgPilarTop, p.x, p.top - 500, pipeWidth, 500);
-        } else {
-          fCtx.fillStyle = "#ffb3c6";
-          fCtx.fillRect(p.x, 0, pipeWidth, p.top);
-          fCtx.fillStyle = "#ff85a2";
-          fCtx.fillRect(p.x - 3, p.top - 14, pipeWidth + 6, 14);
-        }
-
-        if (imgPilarBottom.complete && imgPilarBottom.naturalWidth > 0) {
-          fCtx.drawImage(imgPilarBottom, p.x, p.bottom, pipeWidth, 500);
-        } else {
-          fCtx.fillStyle = "#ffb3c6";
-          fCtx.fillRect(p.x, p.bottom, pipeWidth, fCanvas.height - p.bottom);
-          fCtx.fillStyle = "#ff85a2";
-          fCtx.fillRect(p.x - 3, p.bottom, pipeWidth + 6, 14);
-        }
-
-        const birdBox = { x: 75, y: birdY, w: birdSize, h: birdSize };
-        if (
-          birdBox.x + birdBox.w - 8 > p.x && birdBox.x + 8 < p.x + pipeWidth &&
-          (birdBox.y + 7 < p.top || birdBox.y + birdBox.h - 7 > p.bottom)
-        ) {
-          fGameOver = true;
-          playTone(200, 0.25);
-        }
-
-        if (!p.passed && p.x + pipeWidth < birdBox.x) {
-          p.passed = true;
-          fScore++;
-          coins += 1;
-          document.getElementById('coin-txt').innerText = coins;
-          playTone(850, 0.08);
-          saveGame();
-        }
-
-        if (p.x < -pipeWidth - 20) pipes.splice(i, 1);
-      }
-
-      if (birdY > fCanvas.height - birdSize || birdY < -15) {
-        fGameOver = true;
-      }
-
-      fCtx.save();
-      fCtx.translate(75 + birdSize/2, birdY + birdSize/2);
-      fCtx.rotate(Math.min(Math.PI / 5, Math.max(-Math.PI / 5, birdVel * 0.07)));
-
-      let flyerImg = imgFlappyFlyer;
-      if (!flyerImg.complete || flyerImg.naturalWidth === 0) {
-        flyerImg = document.getElementById('pet-avatar');
-      }
-
-      if (flyerImg.complete && flyerImg.naturalWidth > 0) {
-        fCtx.drawImage(flyerImg, -birdSize/2, -birdSize/2, birdSize, birdSize);
-      } else {
-        fCtx.fillStyle = "#ff85b3";
-        fCtx.beginPath();
-        fCtx.arc(0, 0, birdSize/2, 0, Math.PI * 2);
-        fCtx.fill();
-      }
-      fCtx.restore();
-
-      fCtx.fillStyle = "#5c4d61";
-      fCtx.font = "bold 22px Quicksand";
-      fCtx.fillText(`⭐ Puntos: ${fScore}`, 20, 36);
-
-      if (fGameOver) {
-        fCtx.fillStyle = "rgba(255, 255, 255, 0.88)";
-        fCtx.fillRect(40, 110, fCanvas.width - 80, 140);
-        fCtx.strokeStyle = "#ffd1e3";
-        fCtx.lineWidth = 4;
-        fCtx.strokeRect(40, 110, fCanvas.width - 80, 140);
-
-        fCtx.fillStyle = "#ff65a3";
-        fCtx.font = "bold 22px Quicksand";
-        fCtx.textAlign = "center";
-        fCtx.fillText("¡Casi lo logras! 🌸", fCanvas.width / 2, 155);
-        fCtx.fillStyle = "#5c4d61";
-        fCtx.font = "bold 15px Quicksand";
-        fCtx.fillText("Toca para volver a volar 🕊️", fCanvas.width / 2, 195);
-        fCtx.textAlign = "left";
-      }
-    }
-
-    // ==========================================
-    // MINIJUEGO 3: SALTO A LAS NUBES
-    // ==========================================
-    const jCanvas = document.getElementById('jump-canvas');
-    const jCtx = jCanvas.getContext('2d');
-    let jInterval = null;
-    let jPlayer = { x: 180, y: 260, vx: 0, vy: 0, size: 46 };
-    let jPlatforms = [];
-    let jCoins = [];
-    let jStars = [];
-    let jScore = 0;
-    let jGameOver = false;
-
-    function initJumpGame() {
-      jPlayer = { x: jCanvas.width / 2 - 23, y: 240, vx: 0, vy: -7.8, size: 46 };
-      jPlatforms = [];
-      jCoins = [];
-      jStars = [];
-      jScore = 0;
-      jGameOver = false;
-
-      jPlatforms.push({ x: jCanvas.width / 2 - 50, y: 320, w: 100, h: 28 });
-
-      for (let y = 250; y > 30; y -= 58) {
-        createJumpPlatform(y);
-      }
-    }
-
-    function createJumpPlatform(y) {
-      const w = 88;
-      const h = 26;
-      const x = Math.random() * (jCanvas.width - w - 20) + 10;
-      jPlatforms.push({ x, y, w, h });
-
-      const rand = Math.random();
-      if (rand < 0.18) {
-        jStars.push({ x: x + w / 2 - 13, y: y - 24, size: 26, collected: false });
-      } else if (rand < 0.50) {
-        jCoins.push({ x: x + w / 2 - 11, y: y - 22, size: 22, collected: false });
-      }
-    }
-
-    function startJumpGame() {
-      stopJumpGame();
-      initJumpGame();
-      jInterval = setInterval(jumpGameLoop, 1000 / 35);
-    }
-
-    function stopJumpGame() {
-      if (jInterval) clearInterval(jInterval);
-      jInterval = null;
-    }
-
-    function handleJumpTouch(clientX) {
-      if (jGameOver) {
-        initJumpGame();
-        return;
-      }
-      const rect = jCanvas.getBoundingClientRect();
-      const touchX = (clientX - rect.left) * (jCanvas.width / rect.width);
-      if (touchX < jPlayer.x + jPlayer.size / 2) {
-        jPlayer.vx = -4.8;
-      } else {
-        jPlayer.vx = 4.8;
-      }
-    }
-
-    jCanvas.onmousedown = (e) => handleJumpTouch(e.clientX);
-    jCanvas.ontouchstart = (e) => {
-      if (e.touches.length > 0) handleJumpTouch(e.touches[0].clientX);
-      e.preventDefault();
-    };
-
-    window.addEventListener('keydown', (e) => {
-      if (currentMinigame !== 'jump') return;
-      if (e.code === 'ArrowLeft' || e.code === 'KeyA') jPlayer.vx = -5;
-      if (e.code === 'ArrowRight' || e.code === 'KeyD') jPlayer.vx = 5;
-    });
-
-    window.addEventListener('keyup', (e) => {
-      if (currentMinigame !== 'jump') return;
-      if (['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(e.code)) jPlayer.vx = 0;
-    });
-
-    function jumpGameLoop() {
-      jCtx.clearRect(0, 0, jCanvas.width, jCanvas.height);
-
-      if (imgCloudBg.complete && imgCloudBg.naturalWidth > 0) {
-        jCtx.drawImage(imgCloudBg, 0, 0, jCanvas.width, jCanvas.height);
-      } else {
-        const grad = jCtx.createLinearGradient(0, 0, 0, jCanvas.height);
-        grad.addColorStop(0, '#bae6fd');
-        grad.addColorStop(0.5, '#fce7f3');
-        grad.addColorStop(1, '#fef9c3');
-        jCtx.fillStyle = grad;
-        jCtx.fillRect(0, 0, jCanvas.width, jCanvas.height);
-      }
-
-      if (!jGameOver) {
-        jPlayer.vy += 0.28;
-        jPlayer.y += jPlayer.vy;
-        jPlayer.x += jPlayer.vx;
-        jPlayer.vx *= 0.92;
-
-        if (jPlayer.x < -jPlayer.size / 2) jPlayer.x = jCanvas.width - jPlayer.size / 2;
-        if (jPlayer.x > jCanvas.width - jPlayer.size / 2) jPlayer.x = -jPlayer.size / 2;
-
-        if (jPlayer.vy > 0) {
-          for (let p of jPlatforms) {
-            if (
-              jPlayer.x + jPlayer.size * 0.7 > p.x &&
-              jPlayer.x + jPlayer.size * 0.3 < p.x + p.w &&
-              jPlayer.y + jPlayer.size >= p.y &&
-              jPlayer.y + jPlayer.size <= p.y + p.h + 10
-            ) {
-              jPlayer.vy = -8.6;
-              playTone(620, 0.06);
-              break;
+        function getUserData() { 
+            let d = JSON.parse(localStorage.getItem("11padel_app_data"));
+            if (!d) {
+                d = { jugadores: [], ligasAmericano: [], ligasPozo: [] };
+                localStorage.setItem("11padel_app_data", JSON.stringify(d));
             }
-          }
+            return d;
+        }
+        function saveUserData(d) { localStorage.setItem("11padel_app_data", JSON.stringify(d)); }
+
+        function normalizarUrl(url) {
+            if (!url || url.trim() === "" || url === "#") return "https://instagram.com";
+            let clean = url.trim();
+            if (!clean.startsWith("http://") && !clean.startsWith("https://")) {
+                clean = "https://" + clean;
+            }
+            return clean;
         }
 
-        for (let s of jStars) {
-          if (!s.collected &&
-              Math.hypot((jPlayer.x + jPlayer.size / 2) - (s.x + s.size / 2), (jPlayer.y + jPlayer.size / 2) - (s.y + s.size / 2)) < 28) {
-            s.collected = true;
-            jPlayer.vy = -14.5;
-            playSuperJumpSound();
-            spawnSparkle(jCanvas.getBoundingClientRect().left + s.x, jCanvas.getBoundingClientRect().top + s.y, '⭐✨');
-          }
+        function aplicarEnlaces() {
+            const appLnk = document.getElementById("appLogoLink");
+            if (appLnk) appLnk.href = normalizarUrl(appConfig.appLogoUrl || "https://instagram.com");
+
+            const main = document.getElementById("sponsorMainLink");
+            if (main) main.href = normalizarUrl(appConfig.mainUrl);
+
+            for (let i = 1; i <= 6; i++) {
+                const btn = document.getElementById(`linkBanner${i}`);
+                if (btn) btn.href = normalizarUrl(appConfig[`banner${i}Url`]);
+            }
+
+            renderTorneosPublicos();
         }
 
-        if (jPlayer.y < jCanvas.height * 0.45) {
-          const diff = (jCanvas.height * 0.45) - jPlayer.y;
-          jPlayer.y = jCanvas.height * 0.45;
-          jScore += Math.floor(diff);
+        // RENDER DE CARRUSEL DE 4 TORNEOS
+        function renderTorneosPublicos() {
+            const grid = document.getElementById("tournamentsGridContainer");
+            if (!grid) return;
+            grid.innerHTML = "";
 
-          for (let p of jPlatforms) p.y += diff;
-          for (let c of jCoins) c.y += diff;
-          for (let s of jStars) s.y += diff;
+            let lista = appConfig.torneos || [];
+            while (lista.length < 4) {
+                lista.push({ nombre: `Torneo ${lista.length + 1}`, link: "https://wa.me/", img: `img/torneo${lista.length + 1}.png` });
+            }
 
-          jPlatforms = jPlatforms.filter(p => p.y < jCanvas.height + 20);
-          jCoins = jCoins.filter(c => c.y < jCanvas.height + 20);
-          jStars = jStars.filter(s => s.y < jCanvas.height + 20);
-
-          while (jPlatforms.length < 8) {
-            const highestY = Math.min(...jPlatforms.map(p => p.y));
-            createJumpPlatform(highestY - (Math.random() * 18 + 52));
-          }
+            lista.slice(0, 4).forEach((t, idx) => {
+                const imgSrc = t.img || `img/torneo${idx+1}.png`;
+                grid.innerHTML += `
+                    <div class="tournament-item-card">
+                        <div class="tournament-flyer-wrapper">
+                            <img src="${imgSrc}" alt="Flyer Torneo ${idx+1}" class="tournament-flyer-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                            <div class="tournament-fallback-icon" style="display:none;">
+                                <i class="fas fa-trophy"></i>
+                                <span>Flyer Oficial</span>
+                            </div>
+                        </div>
+                        <div class="tournament-content-box">
+                            <div class="tournament-name-txt">${t.nombre || 'Torneo de Pádel'}</div>
+                            <a href="${normalizarUrl(t.link)}" target="_blank" rel="noopener noreferrer" class="btn-tournament-link">
+                                <i class="fas fa-check-circle"></i> Inscribirme
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        for (let c of jCoins) {
-          if (!c.collected &&
-              Math.hypot((jPlayer.x + jPlayer.size / 2) - (c.x + c.size / 2), (jPlayer.y + jPlayer.size / 2) - (c.y + c.size / 2)) < 26) {
-            c.collected = true;
-            coins += 2;
-            document.getElementById('coin-txt').innerText = coins;
-            playTone(880, 0.08);
-            saveGame();
-          }
-        }
-
-        if (jPlayer.y > jCanvas.height + 15) {
-          jGameOver = true;
-          playTone(220, 0.22);
-        }
-      }
-
-      for (let p of jPlatforms) {
-        if (imgCloudPlatform.complete && imgCloudPlatform.naturalWidth > 0) {
-          jCtx.drawImage(imgCloudPlatform, p.x, p.y, p.w, p.h);
-        } else {
-          jCtx.save();
-          jCtx.fillStyle = '#ffffff';
-          jCtx.beginPath();
-          jCtx.roundRect(p.x, p.y, p.w, p.h, 12);
-          jCtx.fill();
-          jCtx.lineWidth = 2.5;
-          jCtx.strokeStyle = '#cbe4f9';
-          jCtx.stroke();
-          jCtx.fillStyle = '#ffdeeb';
-          jCtx.beginPath();
-          jCtx.arc(p.x + p.w / 2, p.y + p.h / 2, 4, 0, Math.PI * 2);
-          jCtx.fill();
-          jCtx.restore();
-        }
-      }
-
-      for (let c of jCoins) {
-        if (!c.collected) {
-          if (imgCoin.complete && imgCoin.naturalWidth > 0) {
-            jCtx.drawImage(imgCoin, c.x, c.y, c.size, c.size);
-          } else {
-            jCtx.font = `${c.size}px Quicksand, sans-serif`;
-            jCtx.textAlign = 'center';
-            jCtx.textBaseline = 'middle';
-            jCtx.fillText('🪙', c.x + c.size / 2, c.y + c.size / 2);
-          }
-        }
-      }
-
-      for (let s of jStars) {
-        if (!s.collected) {
-          if (imgSpringStar.complete && imgSpringStar.naturalWidth > 0) {
-            jCtx.drawImage(imgSpringStar, s.x, s.y, s.size, s.size);
-          } else {
-            jCtx.font = `${s.size}px Quicksand, sans-serif`;
-            jCtx.textAlign = 'center';
-            jCtx.textBaseline = 'middle';
-            jCtx.fillText('⭐', s.x + s.size / 2, s.y + s.size / 2);
-          }
-        }
-      }
-
-      const currentImg = document.getElementById('pet-avatar');
-      jCtx.save();
-      if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
-        jCtx.drawImage(currentImg, jPlayer.x, jPlayer.y, jPlayer.size, jPlayer.size);
-      } else {
-        jCtx.fillStyle = '#ff85b3';
-        jCtx.beginPath();
-        jCtx.arc(jPlayer.x + jPlayer.size / 2, jPlayer.y + jPlayer.size / 2, jPlayer.size / 2, 0, Math.PI * 2);
-        jCtx.fill();
-      }
-      jCtx.restore();
-
-      jCtx.fillStyle = '#5c4d61';
-      jCtx.font = 'bold 20px Quicksand';
-      jCtx.textAlign = 'left';
-      jCtx.fillText(`☁️ Altura: ${jScore}`, 16, 34);
-
-      if (jGameOver) {
-        jCtx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-        jCtx.fillRect(40, 110, jCanvas.width - 80, 150);
-        jCtx.strokeStyle = '#ffd1e3';
-        jCtx.lineWidth = 4;
-        jCtx.strokeRect(40, 110, jCanvas.width - 80, 150);
-
-        jCtx.fillStyle = '#ff65a3';
-        jCtx.font = 'bold 22px Quicksand';
-        jCtx.textAlign = 'center';
-        jCtx.fillText('¡Te caíste de la nube! ☁️💔', jCanvas.width / 2, 155);
-
-        jCtx.fillStyle = '#5c4d61';
-        jCtx.font = 'bold 15px Quicksand';
-        jCtx.fillText(`Llegaste a ${jScore} pts`, jCanvas.width / 2, 185);
-        jCtx.fillText('Toca la pantalla para rebotar de nuevo ✨', jCanvas.width / 2, 220);
-      }
-    }
-
-    // ==========================================
-    // MINIJUEGO 4: MEMORIA DE GALLETAS
-    // ==========================================
-    const memoryItems = ['🍪', '🍓', '🍰', '🧁', '⭐', '🪙'];
-    let memoryDeck = [];
-    let flippedCards = [];
-    let matchedPairs = 0;
-
-    function initMemoryGame() {
-      const board = document.getElementById('memory-board');
-      board.innerHTML = '';
-      flippedCards = [];
-      matchedPairs = 0;
-      document.getElementById('mem-pairs-txt').innerText = `0 / 6`;
-
-      memoryDeck = [...memoryItems, ...memoryItems].sort(() => Math.random() - 0.5);
-
-      memoryDeck.forEach((icon, idx) => {
-        const card = document.createElement('div');
-        card.className = 'memory-card';
-        card.dataset.index = idx;
-        card.dataset.icon = icon;
-        card.innerText = '❓';
-        card.onclick = () => flipMemoryCard(card);
-        board.appendChild(card);
-      });
-    }
-
-    function flipMemoryCard(card) {
-      if (flippedCards.length >= 2 || card.classList.contains('revealed') || card.classList.contains('matched')) return;
-
-      playTone(550, 0.06);
-      card.classList.add('revealed');
-      card.innerText = card.dataset.icon;
-      flippedCards.push(card);
-
-      if (flippedCards.length === 2) {
-        const [c1, c2] = flippedCards;
-        if (c1.dataset.icon === c2.dataset.icon) {
-          playTone(850, 0.1);
-          c1.classList.add('matched');
-          c2.classList.add('matched');
-          matchedPairs++;
-          document.getElementById('mem-pairs-txt').innerText = `${matchedPairs} / 6`;
-          flippedCards = [];
-
-          if (matchedPairs === 6) {
-            playSuperJumpSound();
-            coins += 15;
-            document.getElementById('coin-txt').innerText = coins;
-            saveGame();
-            setTimeout(() => alert('¡Felicidades! 🎉 Completaste la memoria y ganaste 15 🪙'), 200);
-          }
-        } else {
-          setTimeout(() => {
-            c1.classList.remove('revealed');
-            c2.classList.remove('revealed');
-            c1.innerText = '❓';
-            c2.innerText = '❓';
-            flippedCards = [];
-          }, 700);
-        }
-      }
-    }
-
-    // ==========================================
-    // MINIJUEGO 5: TOCA AL MUNCHIZ
-    // ==========================================
-    let whackTimer = null;
-    let whackMoleTimer = null;
-    let whackScore = 0;
-    let whackTimeLeft = 30;
-    let activeHoleIndex = -1;
-
-    function startWhackGame() {
-      stopWhackGame();
-      whackScore = 0;
-      whackTimeLeft = 30;
-      document.getElementById('whack-score-txt').innerText = whackScore;
-      document.getElementById('whack-time-txt').innerText = `${whackTimeLeft}s`;
-
-      whackTimer = setInterval(() => {
-        whackTimeLeft--;
-        document.getElementById('whack-time-txt').innerText = `${whackTimeLeft}s`;
-        if (whackTimeLeft <= 0) {
-          stopWhackGame();
-          playSuperJumpSound();
-          alert(`¡Tiempo! ⏰ Atrapaste a ${whackScore} monstruitos y ganaste ${whackScore * 2} 🪙`);
-          coins += whackScore * 2;
-          document.getElementById('coin-txt').innerText = coins;
-          saveGame();
-        }
-      }, 1000);
-
-      popupWhackMole();
-    }
-
-    function popupWhackMole() {
-      const holes = document.querySelectorAll('.whack-hole');
-      holes.forEach(h => h.classList.remove('active'));
-
-      activeHoleIndex = Math.floor(Math.random() * holes.length);
-      holes[activeHoleIndex].classList.add('active');
-
-      whackMoleTimer = setTimeout(() => {
-        holes[activeHoleIndex].classList.remove('active');
-        if (whackTimeLeft > 0) {
-          setTimeout(popupWhackMole, Math.random() * 300 + 400);
-        }
-      }, Math.random() * 400 + 750);
-    }
-
-    function hitWhackHole(idx) {
-      const holes = document.querySelectorAll('.whack-hole');
-      if (idx === activeHoleIndex && holes[idx].classList.contains('active')) {
-        playTone(750, 0.08);
-        holes[idx].classList.remove('active');
-        whackScore++;
-        document.getElementById('whack-score-txt').innerText = whackScore;
-        clearTimeout(whackMoleTimer);
-        setTimeout(popupWhackMole, 200);
-      }
-    }
-
-    function stopWhackGame() {
-      if (whackTimer) clearInterval(whackTimer);
-      if (whackMoleTimer) clearTimeout(whackMoleTimer);
-      whackTimer = null;
-      whackMoleTimer = null;
-      document.querySelectorAll('.whack-hole').forEach(h => h.classList.remove('active'));
-    }
-
-    // ==========================================
-    // MINIJUEGO 6: SIMÓN DICE KAWAII
-    // ==========================================
-    let simonSequence = [];
-    let simonUserStep = 0;
-    let simonRound = 1;
-    let isSimonPlayingSequence = false;
-    const simonFrequencies = [330, 440, 554, 659];
-
-    function startSimonGame() {
-      simonSequence = [];
-      simonRound = 1;
-      document.getElementById('simon-round-txt').innerText = simonRound;
-      nextSimonRound();
-    }
-
-    function nextSimonRound() {
-      simonUserStep = 0;
-      document.getElementById('simon-round-txt').innerText = simonRound;
-      simonSequence.push(Math.floor(Math.random() * 4));
-      playSimonSequence();
-    }
-
-    function playSimonSequence() {
-      isSimonPlayingSequence = true;
-      let i = 0;
-      const interval = setInterval(() => {
-        lightSimonButton(simonSequence[i]);
-        i++;
-        if (i >= simonSequence.length) {
-          clearInterval(interval);
-          isSimonPlayingSequence = false;
-        }
-      }, 600);
-    }
-
-    function lightSimonButton(id) {
-      const btn = document.getElementById(`simon-${id}`);
-      playTone(simonFrequencies[id], 0.18);
-      btn.classList.add('active-light');
-      setTimeout(() => btn.classList.remove('active-light'), 300);
-    }
-
-    function handleSimonInput(id) {
-      if (isSimonPlayingSequence) return;
-
-      lightSimonButton(id);
-
-      if (id === simonSequence[simonUserStep]) {
-        simonUserStep++;
-        if (simonUserStep >= simonSequence.length) {
-          coins += 3;
-          document.getElementById('coin-txt').innerText = coins;
-          saveGame();
-          simonRound++;
-          setTimeout(nextSimonRound, 900);
-        }
-      } else {
-        playTone(200, 0.25);
-        alert(`¡Te equivocaste de nota! 💔 Llegaste a la Ronda ${simonRound}.`);
-        simonSequence = [];
-      }
-    }
-
-    function renderAll() {
-      renderPetSwitcher();
-      renderPet();
-      renderFarm();
-      updateAudioButtons();
-    }
-
-    renderSavedProfilesMenu();
-    updateAudioButtons();
-    document.getElementById('login-overlay').style.display = 'flex';
-  </script>
-
-  <!-- AUTO-ACTUALIZACIÓN FORZADA DEL SERVICE WORKER EN CELULARES -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then((reg) => {
-          reg.update();
-
-          reg.onupdatefound = () => {
-            const installingWorker = reg.installing;
-            if (installingWorker) {
-              installingWorker.onstatechange = () => {
-                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  window.location.reload();
+        async function sincronizarEnlacesDesdeLaNube() {
+            try {
+                const res = await fetch(CLOUD_DB_URL);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && (data.mainUrl || data.appLogoUrl || data.torneos || data.waCustomMsg !== undefined)) {
+                        appConfig = Object.assign({}, appConfig, data);
+                        localStorage.setItem("11padel_app_config", JSON.stringify(appConfig));
+                        aplicarEnlaces();
+                    }
                 }
-              };
+            } catch (e) {
+                aplicarEnlaces();
             }
-          };
-        }).catch(err => console.log('SW error:', err));
-      });
-    }
-  </script>
+        }
+
+        // SEGURIDAD ADMIN CON CIFRADO SHA-256
+        function solicitarAccesoAdmin() {
+            document.getElementById("inputMasterPinPrompt").value = "";
+            document.getElementById("modalAuthAdmin").classList.add("active");
+            setTimeout(() => document.getElementById("inputMasterPinPrompt").focus(), 150);
+        }
+
+        async function verificarPinAdmin() {
+            const pin = document.getElementById("inputMasterPinPrompt").value.trim();
+            const hashIngresado = await sha256(pin);
+
+            if (hashIngresado !== MASTER_PIN_HASH) {
+                showToast("PIN incorrecto. Acceso denegado.", "error");
+                return;
+            }
+            sesionAdminHash = hashIngresado;
+            closeModal("modalAuthAdmin");
+            abrirPanelAdmin();
+        }
+
+        function abrirPanelAdmin() {
+            const adminCard = document.getElementById("viewAdmin");
+            adminCard.classList.remove("hidden");
+            
+            document.getElementById("adminAppLogoUrl").value = appConfig.appLogoUrl || "";
+            document.getElementById("adminMainSponsorUrl").value = appConfig.mainUrl || "";
+            document.getElementById("adminWaCustomMsg").value = appConfig.waCustomMsg || "";
+            document.getElementById("adminBanner1Url").value = appConfig.banner1Url || "";
+            document.getElementById("adminBanner2Url").value = appConfig.banner2Url || "";
+            document.getElementById("adminBanner3Url").value = appConfig.banner3Url || "";
+            document.getElementById("adminBanner4Url").value = appConfig.banner4Url || "";
+            document.getElementById("adminBanner5Url").value = appConfig.banner5Url || "";
+            document.getElementById("adminBanner6Url").value = appConfig.banner6Url || "";
+
+            const t = appConfig.torneos || [];
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`adminT${i}Name`).value = t[i-1]?.nombre || "";
+                document.getElementById(`adminT${i}Link`).value = t[i-1]?.link || "";
+                document.getElementById(`adminT${i}Img`).value = t[i-1]?.img || `img/torneo${i}.png`;
+            }
+
+            adminCard.scrollIntoView({ behavior: 'smooth' });
+            showToast("Acceso Autorizado");
+        }
+
+        function cerrarPanelAdmin() {
+            document.getElementById("viewAdmin").classList.add("hidden");
+        }
+
+        async function guardarEnlacesEnFirebase() {
+            appConfig.appLogoUrl = document.getElementById("adminAppLogoUrl").value.trim() || "https://instagram.com";
+            appConfig.mainUrl = document.getElementById("adminMainSponsorUrl").value.trim() || "https://instagram.com/sbtotalpadel";
+            appConfig.waCustomMsg = document.getElementById("adminWaCustomMsg").value.trim() || "";
+            appConfig.banner1Url = document.getElementById("adminBanner1Url").value.trim() || "https://instagram.com";
+            appConfig.banner2Url = document.getElementById("adminBanner2Url").value.trim() || "https://instagram.com";
+            appConfig.banner3Url = document.getElementById("adminBanner3Url").value.trim() || "https://instagram.com";
+            appConfig.banner4Url = document.getElementById("adminBanner4Url").value.trim() || "https://instagram.com";
+            appConfig.banner5Url = document.getElementById("adminBanner5Url").value.trim() || "https://instagram.com";
+            appConfig.banner6Url = document.getElementById("adminBanner6Url").value.trim() || "https://instagram.com";
+
+            const torneosEditados = [];
+            for (let i = 1; i <= 4; i++) {
+                const nom = document.getElementById(`adminT${i}Name`).value.trim();
+                const lnk = document.getElementById(`adminT${i}Link`).value.trim();
+                const img = document.getElementById(`adminT${i}Img`).value.trim() || `img/torneo${i}.png`;
+                torneosEditados.push({ nombre: nom || `Torneo ${i}`, link: lnk, img: img });
+            }
+            appConfig.torneos = torneosEditados;
+
+            // En el paquete que viaja a Firebase mandamos el HASH, cumpliendo la regla sin exponer tu clave real
+            const payloadParaNube = Object.assign({}, appConfig, {
+                adminPass: sesionAdminHash || MASTER_PIN_HASH
+            });
+
+            localStorage.setItem("11padel_app_config", JSON.stringify(appConfig));
+            aplicarEnlaces();
+
+            try {
+                showToast("Sincronizando en la nube...");
+                const response = await fetch(CLOUD_DB_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadParaNube)
+                });
+
+                if (!response.ok) throw new Error("Error de autorización en Firebase");
+                showToast("¡Patrocinadores sincronizados exitosamente!");
+            } catch (e) {
+                showToast("Guardado local (Error al sincronizar con la nube).", "error");
+            }
+            cerrarPanelAdmin();
+        }
+
+        // CONTROL DE MODOS
+        let modoSeleccionado = null;
+        function entrarModo(m) {
+            modoSeleccionado = m;
+            document.getElementById("viewHubModos").classList.add("hidden");
+            document.getElementById("viewLigasModo").classList.remove("hidden");
+            document.getElementById("tituloModoLigas").textContent = m === 'americano' ? "Ligas: 8 Loco / Americano" : "Ligas: Pozo / Rey de la Pista";
+            renderLigasDelModo();
+        }
+
+        function backToHubModos() {
+            document.getElementById("viewLigasModo").classList.add("hidden");
+            document.getElementById("viewPadron").classList.add("hidden");
+            document.getElementById("globalFloatingWaBtn").classList.add("hidden");
+            document.getElementById("viewHubModos").classList.remove("hidden");
+        }
+
+        function abrirPadronJugadores() {
+            document.getElementById("viewHubModos").classList.add("hidden");
+            document.getElementById("viewPadron").classList.remove("hidden");
+            renderPadron();
+        }
+
+        function renderLigasDelModo() {
+            const d = getUserData();
+            const lista = modoSeleccionado === 'americano' ? d.ligasAmericano : d.ligasPozo;
+            const cont = document.getElementById("listaLigasContenedor");
+            cont.innerHTML = "";
+            if (!lista.length) { cont.innerHTML = "<p style='color:gray; font-size:0.85rem; padding:10px;'>No hay ligas registradas en este modo.</p>"; return; }
+            lista.forEach(l => {
+                cont.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--padel-light); border:1px solid #cbd5e1; border-radius:10px; margin-bottom:8px;">
+                    <div><strong style="color:var(--padel-blue);">${l.nombre}</strong><br><small style="color:gray;">Jornadas: ${l.jornadas.length}</small></div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-sm btn-green" onclick="abrirLigaDetalle('${l.id}')">Entrar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarLiga('${l.id}')">🗑</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function abrirModalCrearLiga() { document.getElementById("ligaNombreInput").value = ""; document.getElementById("modalCrearLiga").classList.add("active"); }
+        function guardarNuevaLiga() {
+            const nom = document.getElementById("ligaNombreInput").value.trim();
+            if (!nom) return;
+            const d = getUserData();
+            const n = { id: "l_" + Date.now(), nombre: nom, finalizada: false, jornadas: [] };
+            if (modoSeleccionado === 'americano') d.ligasAmericano.push(n); else d.ligasPozo.push(n);
+            saveUserData(d); closeModal("modalCrearLiga"); renderLigasDelModo();
+        }
+        function eliminarLiga(id) {
+            if (confirm("¿Eliminar esta liga?")) {
+                const d = getUserData();
+                if (modoSeleccionado === 'americano') d.ligasAmericano = d.ligasAmericano.filter(x => x.id !== id);
+                else d.ligasPozo = d.ligasPozo.filter(x => x.id !== id);
+                saveUserData(d); renderLigasDelModo();
+            }
+        }
+
+        // PADRÓN
+        function agregarJugadorPadron() {
+            const inp = document.getElementById("inputNuevoJugador"); 
+            const nom = inp.value.trim();
+            if (!nom) return; 
+            const d = getUserData();
+            if (d.jugadores.includes(nom)) return showToast("Jugador ya registrado", "error");
+            d.jugadores.push(nom); 
+            saveUserData(d); 
+            inp.value = ""; 
+            renderPadron();
+            showToast("Jugador agregado");
+        }
+
+        function borrarJugadorPadron(idx) {
+            const d = getUserData();
+            const eliminado = d.jugadores[idx];
+            if (confirm(`¿Eliminar a "${eliminado}" del padrón?`)) {
+                d.jugadores.splice(idx, 1);
+                saveUserData(d);
+                renderPadron();
+                showToast("Jugador eliminado");
+            }
+        }
+
+        function renderPadron() {
+            const d = getUserData(); 
+            const cont = document.getElementById("listaJugadoresPadron");
+            cont.innerHTML = "";
+            if (d.jugadores.length === 0) {
+                cont.innerHTML = "<p style='color:gray; font-size:0.85rem; padding:12px; text-align:center;'>No hay jugadores registrados. Agrega uno nuevo arriba.</p>";
+                return;
+            }
+            d.jugadores.forEach((j, index) => {
+                cont.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #cbd5e1;">
+                    <span style="font-weight:600;">${j}</span>
+                    <button class="btn btn-sm btn-danger" onclick="borrarJugadorPadron(${index})"><i class="fas fa-trash"></i></button>
+                </div>`;
+            });
+        }
+
+        // DETALLE DE LIGA
+        let ligaActiva = null;
+        function abrirLigaDetalle(id) {
+            const d = getUserData();
+            const l = modoSeleccionado === 'americano' ? d.ligasAmericano : d.ligasPozo;
+            ligaActiva = l.find(x => x.id === id);
+            document.getElementById("viewLigasModo").classList.add("hidden");
+            document.getElementById("globalFloatingWaBtn").classList.add("hidden");
+            document.getElementById("viewLigaDetalle").classList.remove("hidden");
+            document.getElementById("ligaDetalleNombre").textContent = ligaActiva.nombre;
+            renderTablaGeneralLiga(); renderListaJornadasLiga();
+        }
+        function backToLigasModo() {
+            document.getElementById("viewLigaDetalle").classList.add("hidden");
+            document.getElementById("globalFloatingWaBtn").classList.add("hidden");
+            document.getElementById("viewLigasModo").classList.remove("hidden");
+            renderLigasDelModo();
+        }
+        function switchLigaTab(t) {
+            document.querySelectorAll("#viewLigaDetalle .tab").forEach((el, i) => el.classList.toggle("active", (t==='tabla'?i===0:i===1)));
+            document.getElementById("tabLigaTabla").classList.toggle("active", t==='tabla');
+            document.getElementById("tabLigaJornadas").classList.toggle("active", t==='jornadas');
+        }
+        function terminarLigaOficial() {
+            if (confirm("¿Cerrar oficialmente la liga?")) {
+                ligaActiva.finalizada = true; saveLigaActiva(); showToast("Liga finalizada");
+            }
+        }
+
+        function obtenerIconoPosicion(pos) {
+            if (pos === 1) return '<span class="podium-icon">🥇</span>';
+            if (pos === 2) return '<span class="podium-icon">🥈</span>';
+            if (pos === 3) return '<span class="podium-icon">🥉</span>';
+            return pos;
+        }
+
+        // TABLA GENERAL DE LIGA (Puntos por Jornada + Total acumulado + Ranking por Total)
+        function renderTablaGeneralLiga() {
+            const th = document.getElementById("tablaLigaHead"); 
+            const tb = document.getElementById("tablaLigaBody");
+            tb.innerHTML = "";
+            
+            if (modoSeleccionado === 'pozo') {
+                let h = "<tr><th>Pos</th><th>Jugador</th><th>Total</th>";
+                ligaActiva.jornadas.forEach((j, idx) => { h += `<th>J${idx+1}</th>`; });
+                h += "<th>🍺</th></tr>"; 
+                th.innerHTML = h;
+
+                const stats = {};
+                ligaActiva.jornadas.forEach(j => {
+                    j.convocados.forEach(p => { 
+                        if (!stats[p]) stats[p] = { total: 0, list: [], cags: 0 }; 
+                    });
+                });
+
+                ligaActiva.jornadas.forEach(j => {
+                    Object.keys(stats).forEach(p => {
+                        let ptsJornada = 0; 
+                        if (j.rondas && j.convocados.includes(p)) {
+                            j.rondas.forEach(r => {
+                                ptsJornada += (parseInt(r[p]) || 0);
+                            });
+                        }
+                        stats[p].list.push(ptsJornada); 
+                        stats[p].total += ptsJornada;
+                        stats[p].cags += (j.caguamas && j.caguamas[p] ? j.caguamas[p] : 0);
+                    });
+                });
+
+                const sorted = Object.entries(stats).sort((a,b) => b[1].total - a[1].total);
+                sorted.forEach(([p, dat], idx) => {
+                    const rowClass = idx === 0 ? 'podium-1' : '';
+                    let r = `<tr class="${rowClass}">
+                        <td>${obtenerIconoPosicion(idx+1)}</td>
+                        <td><strong>${p}</strong></td>
+                        <td style="color:var(--padel-green); font-weight:bold; font-size:0.95rem;">${dat.total}</td>`;
+                    dat.list.forEach(val => { r += `<td>${val}</td>`; });
+                    r += `<td style="color:var(--padel-orange); font-weight:bold;">🍺 ${dat.cags}</td></tr>`;
+                    tb.innerHTML += r;
+                });
+                if (!sorted.length) tb.innerHTML = "<tr><td colspan='4'>Sin jornadas registradas</td></tr>";
+            } else {
+                th.innerHTML = "<tr><th>Pos</th><th>Jugador</th><th>PJ</th><th>W</th><th>Pts</th><th>+/-</th><th>🍺</th></tr>";
+                const stats = {};
+                ligaActiva.jornadas.forEach(j => {
+                    if (j.rounds) {
+                        j.rounds.forEach(r => {
+                            r.matches.forEach(m => {
+                                const esJugado = m.jugado || (parseInt(m.score1) > 0 || parseInt(m.score2) > 0);
+                                if (esJugado) {
+                                    const s1 = parseInt(m.score1) || 0;
+                                    const s2 = parseInt(m.score2) || 0;
+                                    m.p1.forEach(p => {
+                                        stats[p] = stats[p] || { pj:0, w:0, diff:0, pts:0, cags:0 };
+                                        stats[p].pj++;
+                                        stats[p].diff += (s1 - s2);
+                                        if (s1 > s2) { stats[p].w++; stats[p].pts += 3; }
+                                    });
+                                    m.p2.forEach(p => {
+                                        stats[p] = stats[p] || { pj:0, w:0, diff:0, pts:0, cags:0 };
+                                        stats[p].pj++;
+                                        stats[p].diff += (s2 - s1);
+                                        if (s2 > s1) { stats[p].w++; stats[p].pts += 3; }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                    if (j.caguamas) Object.entries(j.caguamas).forEach(([p, c]) => { stats[p] = stats[p] || { pj:0, w:0, diff:0, pts:0, cags:0 }; stats[p].cags += c; });
+                });
+                const sorted = Object.entries(stats).sort((a,b) => {
+                    if (b[1].pts !== a[1].pts) return b[1].pts - a[1].pts;
+                    return b[1].diff - a[1].diff;
+                });
+                sorted.forEach(([p, dat], idx) => {
+                    const rowClass = idx === 0 ? 'podium-1' : '';
+                    tb.innerHTML += `<tr class="${rowClass}"><td>${obtenerIconoPosicion(idx+1)}</td><td><strong>${p}</strong></td><td>${dat.pj}</td><td>${dat.w}</td><td style="color:var(--padel-green); font-weight:bold;">${dat.pts}</td><td>${dat.diff}</td><td>🍺 ${dat.cags}</td></tr>`;
+                });
+                if (!sorted.length) tb.innerHTML = "<tr><td colspan='7'>Sin partidos jugados</td></tr>";
+            }
+        }
+
+        function renderListaJornadasLiga() {
+            const cont = document.getElementById("listaJornadasContenedor"); cont.innerHTML = "";
+            if (!ligaActiva.jornadas.length) { cont.innerHTML = "<p style='color:gray; padding:10px;'>No hay jornadas creadas.</p>"; return; }
+            ligaActiva.jornadas.forEach(j => {
+                cont.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:var(--padel-light); border:1px solid #cbd5e1; border-radius:8px; margin-bottom:6px;">
+                    <div><strong style="color:var(--padel-blue);">${j.nombre}</strong><br><small style="color:gray;">${j.convocados.length} jugadores</small></div>
+                    <button class="btn btn-sm btn-green" onclick="cargarJornadaEnVivo('${j.id}')">Entrar</button>
+                </div>`;
+            });
+        }
+        function saveLigaActiva() {
+            const d = getUserData();
+            if (modoSeleccionado === 'americano') {
+                const idx = d.ligasAmericano.findIndex(x => x.id === ligaActiva.id); 
+                if (idx !== -1) d.ligasAmericano[idx] = ligaActiva;
+            } else {
+                const idx = d.ligasPozo.findIndex(x => x.id === ligaActiva.id); 
+                if (idx !== -1) d.ligasPozo[idx] = ligaActiva;
+            }
+            saveUserData(d);
+        }
+
+        // CONVOCATORIA
+        let convocadosSeleccionados = [];
+        function abrirModalNuevaJornada() {
+            document.getElementById("jornadaNombreInput").value = `Jornada ${ligaActiva.jornadas.length + 1}`;
+            convocadosSeleccionados = [...getUserData().jugadores];
+            renderPills();
+            document.getElementById("modalNuevaJornada").classList.add("active");
+        }
+        function registrarJugadorExpress() {
+            const inp = document.getElementById("inputRegistroExpress"); const nom = inp.value.trim();
+            if (!nom) return; const d = getUserData();
+            if (!d.jugadores.includes(nom)) { d.jugadores.push(nom); saveUserData(d); }
+            if (!convocadosSeleccionados.includes(nom)) convocadosSeleccionados.push(nom);
+            inp.value = ""; renderPills();
+        }
+        function renderPills() {
+            const d = getUserData(); const cont = document.getElementById("pillsConvocadosContainer"); cont.innerHTML = "";
+            d.jugadores.forEach(j => {
+                const sel = convocadosSeleccionados.includes(j);
+                cont.innerHTML += `<div class="chip-pill ${sel?'active':''}" onclick="togglePill('${j}')">${sel?'✓ ':''}${j}</div>`;
+            });
+            document.getElementById("countConvocados").textContent = convocadosSeleccionados.length;
+        }
+        function togglePill(nom) {
+            if (convocadosSeleccionados.includes(nom)) convocadosSeleccionados = convocadosSeleccionados.filter(x => x !== nom);
+            else convocadosSeleccionados.push(nom);
+            renderPills();
+        }
+
+        // ROUND-ROBIN AMERICANO (N par -> N-1 rondas, N impar -> N rondas)
+        function generarRondas8Loco(players) {
+            let pool = [...players];
+            const n = pool.length;
+            const isOdd = (n % 2 !== 0);
+            if (isOdd) pool.push("BYE");
+
+            const totalRondas = isOdd ? n : (n - 1);
+            const numPistas = Math.floor(n / 4);
+            const r = [];
+
+            let rotation = [...pool];
+
+            for (let round = 0; round < totalRondas; round++) {
+                const parejasRonda = [];
+                const descansan = [];
+
+                for (let i = 0; i < rotation.length / 2; i++) {
+                    const pA = rotation[i];
+                    const pB = rotation[rotation.length - 1 - i];
+
+                    if (pA === "BYE") {
+                        descansan.push(pB);
+                    } else if (pB === "BYE") {
+                        descansan.push(pA);
+                    } else {
+                        parejasRonda.push([pA, pB]);
+                    }
+                }
+
+                const matches = [];
+                let courtCount = 0;
+                for (let p = 0; p + 1 < parejasRonda.length && courtCount < numPistas; p += 2) {
+                    matches.push({
+                        p1: parejasRonda[p],
+                        p2: parejasRonda[p + 1],
+                        score1: 0,
+                        score2: 0,
+                        jugado: false
+                    });
+                    courtCount++;
+                }
+
+                for (let p = numPistas * 2; p < parejasRonda.length; p++) {
+                    descansan.push(parejasRonda[p][0]);
+                    descansan.push(parejasRonda[p][1]);
+                }
+
+                r.push({ matches, descansan });
+
+                const fixed = rotation[0];
+                const rest = rotation.slice(1);
+                rest.unshift(rest.pop());
+                rotation = [fixed, ...rest];
+            }
+
+            return r;
+        }
+
+        function iniciarJornadaConfirmada() {
+            const nom = document.getElementById("jornadaNombreInput").value.trim() || "Jornada";
+            if (convocadosSeleccionados.length < 4) return showToast("Mínimo 4 jugadores para el modo", "error");
+            let j = null;
+            if (modoSeleccionado === 'pozo') {
+                const r1 = {}; 
+                convocadosSeleccionados.forEach(p => { r1[p] = 0; });
+                j = { 
+                    id: "j_" + Date.now(), 
+                    nombre: nom, 
+                    convocados: [...convocadosSeleccionados], 
+                    rondas: [r1], 
+                    rondaActual: 1, 
+                    caguamas: {}, 
+                    finalizada: false 
+                };
+            } else {
+                j = { 
+                    id: "j_" + Date.now(), 
+                    nombre: nom, 
+                    convocados: [...convocadosSeleccionados], 
+                    rounds: generarRondas8Loco(convocadosSeleccionados), 
+                    currentRound: 1, 
+                    caguamas: {}, 
+                    finalizada: false 
+                };
+            }
+            convocadosSeleccionados.forEach(p => j.caguamas[p] = 0);
+            ligaActiva.jornadas.push(j); 
+            saveLigaActiva(); 
+            closeModal("modalNuevaJornada"); 
+            cargarJornadaEnVivo(j.id);
+        }
+
+        let jornadaActiva = null;
+        function cargarJornadaEnVivo(id) {
+            jornadaActiva = ligaActiva.jornadas.find(x => x.id === id);
+            document.getElementById("viewLigaDetalle").classList.add("hidden");
+            document.getElementById("globalFloatingWaBtn").classList.remove("hidden");
+
+            if (modoSeleccionado === 'pozo') {
+                document.getElementById("viewJornadaPozoVivo").classList.remove("hidden");
+                document.getElementById("pozoLiveTitulo").textContent = jornadaActiva.nombre;
+                switchLiveTab('pozo', 'pistas');
+                renderPozoNav(); 
+                showPozoRound(jornadaActiva.rondaActual || 1);
+            } else {
+                document.getElementById("viewJornada8LocoVivo").classList.remove("hidden");
+                document.getElementById("amLiveTitulo").textContent = jornadaActiva.nombre;
+                switchLiveTab('8loco', 'pistas');
+                render8LocoNav(); 
+                show8LocoRound(jornadaActiva.currentRound || 1);
+            }
+        }
+
+        function backToLigaDetalle() {
+            saveLigaActiva();
+            document.getElementById("viewJornadaPozoVivo").classList.add("hidden");
+            document.getElementById("viewJornada8LocoVivo").classList.add("hidden");
+            document.getElementById("globalFloatingWaBtn").classList.add("hidden");
+            document.getElementById("viewLigaDetalle").classList.remove("hidden");
+            abrirLigaDetalle(ligaActiva.id);
+        }
+
+        // PESTAÑAS EN VIVO DENTRO DE LA JORNADA
+        function switchLiveTab(modo, vista) {
+            if (modo === 'pozo') {
+                const btnP = document.getElementById("tabLiveBtnPozoPistas");
+                const btnT = document.getElementById("tabLiveBtnPozoTabla");
+                const viewP = document.getElementById("pozoLivePartidosView");
+                const viewT = document.getElementById("pozoLiveTablaView");
+
+                btnP.classList.toggle("active", vista === 'pistas');
+                btnT.classList.toggle("active", vista === 'tabla');
+                viewP.classList.toggle("hidden", vista !== 'pistas');
+                viewT.classList.toggle("hidden", vista !== 'tabla');
+                if (vista === 'tabla') renderTablaPozoLive();
+            } else {
+                const btnP = document.getElementById("tabLiveBtn8LocoPistas");
+                const btnT = document.getElementById("tabLiveBtn8LocoTabla");
+                const viewP = document.getElementById("amLivePartidosView");
+                const viewT = document.getElementById("amLiveTablaView");
+
+                btnP.classList.toggle("active", vista === 'pistas');
+                btnT.classList.toggle("active", vista === 'tabla');
+                viewP.classList.toggle("hidden", vista !== 'pistas');
+                viewT.classList.toggle("hidden", vista !== 'tabla');
+                if (vista === 'tabla') renderTabla8LocoLive();
+            }
+        }
+
+        // TABLA EN VIVO: POZO (SOLO PUNTOS DE LA JORNADA EN CURSO)
+        function renderTablaPozoLive() {
+            const tb = document.getElementById("tablaPozoLiveBody");
+            tb.innerHTML = "";
+            const totJornada = {};
+            jornadaActiva.convocados.forEach(p => { totJornada[p] = 0; });
+            
+            jornadaActiva.rondas.forEach(r => {
+                jornadaActiva.convocados.forEach(p => {
+                    totJornada[p] += (parseInt(r[p]) || 0);
+                });
+            });
+
+            const sorted = Object.entries(totJornada).sort((a,b) => b[1] - a[1]);
+            sorted.forEach(([p, v], idx) => {
+                const rowClass = idx === 0 ? 'podium-1' : '';
+                tb.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td>${obtenerIconoPosicion(idx+1)}</td>
+                        <td><strong>${p}</strong></td>
+                        <td style="color:var(--padel-green); font-weight:bold; font-size:1.05rem;">${v}</td>
+                        <td style="color:var(--padel-orange); font-weight:bold;">🍺 ${jornadaActiva.caguamas[p] || 0}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // TABLA EN VIVO: 8 LOCO
+        function renderTabla8LocoLive() {
+            const tb = document.getElementById("tabla8LocoLiveBody");
+            tb.innerHTML = "";
+            const stats = {};
+            jornadaActiva.convocados.forEach(p => stats[p] = { pj:0, w:0, diff:0, pts:0, cags: jornadaActiva.caguamas[p] || 0 });
+
+            if (jornadaActiva.rounds) {
+                jornadaActiva.rounds.forEach(r => {
+                    r.matches.forEach(m => {
+                        const esJugado = m.jugado || (parseInt(m.score1) > 0 || parseInt(m.score2) > 0);
+                        if (esJugado) {
+                            const s1 = parseInt(m.score1) || 0;
+                            const s2 = parseInt(m.score2) || 0;
+                            m.p1.forEach(p => {
+                                stats[p].pj++;
+                                stats[p].diff += (s1 - s2);
+                                if (s1 > s2) { stats[p].w++; stats[p].pts += 3; }
+                            });
+                            m.p2.forEach(p => {
+                                stats[p].pj++;
+                                stats[p].diff += (s2 - s1);
+                                if (s2 > s1) { stats[p].w++; stats[p].pts += 3; }
+                            });
+                        }
+                    });
+                });
+            }
+
+            const sorted = Object.entries(stats).sort((a,b) => {
+                if (b[1].pts !== a[1].pts) return b[1].pts - a[1].pts;
+                return b[1].diff - a[1].diff;
+            });
+
+            sorted.forEach(([p, dat], idx) => {
+                const rowClass = idx === 0 ? 'podium-1' : '';
+                tb.innerHTML += `
+                    <tr class="${rowClass}">
+                        <td>${obtenerIconoPosicion(idx+1)}</td>
+                        <td><strong>${p}</strong></td>
+                        <td>${dat.pj}</td>
+                        <td>${dat.w}</td>
+                        <td style="color:var(--padel-green); font-weight:bold; font-size:1.05rem;">${dat.pts}</td>
+                        <td>${dat.diff}</td>
+                        <td style="color:var(--padel-orange); font-weight:bold;">🍺 ${dat.cags}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // GESTIÓN Y PERSISTENCIA DE PUNTOS EN POZO
+        function renderPozoNav() {
+            const cont = document.getElementById("pozoRoundsNav"); 
+            cont.innerHTML = "";
+            for (let i = 1; i <= jornadaActiva.rondas.length; i++) {
+                cont.innerHTML += `<div class="chip-pill ${i === jornadaActiva.rondaActual ? 'active' : ''}" onclick="showPozoRound(${i})">Ronda ${i}</div>`;
+            }
+        }
+
+        function modificarPuntosPozo(roundNum, player, cambio) {
+            const rData = jornadaActiva.rondas[roundNum - 1];
+            const actual = parseInt(rData[player]) || 0;
+            rData[player] = Math.max(0, actual + cambio);
+            saveLigaActiva();
+            showPozoRound(roundNum);
+        }
+
+        function escribirPuntosPozo(roundNum, player, val) {
+            const rData = jornadaActiva.rondas[roundNum - 1];
+            rData[player] = Math.max(0, parseInt(val) || 0);
+            saveLigaActiva();
+        }
+
+        function showPozoRound(n) {
+            jornadaActiva.rondaActual = n; 
+            renderPozoNav();
+            document.getElementById("pozoRondaActualLabel").textContent = `Ronda ${n}`;
+            const rData = jornadaActiva.rondas[n - 1]; 
+            const cont = document.getElementById("pozoPlayersRondaContainer"); 
+            cont.innerHTML = "";
+
+            jornadaActiva.convocados.forEach(p => {
+                if (rData[p] === undefined) rData[p] = 0;
+                const pts = rData[p];
+                const cags = jornadaActiva.caguamas[p] || 0;
+
+                let totalJornada = 0;
+                jornadaActiva.rondas.forEach(r => { totalJornada += (parseInt(r[p]) || 0); });
+
+                cont.innerHTML += `
+                <div class="pozo-row">
+                    <div>
+                        <strong style="color:var(--padel-dark);">${p}</strong>
+                        <div style="font-size:0.7rem; color:gray;">Jornada: <strong style="color:var(--padel-green);">${totalJornada} pts</strong></div>
+                        <button class="caguama-badge" style="margin-top:3px;" onclick="jornadaActiva.caguamas['${p}']=(jornadaActiva.caguamas['${p}']||0)+1; saveLigaActiva(); showPozoRound(${n});">🍺 ${cags}</button>
+                    </div>
+                    <div class="score-ctrl">
+                        <button type="button" class="score-btn" onclick="modificarPuntosPozo(${n}, '${p}', -1)">−</button>
+                        <input type="number" class="score-in" value="${pts}" oninput="escribirPuntosPozo(${n}, '${p}', this.value)">
+                        <button type="button" class="score-btn" onclick="modificarPuntosPozo(${n}, '${p}', 1)">+</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function agregarRondaPozo() {
+            const nuevaRonda = {}; 
+            jornadaActiva.convocados.forEach(p => { nuevaRonda[p] = 0; });
+            jornadaActiva.rondas.push(nuevaRonda); 
+            jornadaActiva.rondaActual = jornadaActiva.rondas.length;
+            saveLigaActiva(); 
+            showPozoRound(jornadaActiva.rondaActual);
+            showToast(`¡Ronda ${jornadaActiva.rondaActual} agregada!`);
+        }
+
+        function finalizarJornadaPozoOficial() {
+            if (confirm("¿Finalizar oficialmente esta jornada?")) { 
+                jornadaActiva.finalizada = true; 
+                saveLigaActiva(); 
+                backToLigaDetalle(); 
+            }
+        }
+
+        // 8 LOCO LIVE (CANCHAS REALISTAS Y MARCADOR TÁCTIL BLINDADO)
+        function render8LocoNav() {
+            const cont = document.getElementById("amRoundsNav"); cont.innerHTML = "";
+            for (let i=1; i<=jornadaActiva.rounds.length; i++) {
+                cont.innerHTML += `<div class="chip-pill ${i===jornadaActiva.currentRound?'active':''}" onclick="show8LocoRound(${i})">Ronda ${i}</div>`;
+            }
+        }
+
+        function cambiarPuntos8Loco(roundIdx, matchIdx, parejaNum, cambio) {
+            const match = jornadaActiva.rounds[roundIdx].matches[matchIdx];
+            match.jugado = true;
+            if (parejaNum === 1) {
+                match.score1 = Math.max(0, (parseInt(match.score1) || 0) + cambio);
+            } else {
+                match.score2 = Math.max(0, (parseInt(match.score2) || 0) + cambio);
+            }
+            saveLigaActiva();
+            show8LocoRound(roundIdx + 1);
+        }
+
+        function escribirPuntos8Loco(roundIdx, matchIdx, parejaNum, val) {
+            const match = jornadaActiva.rounds[roundIdx].matches[matchIdx];
+            match.jugado = true;
+            const num = Math.max(0, parseInt(val) || 0);
+            if (parejaNum === 1) match.score1 = num; else match.score2 = num;
+            saveLigaActiva();
+        }
+
+        function show8LocoRound(n) {
+            jornadaActiva.currentRound = n; render8LocoNav();
+            const curr = jornadaActiva.rounds[n-1]; 
+            const cont = document.getElementById("amMatchesContainer"); 
+            cont.innerHTML = "";
+
+            if (curr.descansan && curr.descansan.length > 0) {
+                cont.innerHTML += `<div class="bye-banner"><i class="fas fa-bed"></i> Descansan esta ronda: ${curr.descansan.join(', ')}</div>`;
+            }
+
+            curr.matches.forEach((m, idx) => {
+                cont.innerHTML += `
+                <div class="padel-court-card">
+                    <span class="court-title-badge"><i class="fas fa-layer-group"></i> PISTA ${idx+1}</span>
+                    
+                    <div class="court-side-team">
+                        <div style="flex:1;">
+                            <div style="font-weight:800; color:white; font-size:0.9rem;">${m.p1.join(' & ')}</div>
+                            <button class="caguama-badge" style="margin-top:2px;" onclick="jornadaActiva.caguamas['${m.p1[0]}']=(jornadaActiva.caguamas['${m.p1[0]}']||0)+1; show8LocoRound(${n}); saveLigaActiva();">🍺 ${jornadaActiva.caguamas[m.p1[0]]||0}</button>
+                        </div>
+                        <div class="score-ctrl">
+                            <button type="button" class="score-btn" onclick="cambiarPuntos8Loco(${n-1}, ${idx}, 1, -1)">−</button>
+                            <input type="number" class="score-in" value="${m.score1 !== undefined ? m.score1 : 0}" oninput="escribirPuntos8Loco(${n-1}, ${idx}, 1, this.value)">
+                            <button type="button" class="score-btn" onclick="cambiarPuntos8Loco(${n-1}, ${idx}, 1, 1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="padel-court-net"></div>
+
+                    <div class="court-side-team">
+                        <div style="flex:1;">
+                            <div style="font-weight:800; color:white; font-size:0.9rem;">${m.p2.join(' & ')}</div>
+                            <button class="caguama-badge" style="margin-top:2px;" onclick="jornadaActiva.caguamas['${m.p2[0]}']=(jornadaActiva.caguamas['${m.p2[0]}']||0)+1; show8LocoRound(${n}); saveLigaActiva();">🍺 ${jornadaActiva.caguamas[m.p2[0]]||0}</button>
+                        </div>
+                        <div class="score-ctrl">
+                            <button type="button" class="score-btn" onclick="cambiarPuntos8Loco(${n-1}, ${idx}, 2, -1)">−</button>
+                            <input type="number" class="score-in" value="${m.score2 !== undefined ? m.score2 : 0}" oninput="escribirPuntos8Loco(${n-1}, ${idx}, 2, this.value)">
+                            <button type="button" class="score-btn" onclick="cambiarPuntos8Loco(${n-1}, ${idx}, 2, 1)">+</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function agregarRondaExtra8Loco() {
+            const extra = generarRondas8Loco(jornadaActiva.convocados);
+            jornadaActiva.rounds.push(extra[0]); saveLigaActiva(); show8LocoRound(jornadaActiva.rounds.length);
+        }
+        function finalizarJornada8LocoOficial() {
+            if (confirm("¿Finalizar jornada?")) { jornadaActiva.finalizada = true; saveLigaActiva(); backToLigaDetalle(); }
+        }
+
+        // FUNCIÓN AUXILIAR: TEXTO DE PIE PARA WHATSAPP
+        function obtenerPieWhatsApp() {
+            if (appConfig.waCustomMsg && appConfig.waCustomMsg.trim() !== "") {
+                return `\n\n📢 *${appConfig.waCustomMsg.trim()}*`;
+            }
+            return "";
+        }
+
+        // COMPARTIR TABLA GENERAL DE TODA LA LIGA POR WHATSAPP
+        function compartirWhatsAppTablaGeneralLiga() {
+            if (!ligaActiva || !ligaActiva.jornadas.length) {
+                return showToast("No hay jornadas registradas en la liga para compartir.", "error");
+            }
+
+            const tipoLiga = modoSeleccionado === 'pozo' ? 'POZO / REY DE PISTA' : '8 LOCO / AMERICANO';
+            let txt = `*🎾 11PADEL POINT PRO*\n🏆 *LIGA:* ${ligaActiva.nombre} (${tipoLiga})\n📊 *TABLA GENERAL ACUMULADA*\n\n`;
+
+            if (modoSeleccionado === 'pozo') {
+                const stats = {};
+                ligaActiva.jornadas.forEach(j => {
+                    j.convocados.forEach(p => { 
+                        if (!stats[p]) stats[p] = { total: 0, list: [], cags: 0 }; 
+                    });
+                });
+
+                ligaActiva.jornadas.forEach(j => {
+                    Object.keys(stats).forEach(p => {
+                        let ptsJornada = 0; 
+                        if (j.rondas && j.convocados.includes(p)) {
+                            j.rondas.forEach(r => { ptsJornada += (parseInt(r[p]) || 0); });
+                        }
+                        stats[p].list.push(ptsJornada); 
+                        stats[p].total += ptsJornada;
+                        stats[p].cags += (j.caguamas && j.caguamas[p] ? j.caguamas[p] : 0);
+                    });
+                });
+
+                const sorted = Object.entries(stats).sort((a,b) => b[1].total - a[1].total);
+                sorted.forEach(([p, dat], idx) => {
+                    const med = idx === 0 ? '🥇 ' : (idx === 1 ? '🥈 ' : (idx === 2 ? '🥉 ' : ''));
+                    const desglose = dat.list.map((v, i) => `J${i+1}:${v}`).join(' | ');
+                    txt += `${idx+1}. ${med}*${p}*\n   ➔ *${dat.total} Pts Totales* [${desglose}] | 🍺 ${dat.cags}\n`;
+                });
+            } else {
+                const stats = {};
+                ligaActiva.jornadas.forEach(j => {
+                    if (j.rounds) {
+                        j.rounds.forEach(r => {
+                            r.matches.forEach(m => {
+                                const esJugado = m.jugado || (parseInt(m.score1) > 0 || parseInt(m.score2) > 0);
+                                if (esJugado) {
+                                    const s1 = parseInt(m.score1) || 0;
+                                    const s2 = parseInt(m.score2) || 0;
+                                    m.p1.forEach(p => {
+                                        stats[p] = stats[p] || { pj:0, w:0, diff:0, pts:0, cags:0 };
+                                        stats[p].pj++;
+                                        stats[p].diff += (s1 - s2);
+                                        if (s1 > s2) { stats[p].w++; stats[p].pts += 3; }
+                                    });
+                                    m.p2.forEach(p => {
+                                        stats[p] = stats[p] || { pj:0, w:0, diff:0, pts:0, cags:0 };
+                                        stats[p].pj++;
+                                        stats[p].diff += (s2 - s1);
+                                        if (s2 > s1) { stats[p].w++; stats[p].pts += 3; }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                    if (j.caguamas) Object.entries(j.caguamas).forEach(([p, c]) => { stats[p] = stats[p] || { pj:0, w:0, diff:0, pts:0, cags:0 }; stats[p].cags += c; });
+                });
+
+                const sorted = Object.entries(stats).sort((a,b) => {
+                    if (b[1].pts !== a[1].pts) return b[1].pts - a[1].pts;
+                    return b[1].diff - a[1].diff;
+                });
+
+                sorted.forEach(([p, dat], idx) => {
+                    const med = idx === 0 ? '🥇 ' : (idx === 1 ? '🥈 ' : (idx === 2 ? '🥉 ' : ''));
+                    txt += `${idx+1}. ${med}*${p}* - *${dat.pts} Pts* (PJ:${dat.pj} | W:${dat.w} | Diff:${dat.diff > 0 ? '+'+dat.diff : dat.diff} | 🍺 ${dat.cags})\n`;
+                });
+            }
+
+            txt += obtenerPieWhatsApp();
+            window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(txt), "_blank");
+        }
+
+        // COMPARTIR WHATSAPP POZO (SOLO PUNTOS DE LA JORNADA EN CURSO)
+        function compartirWhatsAppPozo() {
+            let txt = `*🎾 11PADEL POINT PRO - POZO*\n🏆 *Liga:* ${ligaActiva.nombre}\n📅 *Jornada:* ${jornadaActiva.nombre}\n\n*RESULTADOS DE LA JORNADA:*\n`;
+            const tot = {}; 
+            jornadaActiva.convocados.forEach(p => { tot[p] = 0; });
+            jornadaActiva.rondas.forEach(r => {
+                jornadaActiva.convocados.forEach(p => {
+                    tot[p] += (parseInt(r[p]) || 0);
+                });
+            });
+            Object.entries(tot).sort((a,b)=>b[1]-a[1]).forEach(([p, v], idx) => {
+                const med = idx === 0 ? '🥇 ' : (idx === 1 ? '🥈 ' : (idx === 2 ? '🥉 ' : ''));
+                txt += `${idx+1}. ${med}${p} - *${v} Pts* | 🍺 ${jornadaActiva.caguamas[p]||0}\n`;
+            });
+
+            txt += obtenerPieWhatsApp();
+            window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(txt), "_blank");
+        }
+
+        // COMPARTIR WHATSAPP 8 LOCO
+        function compartirWhatsApp8Loco() {
+            let txt = `*🎾 11PADEL POINT PRO - 8 LOCO*\n🏆 *Liga:* ${ligaActiva.nombre}\n📅 *Jornada:* ${jornadaActiva.nombre}\n\n*MARCADORES EN VIVO:*\n`;
+            jornadaActiva.rounds.forEach((r, idx) => {
+                txt += `*Ronda ${idx+1}:*\n`;
+                r.matches.forEach(m => txt += `${m.p1.join('&')} (${m.score1}) vs (${m.score2}) ${m.p2.join('&')}\n`);
+            });
+
+            txt += obtenerPieWhatsApp();
+            window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(txt), "_blank");
+        }
+
+        function compartirWhatsAppRapido() {
+            if (modoSeleccionado === 'pozo') compartirWhatsAppPozo();
+            else compartirWhatsApp8Loco();
+        }
+
+        function showToast(msg, type="info") {
+            const t = document.getElementById("toast"); t.textContent = msg;
+            t.style.background = type === "error" ? "#e74c3c" : "#2c3e50";
+            t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2500);
+        }
+        function closeModal(id) { document.getElementById(id).classList.remove("active"); }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            aplicarEnlaces();
+            sincronizarEnlacesDesdeLaNube();
+        });
+    </script>
 </body>
 </html>
